@@ -18,17 +18,17 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- === Your Custom Page Content Goes Here below here === -->
     <?php
         //putenv('GOOGLE_APPLICATION_CREDENTIALS=C:\\users\\asus\\Downloads\\google-credentials.json'); // DEV
-        putenv("GOOGLE_APPLICATION_CREDENTIALS=".dirname(__FILE__)."/$level/google-credentials.json"); //PROD
-        require __DIR__."/$level/vendor/autoload.php";
-        use Google\Cloud\Storage\StorageClient;
+        // putenv("GOOGLE_APPLICATION_CREDENTIALS=".dirname(__FILE__)."/$level/google-credentials.json"); //PROD
+        // require __DIR__."/$level/vendor/autoload.php";
+        // use Google\Cloud\Storage\StorageClient;
 
-        $projectId = 'steel-fin-282304';
+        // $projectId = 'steel-fin-282304';
 
-        $storage = new StorageClient([
-            'projectID' => $projectId
-        ]);
+        // $storage = new StorageClient([
+        //     'projectID' => $projectId
+        // ]);
 
-        $bucket = $storage->createBucket(bin2hex(random_bytes(8)));
+        // $bucket = $storage->createBucket(bin2hex(random_bytes(8)));
     ?>
 
     <div class="container">
