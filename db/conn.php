@@ -7,6 +7,7 @@
 
         // Dev connection
         $conn = new \PDO($conn_dsn, $conn_user, $conn_pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch(PDOException $e){
         echo "Database Connection Error, please check your connection file.";
         throw new \PDOException($e->getMessage());

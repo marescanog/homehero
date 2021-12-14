@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top w-100 p-0">
         <d class="flex flex-column w-100 pt-3 pt-lg-0">
         <div class="d-flex justify-content-between px-3 nav-container" id="header-mobile-container">
-            <a class="navbar-brand custom-a" href="<?php echo $level;?>/i2ndex.php">
+            <a class="navbar-brand custom-a" href="<?php echo $level;?>/index.php">
                     <img src="<?php echo $level;?>/images/logo/HH_Logo_Mobile.svg" class="rounded mr-2" alt="Home Hero Logo" id="header-logo-mobile">
             </a>
             <div>
