@@ -15,17 +15,17 @@
           </div>
 
           <div class="modal-body" style="min-width: 350px;">
-              <form id="modal-login-form" type="POST" >
+              <form id="wo-modal-login-form" type="POST" name="wo-login-form">
               <h4 style="font-weight: bold; font-size: 24px; color: #707070; text-align: center;">Worker Portal</h4>
                       <h5 style="font-size: 16px; color: #707070">Welcome back! Sign into your Worker account </h5>
                   
                       <div class="form-group mb-2 mt-1">    
                     <label for="HOLnm" class="font-weight-bold" style="color: #707070;font-size: 14px; text-align: center;">MOBILE NUMBER</label>
-                    <input type="mobile-number" class="form-control mt-0" id="HOLnm" name="phone_number" placeholder="09XX-XXX-XXXX" autocomplete require maxlength="11">
+                    <input type="text" class="form-control mt-0" id="HOLnm" name="phone" placeholder="09XX-XXX-XXXX" autocomplete required maxlength="11">
                   </div>
                   <div class="form-group mb-1 mt-1">
                     <label for="HOLpassword" class="font-weight-bold" style="color: #707070;font-size: 14px; text-align: center;">PASSWORD</label>
-                    <input type="password" class="form-control mt-0 mb-0" id="HOLps" name="password" placeholder="at least 6 characters" autocomplete require minlength="6">
+                    <input type="password" class="form-control mt-0 mb-0" id="HOLps" name="password" placeholder="at least 6 characters" autocomplete required minlength="6">
                   </div>
                   <a class="mt-0 mb-2" href="#" style="font-size:0.8em;">
                     Forgot password?
@@ -35,7 +35,7 @@
                   <span id="LU-submit-btn-txt">CONTINUE</span>
                   <div id="LU-submit-btn-load" class="d-none">
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only">Loading...</span></div>
                     </button>
                   <div class="text-center" style="font-size:0.8em;">
                         <p id="su">
@@ -49,5 +49,7 @@
           </div>
     </div>
 </div>
+
+<script src="<?php echo $level?>/js/components/modal-validation/modal-worker-login.js"></script>
 
                    

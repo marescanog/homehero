@@ -12,11 +12,11 @@ $( document ).ready(()=>{
 
     // Set events for elements
     buttonDesktop.addEventListener("click", ()=>{
-        loadModal("worker-login",modalTypes,submitLoginHandler,getDocumentLevel());
+        loadModal("worker-login",modalTypes,()=>{},getDocumentLevel());
     });
 
     buttonMobile.addEventListener("click", ()=>{
-        loadModal("worker-login",modalTypes,submitLoginHandler,getDocumentLevel());
+        loadModal("worker-login",modalTypes,()=>{},getDocumentLevel());
     });
 
     // Opens Modal & loads content when user clicks on the "Register" header link
@@ -136,7 +136,7 @@ $( document ).ready(()=>{
         //     },
         // });
     }
-
+/*
     const login = () =>{
         // Grab DOM elements
         const myForm = document.getElementById('modal-login-form');
@@ -249,7 +249,7 @@ $( document ).ready(()=>{
         //     }
         // })
     }
-
+*/
     const pageUnavailable = () => {
         Swal.fire({
             title: "Not Available",

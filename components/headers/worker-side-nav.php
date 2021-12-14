@@ -3,9 +3,9 @@
     $hs = $headerLink_Selected ?? 0;
     $tabs=[
       ['Opportunities', 'Interested Clients', 'Ongoing Projects', 'Past Projects'],
-      ['Messages', 'Unread', 'Archived', 'Sent Quotes', 'Support'],
+      //['Messages', 'Unread', 'Archived', 'Sent Quotes', 'Support'],
       ['Services Offered', 'Service Area', 'Weekly Activity', 'Insights','Invoices Sent'],
-      ['Overview', 'Edit Day'],
+      //['Overview', 'Edit Day'],
       ['Your Profile', 'Reviews', 'Settings']
     ];
     $hasExtraFilters = isset($hasExtraFilters) ? $hasExtraFilters : false;
