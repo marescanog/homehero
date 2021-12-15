@@ -61,7 +61,7 @@
                  <!-- Check box (Above 18) Input-->
                 <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" id="agree" name="agree">
-                    <label class="form-check-label" for="agree" style="font-size:0.8em;">I agree to HomeHero's <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>.</label>
+                    <label class="form-check-label" for="agree" style="font-size:0.8em;">I agree to HomeHero's <span class="cclicky" onclick="summonTerms()">Terms and Conditions</span> and <span class="cclicky" onclick="summonPrivacy()">Privacy Policy</span>.</label>
                 </div>
                 <!-- Submit Button -->
                 <button id="RW-submit-btn" type="submit" value="Submit" class="btn btn-warning text-white font-weight-bold w-100 mb-3 submit">
@@ -74,9 +74,9 @@
 
             <div class="text-center" style="font-size:0.8em;">
                 <p>
-                    Already have an account? <a href="#">Login</a>
+                    Already have an account? <span class="cclicky" onclick="redirect_to_worker_login_modal()">Login</span>
                     </br>
-                    Looking to hire a worker? <a href="#">Sign-up</a> at the homeowner's portal.
+                    Looking to hire a worker? <span class="cclicky" onclick="redirect_to_homeonwer_signup_modal()">Sign-up</span> at the homeowner's portal.
                 </p>
             </div>
 

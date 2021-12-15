@@ -138,7 +138,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
         $skill_list = $workers[$wIndx]->skillset_info == null ? null : $workers[$wIndx]->skillset_info;
 
-        $profile_pic = $workers[$wIndx]->profile_pic == false ? false : $workers[$wIndx]->profile_pic;
+        $profile_pic = false;
+
+        if(property_exists($workers[$wIndx], "profile_pic")){
+            $profile_pic =  $workers[$wIndx]->profile_pic;
+        }
+        
 
         include "$level/components/cards/browse-hero-card.php";
     }
@@ -164,6 +169,6 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
 <!-- Custom JS Scripts Below -->
-    <!-- <script src="../../js/pages/user-create-project.js"></script> -->
+    <script src="../../js/pages/browse-heroes.js"></script>
 </body>
 </html>

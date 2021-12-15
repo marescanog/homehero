@@ -356,6 +356,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     $cancellation_reason = null;
 
                                     $tab_link = "";
+                                    $phone_no = null;
 
                                     // For edit modal
                                         // Grab rate_type_id
@@ -505,6 +506,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     $total_price_billed  = null ;
                                     $date_time_completion_paid = null;
                                     $computedRating = 0;
+
+                                    $phone_no = $ongoingProjects[$p]->phone_no;
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
@@ -660,6 +663,10 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                                         + $closedProjects[$p]->punctuality)/4.0;
                                     }
                                    
+
+                                    $phone_no = null;
+
+                                    
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
                                 // Clear values;

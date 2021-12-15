@@ -1,3 +1,11 @@
+.clicky{
+    color: #2699FB;
+}
+.clicky:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .txt-semi{
     font-weight: 700;
 }

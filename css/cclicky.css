@@ -1,0 +1,7 @@
+.cclicky{
+    color: #2699FB;
+}
+.cclicky:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}

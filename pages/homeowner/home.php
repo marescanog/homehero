@@ -144,12 +144,12 @@ $ch = curl_init();
 </div>
 
 
-
+<!-- Discontinued for now -->
 <!-- Popular Posting -->
-<?php   require_once dirname(__FILE__)."/$level/components/sections/popular-posting.php"; ?>
+<?php   //require_once dirname(__FILE__)."/$level/components/sections/popular-posting.php"; ?>
 
 <!-- Testimony -->
-<?php   require_once dirname(__FILE__)."/$level/components/sections/featured-heroes.php"; ?>
+<?php   //require_once dirname(__FILE__)."/$level/components/sections/featured-heroes.php"; ?>
 
 
 

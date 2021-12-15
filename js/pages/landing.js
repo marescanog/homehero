@@ -1,62 +1,88 @@
 
 $(document).ready(()=>{
     // Grab the DOM elements
-    const button_jumbo_search = document.getElementById("button-jumbo-search");
-    const button_jumbo_register = document.getElementById("button-jumbo-register");
+    // const button_jumbo_search = document.getElementById("button-jumbo-search");
+    // const button_jumbo_register = document.getElementById("button-jumbo-register");
 
-    button_jumbo_search.addEventListener("click", ()=>{
-        loadModal("tempAddr",modalTypes,tempAddSubmissionHandler,getDocumentLevel());
-    })
+    // button_jumbo_search.addEventListener("click", ()=>{
+    //     loadModal("tempAddr",modalTypes,tempAddSubmissionHandler,getDocumentLevel());
+    // })
 
+    // button_jumbo_register.addEventListener("click", ()=>{
+    //    loadModal('tempRegister',modalTypes,tempWorkerRegisterHandler,getDocumentLevel()); // This code loads in your modal HTML
+    // })
+
+    // // Specify the Modal's callback function after it loads;
+    // const tempWorkerRegisterHandler = () => {
+    //     const button = document.getElementById('RU-submit-btn');
+    //     button.addEventListener('click',()=>{
+    //         workerRegister();
+    //     })
+    // }
+
+
+    // const tempAddSubmissionHandler = () => {
+    //     const button = document.getElementById('enterAddressButton');
+    //     button.addEventListener("click",()=>{
+    //         submitAddress();
+    //     })
+    // }
+
+    // const workerRegister = () =>{
+    //     // where your ajax call would be
+    //     // get the form data
+    //     // make an ajax call to save the address into the database
+    //     Swal.fire({
+    //         title: "success",
+    //         icon: "success",
+    //         text: "You have sucessfully registered as a worker!",
+    //         confirmButtonText: "close"
+    //     }).then(()=>{
+    //         // perform closing code wuch as cleaning form, reactivating form, closing the modal etc.
+    //         $('#modal').modal('hide');
+    //     })
+    // }
+
+    // const submitAddress = () => {
+    //     // where your ajax call would be
+    //     // get the form data
+    //     // make an ajax call to save the address into the database
+    //     Swal.fire({
+    //         title: "success",
+    //         icon: "success",
+    //         text: "You have sucessfully searched an address!",
+    //         confirmButtonText: "close"
+    //     }).then(()=>{
+    //         // perform closing code wuch as cleaning form, reactivating form, closing the modal etc.
+    //         $('#modal').modal('hide');
+    //     })
+    // }
+
+
+
+    // GET THE 4 BUTTONS ON THE PAGE NAMELY
+    // JUMBOTRON - SIGN UP NOW HOMEOWNER
+    // JUMBOTRON - RESGISTER AS WORKER
+    // CTA - SIGN UP NOW HOMEOWNER
+    // CTA - RESGISTER AS WORKER
+    const button_jumbo_signup = document.getElementById("button_jumbo_signup");
+    const button_jumbo_register = document.getElementById("button_jumbo_register");
+    const button_cta_signup = document.getElementById("button_cta_signup");
+    const button_cta_register = document.getElementById("button_cta_register");
+
+    // Assign the load modals for each appropriate button
+    button_jumbo_signup.addEventListener("click", ()=>{
+        loadModal("signup",modalTypes,()=>{},getDocumentLevel());
+    });
     button_jumbo_register.addEventListener("click", ()=>{
-       loadModal('tempRegister',modalTypes,tempWorkerRegisterHandler,getDocumentLevel()); // This code loads in your modal HTML
-    })
-
-    // Specify the Modal's callback function after it loads;
-    const tempWorkerRegisterHandler = () => {
-        const button = document.getElementById('RU-submit-btn');
-        button.addEventListener('click',()=>{
-            workerRegister();
-        })
-    }
-
-
-    const tempAddSubmissionHandler = () => {
-        const button = document.getElementById('enterAddressButton');
-        button.addEventListener("click",()=>{
-            submitAddress();
-        })
-    }
-
-    const workerRegister = () =>{
-        // where your ajax call would be
-        // get the form data
-        // make an ajax call to save the address into the database
-        Swal.fire({
-            title: "success",
-            icon: "success",
-            text: "You have sucessfully registered as a worker!",
-            confirmButtonText: "close"
-        }).then(()=>{
-            // perform closing code wuch as cleaning form, reactivating form, closing the modal etc.
-            $('#modal').modal('hide');
-        })
-    }
-
-    const submitAddress = () => {
-        // where your ajax call would be
-        // get the form data
-        // make an ajax call to save the address into the database
-        Swal.fire({
-            title: "success",
-            icon: "success",
-            text: "You have sucessfully searched an address!",
-            confirmButtonText: "close"
-        }).then(()=>{
-            // perform closing code wuch as cleaning form, reactivating form, closing the modal etc.
-            $('#modal').modal('hide');
-        })
-    }
+        loadModal("worker-signup",modalTypes,()=>{},getDocumentLevel());
+    });
+    button_cta_signup.addEventListener("click", ()=>{
+        loadModal("signup",modalTypes,()=>{},getDocumentLevel());
+    });
+    button_cta_register.addEventListener("click", ()=>{
+        loadModal("worker-signup",modalTypes,()=>{},getDocumentLevel());
+    });
 })
 
 

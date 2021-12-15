@@ -62,7 +62,7 @@ const save_preferred_cities = (form) => {
                 hideLoadingOverlay();
                 console.log(response);
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'error 65',
                     title: 'Error on form upload',
                     text: 'Please try again!',
                 })
@@ -113,7 +113,7 @@ const save_preferred_workSchedule = (form) => {
                 hideLoadingOverlay();
                 console.log(response);
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'error 116',
                     title: 'Error on form upload',
                     text: 'Please try again!',
                 })
@@ -194,7 +194,7 @@ const save_SPECIFIC_preferred_workSchedule = (form) => {
                 hideLoadingOverlay();
                 console.log(response);
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'error 197',
                     title: 'Error on form upload',
                     text: 'Please try again!',
                 })
@@ -282,7 +282,7 @@ const uploadForm = (form, session) => {
             hideLoadingOverlay();
             console.log(response);
             Swal.fire({
-                icon: 'error',
+                icon: 'error 285',
                 title: 'Error on form upload',
                 text: 'Please try again!',
             })
@@ -317,7 +317,7 @@ const uploadForm_withSingleImage = (form, imageForm) => {
             hideLoadingOverlay();
             console.log(response);
             Swal.fire({
-                icon: 'error',
+                icon: 'error 319',
                 title: 'Error on form upload',
                 text: 'Please try again!',
             })

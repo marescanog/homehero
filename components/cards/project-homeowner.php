@@ -41,6 +41,9 @@
     $total_price_billed  = $total_price_billed != null ? htmlentities($total_price_billed) : null ;
     $date_time_completion_paid = $date_time_completion_paid != null ? htmlentities($date_time_completion_paid) : null ;
     $computedRating = $computedRating != null ? $computedRating : 0;
+
+    // For phone number display
+    $phone_no =  $phone_no == null ?  null :  $phone_no;
 ?>
 <div class="card mt-3 mb-4 shadow ">
     <div class="card-header" style="background-color:#FCEBBF;">
@@ -268,6 +271,23 @@
         <?php }?>
     </div>
 
+<!-- ====================================== -->
+<!-- Phone Number DISPLAY -->
+<!-- ====================================== -->
+<?php
+    if($job_order_status_id == 1){
+?>
+<div class="container mb-4">
+    <div class="card">
+    <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Contact Details:</h6>
+        <p class="ml-2 mb-0 pb-0"><i class="fas fa-phone"></i> <?php echo htmlentities( $phone_no);?></p>
+    </div>
+    </div>
+</div>
+<?php
+    }
+?>
 
 <!-- ====================================== -->
 <!-- BUTTONS DISPLAY - LEFT SIDE -->

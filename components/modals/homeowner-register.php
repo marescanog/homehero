@@ -40,7 +40,7 @@
             <!-- Checkbox  -->
             <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="agree" name="agree" required>
-                <label class="form-check-label" for="agree" style="font-size:0.8em;">I agree to HomeHero's <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>.</label>
+                <label class="form-check-label" for="agree" style="font-size:0.8em;">I agree to HomeHero's <span class="cclicky" onclick="summonTerms()">Terms & Conditions</span> and <span class="cclicky" onclick="summonPrivacy()">Privacy Policy</span>.</label>
             </div>
             <button id="RU-submit-btn"  type="submit" value="Submit"  class="btn btn-warning text-white font-weight-bold w-100 mb-3">
                 <span id="RU-submit-btn-txt">CREATE ACCOUNT</span>
@@ -52,9 +52,9 @@
             
             <div class="text-center" style="font-size:0.8em;">
                 <p>
-                    Already have an account? <a href="#">Login</a>
+                    Already have an account? <span class="cclicky" onclick="redirect_to_homeonwer_login_modal()" >Login</span>
                     </br>
-                    Looking for work? <a href="#">Register</a> at the worker's portal.
+                    Looking for work? <span class="cclicky" onclick="redirect_to_worker_register_modal()">Register</span> at the worker's portal.
                 </p>
             </div>
         </form>

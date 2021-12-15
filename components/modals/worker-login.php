@@ -3,14 +3,14 @@ $level = isset($_POST['level']) ? $_POST['level'] : '.';
 ?>
 <div class="modal-dialog modal-dialog-centered" role="document">
   <div class="modal-content px-3">
-    <div class="modal-header" style="border-bottom: 0;">
-      <div class="mx-auto" style="width: auto;">
-        <img src='<?php echo $level; ?>/images/logo/HH_Logo_Light.svg'>
-      </div>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -1rem -1rem 0;">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+      <div class="modal-header" style="border-bottom: 0;">
+          <div class="mx-auto" style="width: auto;">
+              <img src='<?php echo $level;?>/images/logo/HH_Logo_Light.svg'>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -1rem -1rem 0;">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
 
     <div class="modal-body" style="min-width: 350px;">
       <form id="modal-login-form" type="POST" name="hoLoginForm">
@@ -25,7 +25,7 @@ $level = isset($_POST['level']) ? $_POST['level'] : '.';
           <label for="HOLpassword" class="font-weight-bold" style="color: #707070;font-size: 14px; text-align: center;">PASSWORD</label>
           <input type="password" class="form-control mt-0 mb-0" id="HOLps" name="password" placeholder="at least 6 characters" autocomplete required minlength="6">
         </div>
-        <a class="mt-0 mb-2" href="#" style="font-size:0.8em;">
+        <a class="mt-0 mb-2" href="#" style="font-size:0.8em;" onclick="summon_forgotpass_worker()">
           Forgot password?
         </a>
         <br>
@@ -38,10 +38,10 @@ $level = isset($_POST['level']) ? $_POST['level'] : '.';
         </button>
         <div class="text-center" style="font-size:0.8em;">
           <p id="su">
-            Dont have an account? <a href="#">Sign-up</a>
+            Dont have an account? <span class="cclicky" onclick="redirect_to_worker_register_modal()">Sign-up</span>
             <br>
 
-            Registered as a hero? <a href="#">Log in</a> the Homeowner's Portal.
+            Registered as a hero? <span class="cclicky" onclick="redirect_to_homeonwer_login_modal()">Log in</span> the Homeowner's Portal.
           </p>
         </div>
       </form>

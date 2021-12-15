@@ -30,9 +30,9 @@
                     <label for="HOLpassword" class="font-weight-bold" style="color: #707070;font-size: 14px;">PASSWORD</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" minlength="8" maxlength="31" autocomplete >
                   </div>
-                  <a class="mt-0 mb-2" href="#" style="font-size:0.8em;">
+                  <span class="mt-0 mb-2 clicky" href="#" style="font-size:0.8em;" onclick="summon_forgotpass_homeowner()">
                     Forgot password?
-                    </a> 
+                    </span> 
                     <button id="RU-submit-btn"  type="submit" value="Submit"  class="btn btn-warning text-white font-weight-bold w-100 mb-3 py-2 mt-3">
                       <span id="RU-submit-btn-txt">LOGIN</span>
                       <div id="RU-submit-btn-load" class="d-none">
@@ -42,10 +42,10 @@
                   </button>
                   <div class="text-center" style="font-size:0.8em;">
                         <p id="su">
-                          Dont have an account? <a href="#">Sign-up</a>
+                          Dont have an account? <span class="clicky" onclick="redirect_to_homeonwer_signup_modal()">Sign-up</span>
                           <br>
                           
-                          Registered as a worker? <a href="#">Log in</a> the Worker's Portal.
+                          Registered as a worker? <span class="clicky" onclick="redirect_to_worker_login_modal ()">Log in</span> the Worker's Portal.
                       </p>
                   </div>
                 </form>

@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="p-0 m-0 col-2 col-lg-5 d-flex justify-content-end align-items-center">
-           <button id="notif-<?php echo $worker_id?>"class="btn btn-primary mr-lg-5">
+           <button id="notif-<?php echo $worker_id?>"class="btn btn-primary mr-lg-5" onclick="openModal(<?php echo $worker_id?>)">
                Notify
            </button>
         </div>

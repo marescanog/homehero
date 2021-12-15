@@ -22,4 +22,5 @@
     <!-- Custom JS -->
     <script src="<?php echo $level;?>/js/helper/appendStyleSheet.js"></script>
     <script src="<?php echo $level;?>/js/helper/globals.js"></script>
+    <link rel="stylesheet" href="<?php echo $level;?>/css/cclicky.css">
    

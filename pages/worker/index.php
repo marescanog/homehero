@@ -57,30 +57,42 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <div class="d-lg-flex flex-lg-row justify-content-center jumbotron-container row">
             <div class="d-flex jumbotron-img-container col-12 col-lg-6 mt-auto">
                 <div class="mx-auto m-lg-0 d-flex justify-content-center">
-                    <!-- <img src="./images/pages/landing/Jumbotron_Image.jpg" 
-                         srcset="./images/pages/landing/Jumbotron_Image.jpg 594w, 
-                                 ./images/pages/landing/jumbo-320.jpg 320w,
-                                 ./images/pages/landing/jumbo-280.jpg 280w"
-                         sizes="(max-width: 280px) 280w, 
-                                (max-width: 320px) 320w
-                                594w"
-                         alt="A homehero worker holding a drill" 
-                         class="img-fluid jumbotron-img" > -->
+                    <img src="../../images/pages/landing/worker-jumbotron.jpg" 
+                         alt="Workers" 
+                         class="img-fluid jumbotron-img" >
                 </div>
             </div>
 
             <div class="jumbotron-card mt-5 pt-5 col-12 col-lg-6" > 
                 <div class="card w-lg-75 ml-lg-auto mr-lg-3 mb-lg-5 jumbotron-card-body">
-                    <div class="card-body">
-                            <h3>Find new work in Mandaue</h3>
-             
+                    <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h2 class="h1">Find new work in your city</h2>
+                                <h6 class="h5 pt-2">Complete the 3-step registration process and get access to project offers. It's that simple!</h6>
+                                <p class="mb-0 pb-0">You will need:</p>
+                                <ul class="mt-0 pt-0">
+                                    <li>A valid PH phone number</li>
+                                    <li>Your NBI Clearance</li>
+                                </ul>
+                            </div>
+                           
+                            <div>
+                                <button data-toggle="modal" data-target="#modal" id="button_worker_jombotron_register" class="btn-lg btn-warning text-white">
+                                    <b>REGISTER</b>
+                                </button>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- Replacement for the  popular posting and feature heroes-->
+    <div style="background-color:#EDEDED; height: 50vh;" class="d-flex justify-content-center align-items-center">
+        <div style="max-width:750px;">
+            <h4 class="text-center"><i>Homehero is a web application that allows workers to find job posts from homeowners about different projects for their home. Workers will be able to select job posts based on their skillset such as Plumbing, Carpentry, Gardening and Home Improvement Services.</i></h4>
+        </div> 
+    </div>
 
     <!-- =============================================== -->
     <!-- HOW IT WORKS -->
@@ -97,12 +109,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="col col-lg-3 d-flex flex-column align-items-center pb-5">
                         <div>
                             <?php
-                                // include dirname(__FILE__).'/images/pages/landing/post_tasks.svg'; 
+                                include dirname(__FILE__).'/../../images/pages/landing/post_tasks.svg'; 
                             ?>
                         </div>
                         <div>
-                            <h4 class="gray-font text-center">Post Tasks</h4>
-                            <p>Delegate projects that need to be done by posting your needs</p>
+                            <h4 class="gray-font text-center">Find Tasks</h4>
+                            <p>Select projects based on your skill level and preferences.</p>
                         </div>
                     </div> 
 
@@ -111,12 +123,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                      <div class="col col-lg-3 d-flex flex-column align-items-center">
                         <div>
                             <?php
-                                // include dirname(__FILE__).'/images/pages/landing/review_offers.svg'; 
+                                include dirname(__FILE__).'/../../images/pages/landing/review_offers.svg'; 
                             ?>
                         </div>
                         <div>
-                            <h4 class="gray-font text-center">Review Offers</h4>
-                            <p>Check offers and hire the right hero for your tasks</p>
+                            <h4 class="gray-font text-center">Accept Offers</h4>
+                            <p>Check offers and accept the right one for your price</p>
                         </div>
                     </div> 
 
@@ -124,11 +136,11 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <!-- Feature 1 -->
                     <div class="col col-lg-3 d-flex flex-column align-items-center">
                         <div >
-                            <!-- <img src="./images/pages/landing/taxi-surfing.png" alt="" class="img-fluid feature-max-img"> -->
+                            <img src="../../images/pages/landing/taxi-884.png" alt="" class="img-fluid feature-max-img">
                         </div>
                         <div>
-                            <h4 class="gray-font text-center">Task Done!</h4>
-                            <p>Sit back and relax as your hirehero gets the task done for you!</p>
+                            <h4 class="gray-font text-center">Work and Get Paid!</h4>
+                            <p>Complete the task and get paid!</p>
                         </div>
                     </div> 
 
@@ -148,32 +160,32 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
              <h2 class="text-center gray-font my-4">Ready to get your needs solved?</h2>
              <div class="container CTA-box-container">
                  <div class="row">
-                     <div class="col-12 col-lg-6 CTA-box CTA-box-white ">
-                         <div class="CTA-box-content-container mb-lg-3 mt-lg-3">
-                            <div>
-                                <!-- <img class="img-fluid" src="./images/pages/landing/CTABottomHomeowner.jpg" alt="Homeowner using the Homehero app"> -->
-                            </div>
-                            <div class="CTA-button-container">
-                                <button class="btn btn-warning btn-lg text-white font-weight-bold w-100 mb-2">
-                                    Sign Up
-                                </button>
-                                <p>Get your FREE online account and start looking for a Hero to help with your home.</p>
-                            </div>
-                         </div>
-                     </div>
                      <div class="col-12 col-lg-6 CTA-box CTA-box-offwhite">
                         <div class="CTA-box-content-container mb-lg-3 mt-lg-3">
                             <div>
-                                <!-- <img class="img-fluid" src="./images/pages/landing/CTABottomWorker.jpg" alt="Worker using the Homehero app"> -->
+                                <img class="img-fluid" src="../../images/pages/landing/CTABottomWorker.jpg" alt="Worker using the Homehero app">
                             </div>
                             <div class="CTA-button-container">
-                                <button class="btn btn-warning btn-lg text-white font-weight-bold w-100 mb-2"">
+                                <button  data-toggle="modal" data-target="#modal" id="button_worker_cta_register" class="btn btn-warning btn-lg text-white font-weight-bold w-100 mb-2"">
                                     Become a HomeHero
                                 </button>
                                 <p>Register as a HomeHero and easily be able to find and connect to clients.</p>
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 CTA-box CTA-box-white ">
+                         <div class="CTA-box-content-container mb-lg-3 mt-lg-3">
+                            <div>
+                                <img class="img-fluid" src="../../images/pages/landing/CTABottomHomeowner.jpg" alt="Homeowner using the Homehero app">
+                            </div>
+                            <div class="CTA-button-container">
+                                <button  data-toggle="modal" data-target="#modal" id="button_homeowner_cta_register"class="btn btn-warning btn-lg text-white font-weight-bold w-100 mb-2">
+                                    Sign Up
+                                </button>
+                                <p>Get your FREE online account and start looking for a Hero to help with your home.</p>
+                            </div>
+                         </div>
+                     </div>
                  </div>
              </div>
         </div>
@@ -193,3 +205,23 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- <script src="./js/pages/landing.js"></script> -->
 </body>
 </html>
+<script>
+
+    const button_worker_jombotron_register = document.getElementById("button_worker_jombotron_register");
+    const button_homeowner_cta_register = document.getElementById("button_homeowner_cta_register");
+    const button_worker_cta_register = document.getElementById("button_worker_cta_register");
+    // Assign the load modals for each appropriate button
+    button_worker_jombotron_register.addEventListener("click", ()=>{
+        loadModal("worker-signup",modalTypes,()=>{},getDocumentLevel());
+    });
+    button_homeowner_cta_register.addEventListener("click", ()=>{
+        loadModal("signup",modalTypes,()=>{},getDocumentLevel());
+    });
+
+    button_worker_cta_register.addEventListener("click", ()=>{
+        loadModal("worker-signup",modalTypes,()=>{},getDocumentLevel());
+    });
+
+
+
+</script>

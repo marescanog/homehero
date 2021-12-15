@@ -70,11 +70,11 @@ $("#registerForm").validate({
         // Ajax to check phone number;
         $.ajax({
             type: 'GET',
-            url : 'https://slim3api.herokuapp.com/auth/check-phone', // PROD
-            // url: 'http://localhost/slim3homeheroapi/public/auth/check-phone', // DEV
+            // url : '', // PROD NO DO NOT PROD
+            url: 'http://localhost/slim3homeheroapi/public/auth/check-phone', // DEV
             data : phoneCheckInDatabase,
             success : function(response) {
-                // console.log(response);
+                console.log(response);
                 // Proceed to SMS verification to submit with Ajax for worker creation.
                 // Verify password and get a hashed password
                  // CHANGELINKDEVPROD
@@ -205,7 +205,7 @@ $("#registerForm").validate({
                                     showCancelButton: true,
                                     confirmButtonText: 'Continue Registration',
                                     showLoaderOnConfirm: true,
-                                    onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form),
+                                    // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form),
                                     preConfirm: (password) => {
                                         registrationTokenData['password'] = password;
                                          // CHANGELINKDEVPROD
@@ -262,7 +262,7 @@ $("#registerForm").validate({
                                                                 text: 'Something went wrong! Please try again',
                                                                 icon: 'error',
                                                                 confirmButtonText: 'ok',
-                                                                onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                                                                // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                                                             })
                                                         }
                                                     }
@@ -290,7 +290,7 @@ $("#registerForm").validate({
                                     showCancelButton: true,
                                     confirmButtonText: 'Try a different number',
                                     cancelButtonText: 'Login with this number at worker portal',
-                                    onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                                    // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                                 }). then((result)=>{
                                     if (result.isConfirmed) {
                                         enableErrorDisplayFor("RU_phone","Phone number is already associated with an existing account. Please enter a different number.");
@@ -308,7 +308,7 @@ $("#registerForm").validate({
                                 title: "Error",
                                 text: "Something went wrong. Please try again",
                                 icon: "error",
-                                onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                                // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                             })
                         }
                     });
@@ -330,9 +330,9 @@ enableErrorDisplayFor("RU_phone","Phone number is already associated with an exi
                             showDenyButton: true,
                             showCancelButton: true,
                             confirmButtonText: 'Log in at the homeowner portal instead',
-                            cancelButtonText: 'Log in at the support portal instead.',
-                            denyButtonText: `Register as a worker with this number`,
-                            onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                            //cancelButtonText: 'Log in at the support portal instead.',
+                           // denyButtonText: `Register as a worker with this number`,
+                            // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                         }). then((result)=>{
                             if (result.isConfirmed) {
                                 // redirect to homeowner portal
@@ -350,12 +350,12 @@ enableErrorDisplayFor("RU_phone","Phone number is already associated with an exi
                             title: 'Phone number number already registered to an account!',
                             text: "Looks like you have a support account associated with this number. Would you like to log in as support instead?",
                             icon: 'error',
-                            showCancelButton: true,
-                            showDenyButton: true,
+                           // showCancelButton: true,
+                           // showDenyButton: true,
                             confirmButtonText: 'Try a different phone number instead',
-                            cancelButtonText: 'Log in at the support portal instead.',
-                            denyButtonText: `Register as a worker with this number`,
-                            onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                           // cancelButtonText: 'Log in at the support portal instead.',
+                           // denyButtonText: `Register as a worker with this number`,
+                            // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                         }).then((result)=>{
                             if (result.isConfirmed) {
                                 // try different number
@@ -373,12 +373,12 @@ enableErrorDisplayFor("RU_phone","Phone number is already associated with an exi
                             title: 'Phone number number already registered to an account!',
                             text: "Looks like you have a homeowner account associated with this number. Would you like to log in to your homeowner account instead?",
                             icon: 'error',
-                            showCancelButton: true,
-                            showDenyButton: true,
+                            //showCancelButton: true,
+                            //showDenyButton: true,
                             confirmButtonText: 'Try a different phone number instead',
-                            cancelButtonText: 'Log in at the homeowner portal instead',
-                            denyButtonText: `Register as a worker with this number`,
-                            onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
+                           // cancelButtonText: 'Log in at the homeowner portal instead',
+                           // denyButtonText: `Register as a worker with this number`,
+                            // onClose: enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form)
                         }).then((result)=>{
                             if (result.isConfirmed) {
                                 // try different number

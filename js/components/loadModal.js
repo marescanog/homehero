@@ -33,7 +33,8 @@ const modalTypes = {
     "editAddr" : docLevelModal+"/components/modals/temporary/temp-edit-address.php", 
     "profile-edit-name" : docLevelModal+"/components/modals/ho-profile-edit-name.php", 
     "profile-add-picture" : docLevelModal+"/components/modals/ho-profile-add-picture.php", 
-    "change-phone-sms": docLevelModal+"/components/modals/sms-verification-to-change-ho-pass.php"
+    "change-phone-sms": docLevelModal+"/components/modals/sms-verification-to-change-ho-pass.php",
+    "notify-worker": docLevelModal+"/components/modals/notify-worker.php"
 }
 
 // This function loads the
