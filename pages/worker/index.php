@@ -6,8 +6,13 @@ if(isset($_SESSION["registration_token"]) && isset($_SESSION["hasRegistered"])){
     session_start(); // start new session
 } else{
     if(isset($_SESSION["token"])){
-        header("Location: ../../pages/homeowner/home.php");
-        exit();
+        if($_SESSION['userType'] == 2) {
+            header("Location: ../../pages/worker/home.php");
+            exit();
+        } else {
+            header("Location: ../../pages/homeowner/home.php");
+            exit();
+        }
     }
 }
 // else if(isset($_SESSION["token"]) && isset($_SESSION["user_type"])){

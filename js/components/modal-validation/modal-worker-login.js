@@ -1,4 +1,4 @@
-$("#wo-modal-login-form").validate({
+$("#modal-login-form").validate({
     rules: {
         phone:{
             phonePH: true
@@ -42,6 +42,7 @@ $("#wo-modal-login-form").validate({
                 // Redirect to User Auth then User Home page
                 let data = {};
                 data['token'] = response["response"]["token"]
+                data['id'] = response["response"]["id"]
                 data['userType'] = 2;
                 data['email'] = response["response"]["email"];
                 data['first_name'] = response["response"]["first_name"];
@@ -57,7 +58,7 @@ $("#wo-modal-login-form").validate({
                 // an ajax to assign registration session token
                 $.ajax({
                     type : 'POST',
-                    url : getDocumentLevel()+'/auth/setLoginSession.php',
+                    url : getDocumentLevel()+'/auth/setLoginSessionWorker.php',
                     data : data,
                     success : function(response) {
                         var res = JSON.parse(response);

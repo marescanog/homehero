@@ -17,10 +17,9 @@
                                 <?php echo $fistName;?>
             </div>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="">Action</a>
-                    <a class="dropdown-item" href="">Another action</a>
+                    <a class="dropdown-item" href="<?php echo $level;?>/pages/worker/profile.php">Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a id="logout-link-mobile" class="dropdown-item" >logout</a>
+                    <a id="logout-link-mobile" class="dropdown-item" >Log out</a>
                     </div>
                 </div>
             </div>
@@ -45,7 +44,7 @@
                             </div>
                         </li>
 
-                        <li class="nav-item mr-lg-2 cust-width mt-3 mt-lg-0">
+                        <!--<li class="nav-item mr-lg-2 cust-width mt-3 mt-lg-0">
                             <a class="nav-link p-0 custom-a 
                                 <?php echo $headerLink_Selected == 1 ? " selected" : "";
                                     ?>
@@ -54,7 +53,7 @@
                             <div class="custom-underline                                 
                                 <?php echo $headerLink_Selected == 1 ? " show" : "";?>">
                             </div>
-                        </li>
+                        </li>-->
 
                         <li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
                             <a class="nav-link p-0 custom-a
@@ -66,7 +65,7 @@
                             </div>
                         </li>
 
-                        <li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
+                        <!--<li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
                             <a class="nav-link p-0 custom-a 
                                 <?php echo $headerLink_Selected == 3 ? " selected" : "";
                                 ?>
@@ -74,7 +73,7 @@
                             <div class="custom-underline                                 
                                 <?php echo $headerLink_Selected == 3 ? " show" : "";?>">
                             </div>
-                        </li>
+                        </li>-->
 
                         <li class="nav-item mr-lg-3 cust-width mt-3 mb-3 mt-lg-0 mb-lg-0">
                             <a class="nav-link p-0 custom-a 
@@ -95,10 +94,9 @@
                             <?php echo $fistName;?>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="">Action</a>
-                    <a class="dropdown-item" href="">Another action</a>
+                    <a class="dropdown-item" href="<?php echo $level;?>/pages/worker/profile.php">Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a id="logout-link-mobile" class="dropdown-item" >logout</a>
+                    <a id="logout-link-desktop" class="dropdown-item" >Log out</a>
                 </div>
             </div>
         </div>
@@ -109,5 +107,5 @@
     </div>
 </nav>
 <script src="<?php echo $level;?>/js/components/loadModal.js"></script>
-<!-- <script src="<?php //echo $level;?>/js/components/headers/user-signedin.js"></script> -->
+<script src="<?php echo $level;?>/js/components/headers/worker-signedin.js"></script>
 

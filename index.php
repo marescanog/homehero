@@ -2,8 +2,13 @@
 
 session_start();
 if(isset($_SESSION["token"])){
-    header("Location: ./pages/homeowner/home.php");
-    exit();
+    if($_SESSION['userType'] == 2) {
+        header("Location: ./pages/worker/home.php");
+        exit();
+    } else {
+        header("Location: ./pages/homeowner/home.php");
+        exit();
+    }
 }
 
 $level =".";

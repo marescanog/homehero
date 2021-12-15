@@ -36,7 +36,7 @@ $( document ).ready(()=>{
         //     registerHandler();
         // });
     }
-
+/*
     const login = () =>{
         // Grab DOM elements
         const myForm = document.getElementById('modal-login-form');
@@ -150,7 +150,7 @@ $( document ).ready(()=>{
             }
         })
     }
-
+*/
     // const registerHandler =(e)=>{
     //     // e.preventDefault();
     
