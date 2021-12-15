@@ -41,11 +41,17 @@
     $total_price_billed  = $total_price_billed != null ? htmlentities($total_price_billed) : null ;
     $date_time_completion_paid = $date_time_completion_paid != null ? htmlentities($date_time_completion_paid) : null ;
     $computedRating = $computedRating != null ? $computedRating : 0;
+
+    // For homeowner details
+    $posted_by = isset($posted_by) ? $posted_by : null;
+    $phone_no =  $phone_no == null ?  null :  $phone_no;
+    $homeowner_id = isset($homeowner_id) ? $homeowner_id : null;
 ?>
 <div class="card mt-3 mb-4 shadow ">
     <div class="card-header" style="background-color:#FCEBBF;">
         <h5 class="card-title titulo-proj"><?php echo $job_title  ?? ( $project_type?? 'Project Name'); ?></h5>
-        <h6 class="mb-0 mt-0">Status: 
+        <h6 class="mb-0 mt-0">Posted by: <?php echo $posted_by; ?></h6>
+        <h6 class="mb-0 mt-0">Status:
             <span class="
                 <?php
                     if ($job_order_status_id == 1 && $today!= null && $d != null && $today>$d && $jo_start_time == null) {
@@ -70,22 +76,22 @@
                 } else if  ($job_status == 2){
                     if($job_order_status_id == 1){
                         if($today!= null && $d != null && $today>$d && $jo_start_time == null){
-                            echo 'Assigned To '.$assigned_to;
+                            echo 'Assigned to you';
                             echo '</br>';
-                            echo "<span class='small-warn'>** This worker has not started the job and the scheduled time has already passed. Please cancel and repost in the event the worker does not show.</span>";
+                            echo "<span class='small-warn'>** Please start your project or inform the homeowner for any delays or concerns. Click cancel to forego the job order.</span>";
                         } else {
-                            echo 'Assigned To '.$assigned_to;
+                            echo 'Assigned to you';
                         }
                     } else if ($job_order_status_id == 3){
                         $nameWhoCancelled = "";
                         if ($cancelled_by != null && $homeowner_id != null){
-                            $nameWhoCancelled = $cancelled_by  == $homeowner_id ? " You" : $assigned_to;
+                            $nameWhoCancelled = $cancelled_by  == $homeowner_id ? $posted_by : " You";
                         }
-                        echo 'Assigned To '.$assigned_to;
+                        echo 'Assigned to you';
                         echo '</br>';
                         echo "<span class='text-danger mt-1'>Cancelled by: ".$nameWhoCancelled."</span>";
                     } else {
-                        echo 'Completed by '.$assigned_to;
+                        echo 'Completed!';
                     }
                 } else if  ($job_status == 3){
                     if($job_order_status_id == null || $job_order_status_id  != 1){ // not assigned
@@ -108,7 +114,7 @@
                     include dirname(__FILE__)."/".$level.'/images/svg/local_offer_black_24dp.svg';  
                 ?>
             </div>
-            <h6 class="card-subtitle mb-2 text-muted mt-1"><b>Your offer:
+            <h6 class="card-subtitle mb-2 text-muted mt-1"><b>Client's offer:
                 <?php 
                     if(  $rate_offer != null &&  $rate_type_id != null){
                         echo $rate_offer.$rt_array[$rate_type_id-1];
@@ -196,7 +202,7 @@
                     ">
                         <?php
                             if($today!= null && $d != null && $today>$d && $jo_start_time == null){
-                                echo 'Not Started By worker - Past Schedule';
+                                echo 'Not Started: Please start your project as soon as possible or contact the homeowner for any concerns.';
                             } else if ($jo_start_time != null) {
                                 echo 'In Progress';
                             } else {
@@ -259,9 +265,9 @@
                      
                         if($isRated != null && $isRated == 1){
                             // compute rating
-                            echo 'Your rated '.$computedRating.' stars';
+                            echo 'Rated '.$computedRating.' stars';
                         } else {
-                            echo 'You did not rate this job order.'; 
+                            echo 'Job order not rated yet.'; 
                         }
                     ?></p>
             </div>
@@ -276,25 +282,21 @@
     <div class="card-footer text-muted">
         <div class="d-flex justify-content-between">
            <div class="d-flex">
-                <a href="<?php echo $level;?>/pages/homeowner/project-info.php?id=<?php echo $job_id.$tab_link ;?>">
+                <a href="<?php echo $level;?>/pages/worker/project-info.php?id=<?php echo $job_id.$tab_link ;?>">
                     <button class="btn btn-warning text-white">
                         <b>VIEW</b>
-                    </button>
                 </a>
                     <?php
-                        // You can only edit a project when it is not filled
+                        // Worker can accept job post when it is not filled
                         if($job_status == 1){
                     ?> 
-                        <button class="btn btn-outline-warning ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="editProject(<?php echo addslashes(htmlentities($job_id)).',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes($pref_sched).'\',\''.addslashes($job_size_id).'\',\''.addslashes($rate_offer).'\',\''.addslashes($rate_type_id).'\',\''.addslashes(htmlentities($job_desc)).'\',\''.addslashes($home_id).'\',\''.addslashes(htmlentities($address)).'\''; ?>)">
-                            <b>EDIT</b>
+                        <button class="btn btn-outline-warning ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                            <b>ACCEPT</b>
                         </button>
                     <?php 
                         // user can reshedule but not edit only if the post expired
                         } else if ($job_status == 3) {
                     ?>
-                        <button class="btn btn-secondary text-white ml-2" data-toggle="modal" data-target="#modal" onclick="reschedule(<?php echo $job_id.',\''.$pref_sched.'\'';?>)">
-                            <b>RESCHEDULE</b>
-                        </button>
                     <?php 
                         } else {                            
                             // Edit button also appears when project is filled
@@ -322,15 +324,7 @@
                                 <b>EDIT</b>
                             </button> -->
 
-                            <?php
-                                if($job_order_status_id == 1 && $today!= null && $d != null && $today>$d && $jo_start_time == null){
-                            ?>
-                                <button class="btn btn-danger text-white ml-2" data-toggle="modal" data-target="#modal" onclick="cancelandRepost(<?php echo $job_order_id.',\''.$pref_sched.'\',\''. addslashes($job_title).'\',\''. addslashes($project_type).'\',\''.addslashes($address).'\'';?>)">
-                                    <b>CANCEL & REPOST</b>
-                                </button>
-                            <?php
-                                }
-                            ?>
+
 
 
                         <?php } 
@@ -341,24 +335,16 @@
                             if($job_order_status_id == 2){
                         ?>
                             <?php
-                                if($date_paid == null){
+                                if($date_paid != null){
                             ?>
-                                <button class="btn btn-success text-white ml-2" data-toggle="modal" data-target="#modal" onclick="completePayment(<?php echo $job_order_id;?>)">
-                                    <b>COMPLETE PAYMENT</b>
+                                <button class="btn btn-success text-white ml-2" data-toggle="modal" data-target="#modal" onclick="paymentReceived(<?php echo $job_order_id;?>)">
+                                    <b>PAYMENT RECEIVED</b>
                                 </button>
                             <?php 
                                 }
                             ?>
 
-                            <?php
-                                if($isRated != null && $isRated == 0){
-                            ?>
-                                <button class="btn btn-outline-success ml-2" style="border: 3px solid #5cb85c" data-toggle="modal" data-target="#modal" onclick="rateProject(<?php echo $job_order_id;?>)">
-                                    <b>RATE</b>
-                                </button>
-                            <?php 
-                                }
-                            ?>
+
                         <?php 
                             }
                         ?>

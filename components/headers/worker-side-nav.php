@@ -25,7 +25,20 @@
           ?>
             <li class="nav-item">
               <a id="<?php echo "side-nav-".$x;?>"
-                class="nav-link <?php echo $current_nav_side_tab == $tabs[$hs][$x] ? 'active' : '';?>" href="./home.php">
+                class="nav-link <?php echo $current_nav_side_tab == $tabs[$hs][$x] ? 'active' : '';?>" href='<?php
+                  if ($tabs[$hs][$x] == 'Opportunities')
+                    $link='home';
+                  else if ($tabs[$hs][$x] == 'Services Offered')
+                    $link='services';
+                  else if ($tabs[$hs][$x] == 'Your Profile')
+                    $link='profile';
+                  else {
+                    $link = strtolower($tabs[$hs][$x]);
+                    $link = preg_replace("/\s+/", "", $link);
+                  }
+
+                  echo "./".$link.".php";
+                ?>'>
                 <?php
                   echo $iconsSideNav[$hs][$x];
                   echo " ".$tabs[$hs][$x];

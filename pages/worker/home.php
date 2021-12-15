@@ -17,6 +17,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
 <!-- === Link your custom CSS pages below here ===-->
 <link rel="stylesheet" href="../../css/headers/header-worker.css">
 <link rel="stylesheet" href="../../css/headers/worker-side-nav.css">
+<link rel="stylesheet" href="../../css/pages/homeowner/projects.css">
 <script src="https://kit.fontawesome.com/d10ff4ba99.js" crossorigin="anonymous"></script>
 <!-- <link rel="stylesheet" href="../../css/pages/homeowner/homeowner-create-project.css"> -->
 <!-- === Link your custom CSS  pages above here ===-->
@@ -45,17 +46,18 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     /* Database search: List of active job postings that matches the worker's skillset */
                     require_once("$level/db/conn.php");
                     // CREATE query
-                    $sql = " SELECT jp.id, hh.first_name, hh.last_name, h.street_no, h.street_name, b.barangay_name, c.city_name, js.job_order_size, pt.type, e.expertise, jp.job_description, jp.rate_offer, rt.type, jp.preferred_date_time, jp.created_on, jp.job_post_name
-                FROM job_post jp, hh_user hh, home h, homeowner ho, barangay b, city c, job_order_size js, project_type pt, expertise e, rate_type rt
+                    $sql = " SELECT jp.id, jp.homeowner_id, hh.user_id, hh.first_name, hh.last_name, hh.phone_no, h.street_no, h.street_name, b.barangay_name, c.city_name, jp.job_size_id, jp.job_post_status_id, jos.job_order_size, pt.type as `project_type`, e.expertise, jp.job_description, jp.rate_offer, jp.rate_type_id, jp.preferred_date_time, jp.created_on, jp.job_post_name
+                FROM job_post jp, hh_user hh, home h, homeowner ho, barangay b, city c, job_order_size js, project_type pt, expertise e, rate_type rt, job_order_size jos
                 WHERE jp.homeowner_id=ho.id
+                AND jp.job_size_id = jos.id
+                AND jp.rate_type_id = rt.id
                 AND ho.id=hh.user_id
                 AND jp.home_id=h.id
                 AND h.barangay_id=b.id
                 AND b.city_id=c.id
-                AND jp.job_size_id=js.id
                 AND jp.required_expertise_id=pt.id
                 AND pt.expertise=e.id
-                AND jp.rate_type_id=rt.id
+                AND jp.preferred_date_time >= CURRENT_TIMESTAMP
             
                 AND jp.job_post_status_id=1
                 AND jp.is_deleted=0
@@ -114,6 +116,10 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                         $rate_offer = $ongoingJobPosts[$p]['rate_offer'];
                         // Grab project type 
                         $project_type = $ongoingJobPosts[$p]['project_type'];
+                        // Grab homeowner name
+                        $posted_by = $ongoingJobPosts[$p]['first_name']." ".$ongoingJobPosts[$p]['last_name'];
+                        // Grab phone number 
+                        $phone_no = $ongoingJobPosts[$p]['phone_no'];
                             
                         $is_rated = null;
                         $job_order_id = null;
@@ -164,9 +170,10 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
     <?php require_once dirname(__FILE__) . "/$level/components/foot-meta.php"; ?>
     <!-- Custom JS Scripts Below -->
     <!-- <script src="../../js/pages/user-home.js"></script> -->
+    <script src="./worker-actions/worker-actions.js"></script>
     <script>
 
-
+        
 
     </script>
 </body>
