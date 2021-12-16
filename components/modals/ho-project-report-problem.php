@@ -10,6 +10,8 @@ $output = null;
     $rep_project_type_name = null;
     $rep_home_address_label = null;
     $rep_assigned_to = null;
+    $user_type = null;
+
     if($data != null){
         $job_order_id = isset($_POST['data']['job_order_id']) ? $_POST['data']['job_order_id'] : null;
         $assigned_to = isset($_POST['data']['assigned_to']) ? $_POST['data']['assigned_to'] : null;
@@ -17,6 +19,7 @@ $output = null;
         $rep_project_type_name = isset($_POST['data']['project_type_name']) ? $_POST['data']['project_type_name'] : null;
         $rep_home_address_label = isset($_POST['data']['home_address_label']) ? $_POST['data']['home_address_label'] : null;
         $rep_assigned_to = isset($_POST['data']['assigned_to'] )? $_POST['data']['assigned_to'] : null;
+        $user_type = isset($_POST['data']['user_type'] )? $_POST['data']['user_type'] : null;
     }
 
     $curl_error = null;
@@ -25,7 +28,11 @@ $output = null;
         // NODEPLOYEDPRODLINK
         // DO A CURL REQUEST TO check if A Report has already been filed
         // $url = ""; // PROD (No current deployed prod route)
-        $url = "http://localhost/slim3homeheroapi/public/homeowner/has-job-issue/".$job_order_id; // DEV
+        if($user_type == 'worker') {
+            $url = "http://localhost/slim3homeheroapi/public/homeowner/has-job-issue/".$job_order_id.'/'.$_SESSION['id']; // DEV
+        } else {
+            $url = "http://localhost/slim3homeheroapi/public/homeowner/has-job-issue/".$job_order_id;
+        }
             
         $headers = array(
             "Authorization: Bearer ".$_SESSION["token"],
@@ -155,8 +162,13 @@ $output = null;
                 <h5 class="card-title"><?php echo $rep_job_post_name  ?? ( $rep_project_type_name ?? 'Your project'); ?></h5>
                 <h6 class="card-subtitle mb-2 text-muted">for the address at</h6>
                 <p class="card-text"><?php echo $rep_home_address_label;?></p>
-                <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
-                <p class="card-text"><?php echo $rep_assigned_to;?></p>
+                <?php if($user_type != 'worker') { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
+                    <p class="card-text"><?php echo $rep_assigned_to;?></p>
+                <?php } else { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
+                    <p class="card-text"><?php echo $posted_by;?></p>
+                <?php } ?>
             </div>
         </div>
         
@@ -167,6 +179,7 @@ $output = null;
         </div>
 
         <input type="hidden" name="id" value="<?php echo $job_order_id;?>">
+        <?php if($user_type == 'worker') { ?> <input type="hidden" value="<?php echo $_SESSION['id'];?>" name="user_id"> <?php } ?>
         <!-- Issue number 7 - Job Order Issue -->
 
         </div>
@@ -193,8 +206,13 @@ $output = null;
                 <h6 class="card-subtitle mt-3 mb-2 text-muted h5"><?php echo $rep_job_post_name  ?? ( $rep_project_type_name ?? 'Your project'); ?></h6>
                 <h6 class="card-subtitle mt-2 mb-2 text-muted">for the address at</h6>
                 <p class="card-text"><?php echo $rep_home_address_label;?></p>
-                <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
-                <p class="card-text"><?php echo $rep_assigned_to;?></p>
+                <?php if($user_type != 'worker') { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
+                    <p class="card-text"><?php echo $rep_assigned_to;?></p>
+                <?php } else { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
+                    <p class="card-text"><?php echo $rep_assigned_to;?></p>
+                <?php } ?>
             </div>
         </div>
 
@@ -225,4 +243,9 @@ $output = null;
     ?>
 <!-- A SUPPORT TICKET IS ALREADY MADE -end  -->
 </div>
-<script src="../../js/components/modal-validation/modal-ho-report-problem.js"></script>
+
+<?php if($user_type == 'worker') { ?>
+    <script src="../../js/components/modal-validation/modal-ho-report-problem2.js"></script>
+<?php } else  { ?>
+    <script src="../../js/components/modal-validation/modal-ho-report-problem.js"></script>
+<?php } ?>

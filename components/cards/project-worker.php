@@ -87,9 +87,7 @@
                         if ($cancelled_by != null && $homeowner_id != null){
                             $nameWhoCancelled = $cancelled_by  == $homeowner_id ? $posted_by : " You";
                         }
-                        echo 'Assigned to you';
-                        echo '</br>';
-                        echo "<span class='text-danger mt-1'>Cancelled by: ".$nameWhoCancelled."</span>";
+                        echo "<span class='text-danger mt-1'>Cancelled by ".$nameWhoCancelled."</span>";
                     } else {
                         echo 'Completed!';
                     }
@@ -214,6 +212,23 @@
             </div>
         <?php }?>
 
+
+<!-- ====================================== -->
+<!-- CONTACT INFO  -->
+<!-- ====================================== -->
+        <?php if($job_status != 1){?>
+            <div class="d-flex flex-row">
+                <div class="gray-icon mr-3">
+                    <i class="fas fa-phone" aria-hidden="true"></i>
+                </div>
+                <p id="descLabel"><b>Mobile number:</b> 
+                    <?php
+                        echo $phone_no;
+                    ?>
+                </p>
+            </div>
+        <?php }?>
+
 <!-- ====================================== -->
 <!-- PAYMENT DISPLAY  -->
 <!-- ====================================== -->
@@ -290,68 +305,35 @@
                         // Worker can accept job post when it is not filled
                         if($job_status == 1){
                     ?> 
-                        <button class="btn btn-outline-warning ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
                             <b>ACCEPT</b>
                         </button>
-                    <?php 
-                        // user can reshedule but not edit only if the post expired
-                        } else if ($job_status == 3) {
+                    <?php
+                         } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time == null) {
                     ?>
-                    <?php 
-                        } else {                            
-                            // Edit button also appears when project is filled
-                            // but it is not one day before the scheduled date
-                            // decided to change that cannot edit when post is filled, just comment out
-                            // Rebook instead
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="startJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                            <b>START PROJECT</b>
+                        </button>
+                    <?php
+                         } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time != null) {
                     ?>
-                        <?php if($job_order_status_id != 2 && $job_order_status_id != 3 && $job_status != 4){?>
-                            <!-- <button class="btn text-white ml-1
-                                <?php 
-                                    // if($today!= null && $d != null && $tomorrow>$d){
-                                    //     echo "disabled btn-secondary";
-                                    // } else {
-                                    //     echo "btn-warning";
-                                    // }
-                                    // ?>"
-                                    // <?php 
-                                    // if($today!= null && $d != null && $tomorrow>$d){
-                                    // ?>
-                                    //     data-toggle="tooltip" data-placement="top" title="Editing disabled 1 day before scheduled date"
-                                    // <?php
-                                    // } 
-                                ?> 
-                            >
-                                <b>EDIT</b>
-                            </button> -->
-
-
-
-
-                        <?php } 
-                        
-                        
-                        
-                        // You can only complete payment & rate if the job order is complete
-                            if($job_order_status_id == 2){
-                        ?>
-                            <?php
-                                if($date_paid != null){
-                            ?>
-                                <button class="btn btn-success text-white ml-2" data-toggle="modal" data-target="#modal" onclick="paymentReceived(<?php echo $job_order_id;?>)">
-                                    <b>PAYMENT RECEIVED</b>
-                                </button>
-                            <?php 
-                                }
-                            ?>
-
-
-                        <?php 
-                            }
-                        ?>
-
-
-                    <?php 
-                        }
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="stopJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                            <b>STOP PROJECT AND GENERATE BILL</b>
+                        </button>
+                    <?php
+                         } else if ($job_order_status_id == 2 && $date_paid != null) {
+                    ?>
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="paymentReceived(<?php echo addslashes(htmlentities($job_order_id)); ?>)">
+                            <b>CONFIRM PAYMENT RECEIVED</b>
+                        </button>
+                    <?php
+                         } else if ($job_order_status_id == 2 && $date_paid == null) {
+                    ?>
+                        <button class="btn btn-outline-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" disabled>
+                            <b>PENDING PAYMENT</b>
+                        </button>
+                    <?php
+                         }
                     ?>
            </div>
 
@@ -359,39 +341,30 @@
 <!-- ====================================== -->
 <!-- BUTTONS DISPLAY - RIGHT SIDE -->
 <!-- ====================================== -->
-           <?php
-                // Case when worker does not show, user can report the worker
-                if($job_order_status_id == 1 && $today!= null && $d != null && $today>$d && $jo_start_time == null){
-           ?>
-            <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportNoShow(<?php echo $job_order_id.',\''.addslashes($assigned_to).'\'';?>)">
-                    REPORT WORKER
-                </button>
-           <?php
-                } else {
-           ?>
+           
                 <?php 
                     // Case when it is still a post
                     if($job_status == 1 && $job_order_status_id == null){
                 ?>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="cancelJobPost(<?php echo $job_id.',\''.addslashes($job_title).'\',\''.$project_type.'\',\''.addslashes($address).'\'';?>)">
-                        CANCEL POST
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="declineJobPost(<?php echo $job_id.',\''.addslashes($job_title).'\',\''.$project_type.'\',\''.addslashes($address).'\'';?>)">
+                        DECLINE
                     </button>
                 <?php 
                     // Case when it is a job order
                     } else if ($job_status == 2 && $job_order_status_id == 1){
-                        // Cannnot cancel a job order when it has started but can report to admin to close job order
+                        // Cancel job order is not started, or report problem when started
                         // In event homehero doesn't stop job
                 ?>
                     <?php 
                         if( $jo_start_time == null){
                     ?>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="cancelProject(<?php echo $job_order_id.',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes(htmlentities($project_type)).'\',\''.addslashes(htmlentities($address)).'\',\''.addslashes(htmlentities($assigned_to)).'\'';?>)">
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="cancelProject(<?php echo $job_order_id.',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes(htmlentities($project_type)).'\',\''.addslashes(htmlentities($address)).'\',\''.addslashes(htmlentities($posted_by)).'\'';?>)">
                             CANCEL JOB ORDER
                         </button>
                     <?php 
                         } else {
                     ?>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportProblem(<?php echo $job_order_id.',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes(htmlentities($project_type)).'\',\''.addslashes(htmlentities($address)).'\',\''.addslashes(htmlentities($assigned_to)).'\'';?>)">
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportProblem(<?php echo $job_order_id.',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes(htmlentities($project_type)).'\',\''.addslashes(htmlentities($address)).'\',\''.addslashes(htmlentities($posted_by)).'\'';?>)">
                             REPORT PROBLEM
                         </button>
                     <?php 
@@ -403,10 +376,10 @@
                 ?>
                     <!-- For now just billing issues instead of all other cases -->
                     <?php
-                        if($job_order_status_id == 2 && $date_paid == null){
+                        if($job_order_status_id == 2 && $date_paid != null){
                     ?>
-                         <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportBill(<?php echo $job_order_id.',\''.addslashes(htmlentities($address)).'\',\''.addslashes($assigned_to).'\'';?>)">
-                            DISPUTE BILL
+                         <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportBill(<?php echo $job_order_id.',\''.addslashes(htmlentities($address)).'\',\''.addslashes($posted_by).'\'';?>)">
+                            DISPUTE PAYMENT
                         </button>
                     <?php 
                         }
@@ -414,9 +387,7 @@
                 <?php
                     }
                 ?>
-           <?php 
-                }
-           ?>
+
 
             
         </div>

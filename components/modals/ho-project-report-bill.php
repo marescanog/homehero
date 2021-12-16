@@ -8,10 +8,12 @@ $output = null;
     $job_order_id = null; 
     $assigned_to = null;
     $address = null;
+    $user_type=null;
     if($data != null){
         $job_order_id = isset($_POST['data']['job_order_id']) ? $_POST['data']['job_order_id'] : null;
         $assigned_to = isset($_POST['data']['assigned_to']) ? $_POST['data']['assigned_to'] : null;
         $address = isset($_POST['data']['address']) ? $_POST['data']['address'] : null;
+        $user_type = isset($_POST['data']['user_type']) ? $_POST['data']['user_type'] : null;
     }
 
     $curl_error = null;
@@ -20,7 +22,11 @@ $output = null;
         // NODEPLOYEDPRODLINK
         // DO A CURL REQUEST TO check if A Report has already been filed
         // $url = ""; // PROD (NO LIVE DEPLOYED ROUTE LINK)
-         $url = "http://localhost/slim3homeheroapi/public/homeowner/has-billing-issue/$job_order_id"; // DEV
+        if($user_type == 'worker') {
+            $url = "http://localhost/slim3homeheroapi/public/homeowner/has-billing-issue/".$job_order_id.'/'.$_SESSION['id']; // DEV
+        } else {
+            $url = "http://localhost/slim3homeheroapi/public/homeowner/has-billing-issue/".$job_order_id;
+        }
             
 
          $headers = array(
@@ -150,8 +156,13 @@ $output = null;
                 <h6 class="card-subtitle mt-3 mb-2 text-muted h5"><?php //echo $rep_job_post_name  ?? ( $rep_project_type_name ?? 'Your project'); ?></h6>
                 <h6 class="card-subtitle mt-2 mb-2 text-muted">for the address at</h6>
                 <p class="card-text"><?php echo $address;?></p>
+                <?php if($user_type != 'worker') { ?>
                 <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
                 <p class="card-text"><?php echo $assigned_to;?></p>
+                <?php } else { ?>
+                <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
+                <p class="card-text"><?php echo $assigned_to;?></p>
+                <?php } ?>
             </div>
         </div>
 <?php 
@@ -200,6 +211,7 @@ $output = null;
         </div>
 
         <input type="hidden" name="id" value="<?php echo $job_order_id;?>">
+        <?php if($user_type == 'worker') { ?> <input type="hidden" value="<?php echo $_SESSION['id'];?>" name="user_id"> <?php } ?>
         <!-- Issue number 7 - Job Order Issue -->
 
         </div>
@@ -222,4 +234,8 @@ $output = null;
         }
     ?>
 </div>
+<?php if($user_type == 'worker') { ?>
+<script src="../../js/components/modal-validation/modal-ho-report-bill2.js"></script>
+<?php } else { ?>
 <script src="../../js/components/modal-validation/modal-ho-report-bill.js"></script>
+<?php } ?>

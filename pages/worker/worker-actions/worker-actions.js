@@ -22,14 +22,6 @@ function paymentReceived(jobOrderID){
 
 }
 
-function disputeHomeowner(postID,hoID){
-
-}
-
-function disputeBilling(jobOrderID){
-
-}
-
 function updateCityPreferences(postID,hoID){
 
 }

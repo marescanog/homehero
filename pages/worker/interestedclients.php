@@ -33,21 +33,21 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
         <!-- === Your Custom Page Content Goes Here below here === -->
 
         <?php
-        $current_nav_side_tab = "Opportunities";
+        $current_nav_side_tab = "Interested Clients";
         require_once dirname(__FILE__) . "/$level/components/headers/worker-side-nav.php";
         ?>
         <div class="col-md-10">
             <div class="container container-full  w-100 m-lg-0 p-0 min-height ml-3">
                 <main role="main" class="col-md-9 col-lg-10 pt-3 px-4 " style="margin-left:30%; margin-right:40%">
 
-                    <h1 class="text-center">Current Job Postings</h1>
+                    <h1 class="text-center">Interested Clients</h1>
 
                     <?php
                     /* Database search: List of active job postings that matches the worker's skillset */
                     require_once("$level/db/conn.php");
                     // CREATE query
                     $sql = " SELECT jp.id, jp.homeowner_id, hh.user_id, hh.first_name, hh.last_name, hh.phone_no, h.street_no, h.street_name, b.barangay_name, c.city_name, jp.job_size_id, jp.job_post_status_id, jos.job_order_size, pt.type as `project_type`, e.expertise, jp.job_description, jp.rate_offer, jp.rate_type_id, jp.preferred_date_time, jp.created_on, jp.job_post_name
-                FROM job_post jp, hh_user hh, home h, homeowner ho, barangay b, city c, job_order_size js, project_type pt, expertise e, rate_type rt, job_order_size jos
+                FROM job_post jp, hh_user hh, home h, homeowner ho, barangay b, city c, job_order_size js, project_type pt, expertise e, rate_type rt, job_order_size jos, homeowner_notification hn
                 WHERE jp.homeowner_id=ho.id
                 AND jp.job_size_id = jos.id
                 AND jp.rate_type_id = rt.id
@@ -57,12 +57,17 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                 AND b.city_id=c.id
                 AND jp.required_expertise_id=pt.id
                 AND pt.expertise=e.id
+
+                AND hn.post_id=jp.id
                 
             
                 AND jp.job_post_status_id=1
                 AND jp.is_deleted=0
                 AND c.id IN (SELECT city_id FROM city_preference WHERE worker_id=:id)
                 AND jp.required_expertise_id IN (SELECT skill FROM skillset WHERE worker_id=:id) 
+
+                AND hn.worker_id=:id
+
                 GROUP BY jp.id ";
 
                     // Prepare statement
@@ -81,10 +86,16 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     ?>
 
                         <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
-                            No available job posts matching your registered services.
+                            You have no notifications yet from homeowners. See more job postings in <a href="./home.php">Opportunites</a>.
                         </h5>
                         <?php
-                    } else {
+                    } else { 
+                    ?>
+                        <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
+                            Below are the homeowners who picked you as their preferred workers for their projects.
+                        </h5>
+
+                    <?php
                         for ($p = 0; $p < count($ongoingJobPosts); $p++) {
                         // Grab address value
                         $address = $ongoingJobPosts[$p]['street_no']." ".$ongoingJobPosts[$p]['street_name'].", ".$ongoingJobPosts[$p]['barangay_name'].", ".$ongoingJobPosts[$p]['city_name'];

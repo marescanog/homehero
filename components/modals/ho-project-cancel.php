@@ -5,12 +5,14 @@
     $can_project_type_name = null;
     $can_home_address_label = null;
     $can_assigned_to = null;
+    $user_type = null;
     if($data != null){
         $can_projectID = $_POST['data']['projectID'];
         $can_job_post_name = $_POST['data']['job_post_name'];
         $can_project_type_name = $_POST['data']['project_type_name'];
         $can_home_address_label = $_POST['data']['home_address_label'];
-        $can_assigned_to = $_POST['data']['assigned_to'];
+        $can_assigned_to = $_POST['data']['assigned_to'] ?? null;
+        $user_type = $_POST['data']['user_type'] ?? null;
     }
 ?>
 <div class="modal-content">
@@ -48,11 +50,18 @@
                 <h5 class="card-title"><?php echo $can_job_post_name  ?? ( $can_project_type_name ?? 'Your project'); ?></h5>
                 <h6 class="card-subtitle mb-2 text-muted">for the address at</h6>
                 <p class="card-text"><?php echo $can_home_address_label;?></p>
-                <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
-                <p class="card-text"><?php echo $can_assigned_to;?></p>
+                <?php if($user_type != 'worker') { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">assigned to homehero </h6>
+                    <p class="card-text"><?php echo $can_assigned_to;?></p>
+                <?php } else { ?>
+                    <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
+                    <p class="card-text"><?php echo $can_assigned_to;?></p>
+                <?php } ?>
             </div>
         </div>
         <input type="hidden" value="<?php echo $can_projectID;?>" name="id">
+        <?php if($user_type == 'worker') { ?> <input type="hidden" value="<?php echo $_SESSION['id'];?>" name="user_id"> <?php } ?>
+        
         <div class="form-group mt-3">
             <label for="cancellation_reason">Please provide your cancellation reason below:</label>
             <textarea class="form-control mb-0" id="cancellation_reason" rows="3" name="cancellation_reason"></textarea>
@@ -77,4 +86,9 @@
         }
     ?>
 </div>
-<script src="../../js/components/modal-validation/modal-ho-cancel-order.js"></script>
+
+<?php if($user_type == 'worker') { ?>
+    <script src="../../js/components/modal-validation/modal-ho-cancel-order2.js"></script>
+<?php } else { ?>
+    <script src="../../js/components/modal-validation/modal-ho-cancel-order.js"></script>
+<?php } ?>
