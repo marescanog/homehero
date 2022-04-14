@@ -49,7 +49,6 @@ $("#support-login-form").validate({
                 data['first_name'] = response["response"]["first_name"];
                 data['last_name'] = response["response"]["last_name"];
                 data['role'] = response["response"]["role"];
-                data['userID'] = response["response"]["id"];
                 // profile_pic_location
                 data['profile_pic_location'] = response["response"]["profile_pic_location"];
 
@@ -108,3 +107,7 @@ $("#support-login-form").validate({
         });
     }
 });
+
+const test = () => {
+
+}

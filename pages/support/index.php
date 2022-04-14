@@ -29,9 +29,10 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <label for="HOLpassword" class="font-weight-bold" style="color: #707070;font-size: 14px;">PASSWORD</label>
                     <input type="password" class="form-control mt-0 mb-0" id="HOLps" name="password" placeholder="Your Password" require >
                   </div>
-                  <a class="mt-0 mb-2" href="#" style="font-size:0.8em;">
+                  <!-- <a class="mt-0 mb-2" href="#" style="font-size:0.8em;">
                     Forgot password?
-                    </a> 
+                    </a>  -->
+                    <span onclick="summon_forgotpass_support()" class="mt-0 mb-2 cclicky" style="font-size:0.8em;">Forgot password?</span>
                   <br>
                   <button id="RU-submit-btn" type="submit" class="btn btn-warning text-white font-weight-bold w-100 mb-3 mt-2" >
                   <span id="RU-submit-btn-txt">CONTINUE</span>
@@ -40,11 +41,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                       <span class="sr-only">Loading...</span>
                     </button>
                   <div class="text-center" style="font-size:0.8em;">
+                  <!-- onclick="redirect_to_homeonwer_signup_modal()" -->
                         <p id="su">
-                          Dont have an account? <a href="#">Sign-up</a>
-                          <br>
+                          <!-- Dont have an account? <span onclick="redirect_to_homeonwer_signup_modal()" class="cclicky">Sign-up</span>
+                          <br> -->
                           
-                          Registered as a worker? <a href="#">Log in</a> the Worker's Portal.
+                          Registered as a worker? <a href="../.../../worker/">Log in</a> the Worker's Portal.
                       </p>
                   </div>
                 </form>
@@ -63,7 +65,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
 <!-- Custom JS Scripts Below -->
-<script src="<?php echo $level?>/js/components/modal-validation/support-login.js"></script>
+    <script src="<?php echo $level?>/js/components/modal-validation/support-login.js"></script>
     <script>
 
     </script>

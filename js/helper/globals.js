@@ -187,6 +187,14 @@ const summon_forgotpass_homeowner = () => {
       })
 }
 
+const summon_forgotpass_support = () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'Forgot password',
+        text: 'Please contact your supervisor or admin@support.com for further assistance with password retrieval',
+      })
+}
+
 const summon_forgotpass_worker = () => {
     Swal.fire({
         icon: 'info',

@@ -13,7 +13,6 @@
     $firstName = isset($_POST['first_name']) ? $_POST['first_name'] : null;
     $lastName = isset($_POST['last_name']) ? $_POST['last_name'] : null;
     $role = isset($_POST['role']) ? $_POST['role'] : null;
-    $userID = isset($_POST['userID']) ? $_POST['userID'] : null;
     $profilePicture = isset($_POST['profile_pic_location']) ? $_POST['profile_pic_location'] : false;
 
     // Check if the user has a registration token set
@@ -30,7 +29,6 @@
         $_SESSION['email'] =  $email;
         $_SESSION['first_name'] = $firstName;
         $_SESSION['last_name'] = $lastName;
-        $_SESSION['userID'] = $userID;
         $_SESSION['role'] = $role;
         $_SESSION['profile_pic_location'] = $profilePicture;
 

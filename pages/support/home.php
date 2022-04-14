@@ -8,8 +8,74 @@ if(!isset($_SESSION["token_support"])){
 
 $level ="../..";
 
-require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
+// CURL STARTS HERE
+// NEWLINKDEV
+// Curl request to get data to fill projects page
 
+$url = "http://localhost/slim3homeheroapi/public/support/ticket-dashboard"; // DEV
+// $url = ""; // NO PROD LINK
+
+$headers = array(
+    "Authorization: Bearer ".$_SESSION["token_support"],
+    'Content-Type: application/json',
+);
+
+$post_data = array(
+    'email' => $_SESSION["email"]
+);
+
+// 1. Initialize
+$ch = curl_init();
+
+// 2. set options
+    // URL to submit to
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // Return output instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Type of request = POST
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    // Adding the post variables to the request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+
+    // Set headers for auth
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+    // Execute the request and fetch the response. Check for errors
+    $output = curl_exec($ch);
+
+    // Moved inside Modal Body for better display of error messages
+    $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
+    $curl_error_message = null;
+
+    // ERROR HANDLING 
+    if($output === FALSE){
+        $curl_error_message = curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    // $output =  json_decode(json_encode($output), true);
+    $output =  json_decode($output);
+    
+    // Declare variables to be used in this page
+    $new_tickets = 0;
+    $ongoing_tickets = 0;
+    $closed_tickets = 0;
+
+    if(is_object($output) && $output->success == true){
+        $new_tickets = $output->response->new_total;
+        $ongoing_tickets = $output->response->ongoing_total;
+        $closed_tickets = $output->response->resolved_total;
+    }
+
+
+
+
+// HTML STARTS HERE
+require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 ?>
 <!-- === Link your custom CSS pages below here ===-->
 <link rel="stylesheet" href="../../css/headers/support.css">
@@ -36,7 +102,11 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <h1 class="h2">Dashboard</h1>
     </div>
     <?php
-       // var_dump($_SESSION);
+    //    var_dump($_SESSION);
+    //    var_dump($output);
+    //    var_dump($new_tickets);
+    //    var_dump($ongoing_tickets);
+    //    var_dump($closed_tickets);
     ?>
         <!-- Cards -->
         <div class="row mb-4">
@@ -46,7 +116,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="p-0 cont-value">
                             <?php
-                                echo isset($_POST['new_ticket_total']) ? $_POST['new_ticket_total'] : '0';
+                                // echo isset($_POST['new_ticket_total']) ? $_POST['new_ticket_total'] : '0';
+                                echo $new_tickets;
                             ?>
                         </div>
                         <div class="p-0 cont-icon">
@@ -64,7 +135,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="p-0 cont-value">
                             <?php
-                                echo isset($_POST['ongoing_ticket_total']) ? $_POST['ongoing_ticket_total'] : '0';
+                                // echo isset($_POST['ongoing_ticket_total']) ? $_POST['ongoing_ticket_total'] : '0';
+                                echo $ongoing_tickets;
                             ?>
                         </div>
                         <div class="p-0 cont-icon">
@@ -82,7 +154,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="p-0 cont-value">
                             <?php
-                                echo isset($_POST['resolved_ticket_total']) ? $_POST['resolved_ticket_total'] : '0';
+                                // echo isset($_POST['resolved_ticket_total']) ? $_POST['resolved_ticket_total'] : '0';
+                                echo $closed_tickets;
                             ?>
                         </div>
                         <div class="p-0 cont-icon">
