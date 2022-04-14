@@ -1,9 +1,18 @@
+/* mouse over link */
+a.button-hover:hover {
+    color: transparent;
+}
+
 .card-body{
     border-radius: 10px;
 }
 
 .card{
     border-radius: 10px;
+}
+
+.card:hover{
+    opacity: 0.85;
 }
 
 .card-icon{

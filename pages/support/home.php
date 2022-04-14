@@ -111,60 +111,66 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <!-- Cards -->
         <div class="row mb-4">
             <div class="col-12 col-lg-3">
-                <div class="card">
-                <div class="card-body purple">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="p-0 cont-value">
-                            <?php
-                                // echo isset($_POST['new_ticket_total']) ? $_POST['new_ticket_total'] : '0';
-                                echo $new_tickets;
-                            ?>
+                <a href="../support/all-Tickets.php?tab=new" class="button-hover">
+                    <div class="card">
+                    <div class="card-body purple">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="p-0 cont-value">
+                                <?php
+                                    // echo isset($_POST['new_ticket_total']) ? $_POST['new_ticket_total'] : '0';
+                                    echo $new_tickets;
+                                ?>
+                            </div>
+                            <div class="p-0 cont-icon">
+                                <i class="fas fa-ticket-alt card-icon purple-icon"></i>
+                            </div>
                         </div>
-                        <div class="p-0 cont-icon">
-                            <i class="fas fa-ticket-alt card-icon purple-icon"></i>
-                        </div>
+                        <h5 class="card-title card-header-format">New Tickets</h5>
                     </div>
-                    <h5 class="card-title card-header-format">New Tickets</h5>
-                </div>
-                </div>
+                    </div>
+                </a>
             </div>
 
             <div class="col-12 col-lg-3">
-                <div class="card ">
-                <div class="card-body blue">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="p-0 cont-value">
-                            <?php
-                                // echo isset($_POST['ongoing_ticket_total']) ? $_POST['ongoing_ticket_total'] : '0';
-                                echo $ongoing_tickets;
-                            ?>
+                <a href="../support/my-tickets.php?tab=ongoing" class="button-hover">
+                    <div class="card ">
+                    <div class="card-body blue">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="p-0 cont-value">
+                                <?php
+                                    // echo isset($_POST['ongoing_ticket_total']) ? $_POST['ongoing_ticket_total'] : '0';
+                                    echo $ongoing_tickets;
+                                ?>
+                            </div>
+                            <div class="p-0 cont-icon">
+                                <i class="fas fa-list-alt card-icon blue-icon"></i>
+                            </div>
                         </div>
-                        <div class="p-0 cont-icon">
-                            <i class="fas fa-list-alt card-icon blue-icon"></i>
-                        </div>
+                        <h5  class="card-title card-header-format">Ongoing Tickets</h5>
                     </div>
-                    <h5 class="card-title card-header-format">Ongoing Tickets</h5>
-                </div>
-                </div>
+                    </div>
+                </a>
             </div>
 
             <div class="col-12 col-lg-3">
-                <div class="card">
-                <div class="card-body green">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="p-0 cont-value">
-                            <?php
-                                // echo isset($_POST['resolved_ticket_total']) ? $_POST['resolved_ticket_total'] : '0';
-                                echo $closed_tickets;
-                            ?>
+                <a href="../support/my-tickets.php?tab=completed" class="button-hover">
+                    <div class="card">
+                    <div class="card-body green">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="p-0 cont-value">
+                                <?php
+                                    // echo isset($_POST['resolved_ticket_total']) ? $_POST['resolved_ticket_total'] : '0';
+                                    echo $closed_tickets;
+                                ?>
+                            </div>
+                            <div class="p-0 cont-icon">
+                                <i class="fas fa-calendar-check card-icon green-icon"></i>
+                            </div>
                         </div>
-                        <div class="p-0 cont-icon">
-                            <i class="fas fa-calendar-check card-icon green-icon"></i>
-                        </div>
+                        <h5 class="card-title card-header-format">Resolved Tickets</h5>
                     </div>
-                    <h5 class="card-title card-header-format">Resolved Tickets</h5>
-                </div>
-                </div>
+                    </div>
+                </a>
             </div>
         </div>
 
