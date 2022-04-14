@@ -42,9 +42,10 @@
               <div class="mb-2">
                 Total log-in time: <span>03:25:00</span>
               </div>
-              <button class="btn btn-danger">
+              <button id="logout-btn-desktop" class="btn btn-danger">
                 LOG OUT
               </button>
             </div>
           </div>
         </nav>
+        <script src="<?php echo $level;?>/js/components/headers/support-signedin.js"></script>

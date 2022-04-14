@@ -1,4 +1,12 @@
+<?php
+  $email = isset($_SESSION["email"]) ? $_SESSION["email"] : "agent@support.com";
+  $role = isset($_SESSION["role"]) ? $_SESSION["role"] : "HomeHero Support";
+  $roleTypes = ["Verification Support","Customer Support","Technical Support","Supervisor","Admin","Super Admin"];
 
+  if($role < 0 || $role > 6){
+    $role = null;
+  }
+?>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap justify-content-start">
     <div class="d-flex nametag ">
         <div class="img-container d-flex  align-items-center p-0 m-0">
@@ -7,8 +15,8 @@
             </a>
         </div>
          <div class="text-white text-container d-flex flex-column justify-content-center ">
-            <h6 class="p-0 m-0">Ashley@support.com</h6>
-            <p class="p-0 m-0 nametag-text">Registration Support</p>
+            <h6 class="p-0 m-0"><?php echo htmlentities($email);?></h6>
+            <p class="p-0 m-0 nametag-text"><?php echo $role == null ? "HomeHero Support":$roleTypes[$role-1];?></p>
         </div>
     </div>
 

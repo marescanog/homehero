@@ -1,6 +1,13 @@
 <?php 
 
-$level ="../../";
+session_start();
+if(!isset($_SESSION["token_support"])){
+    header("Location: ../../");
+    exit();
+}
+
+$level ="../..";
+
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 
 ?>
@@ -28,6 +35,9 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
     </div>
+    <?php
+       // var_dump($_SESSION);
+    ?>
         <!-- Cards -->
         <div class="row mb-4">
             <div class="col-12 col-lg-3">
