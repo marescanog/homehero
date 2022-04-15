@@ -37,7 +37,7 @@ $("#support-login-form").validate({
              url: 'http://localhost/slim3homeheroapi/public/support/login', //dev
             data : submitformData,
             success : function(response) {
-                console.log("your response after account login is:")
+                // console.log("your response after account login is:")
                 // console.log(response);
              
 
