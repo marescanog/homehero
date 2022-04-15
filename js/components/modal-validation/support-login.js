@@ -32,7 +32,7 @@ $("#support-login-form").validate({
         // CHANGELINKDEVPROD
         // Ajax request to login
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             // url : '', //no prod link
              url: 'http://localhost/slim3homeheroapi/public/support/login', //dev
             data : submitformData,
