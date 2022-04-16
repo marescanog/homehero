@@ -134,7 +134,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             </div>
 
             <div class="col-12 col-lg-3">
-                <a href="../support/my-tickets.php?tab=ongoing" class="button-hover">
+                <a href="../support/my-tickets.php?tab=0" class="button-hover">
                     <div class="card ">
                     <div class="card-body blue">
                         <div class="d-flex align-items-center justify-content-between">
@@ -155,7 +155,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             </div>
 
             <div class="col-12 col-lg-3">
-                <a href="../support/my-tickets.php?tab=completed" class="button-hover">
+                <a href="../support/my-tickets.php?tab=1" class="button-hover">
                     <div class="card">
                     <div class="card-body green">
                         <div class="d-flex align-items-center justify-content-between">
@@ -205,7 +205,6 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- === Your Custom Page Content Goes Here above here === -->
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
-<!-- Custom JS Scripts Below -->
 <?php 
     if(is_object($output) && $output->success == false){
         $output_status = $output->response->status;
@@ -238,6 +237,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <?php
      }
 ?>
+<!-- Custom JS Scripts Below -->
     <script>
 
     </script>

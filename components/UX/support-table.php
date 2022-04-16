@@ -24,8 +24,8 @@
 <div class="main-container d-flex flex-column flex-1 min-height">
     <div>
         <div class="mt-3 row d-flex justify-content-between align-items-center">
-            <div class="col-12 col-lg-2 ">
-                <p class="showing-x-text ml-2">
+            <div class="col-12 col-lg-2 " >
+                <p class="showing-x-text ml-2" style="min-width:25em !important;">
                     Showing <?php echo $EntriesDisplayed ;?> 
                     out of <?php echo $totalRecords;?> 
                     Entries  
