@@ -202,3 +202,11 @@ const summon_forgotpass_worker = () => {
         text: 'Please contact homehero@support.com for further assistance with password retrieval',
       })
 }
+
+const addURLParameter = (name=null,value=null) => {
+    if(name != null && value != null){
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(name, value);
+        window.location.search = urlParams;
+    }
+}

@@ -1,6 +1,99 @@
 <?php 
 
+session_start();
+if(!isset($_SESSION["token_support"])){
+    header("Location: ../../");
+    exit();
+}
+
 $level ="../../";
+
+// CURL STARTS HERE
+// NEWLINKDEV
+// Curl request to get data to fill projects page
+
+$url = "http://localhost/slim3homeheroapi/public/support/my-tickets"; // DEV
+// $url = ""; // NO PROD LINK
+
+$headers = array(
+    "Authorization: Bearer ".$_SESSION["token_support"],
+    'Content-Type: application/json',
+);
+
+$send_limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? $_GET['limit']: 10 ;
+$send_page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+
+// 0-ongoing, 1-completed, 2-escalations, 3-transferred
+$get_tab = isset($_GET['tab']) && $_GET['tab'] ?  $_GET['tab'] : null;
+$current_tab = isset($_GET['tab']) && is_numeric($get_tab) ? ($get_tab > 0 && $get_tab <4 ? $get_tab : 0) : 0;
+
+$post_data = array(
+    'email' => $_SESSION["email"],
+    'page' => $send_page,
+    'limit' => $send_limit
+    // 'email' => 'mdenyys@support.com'
+);
+
+// 1. Initialize
+$ch = curl_init();
+
+// 2. set options
+    // URL to submit to
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // Return output instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Type of request = POST
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    // Adding the post variables to the request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+
+    // Set headers for auth
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+    // Execute the request and fetch the response. Check for errors
+    $output = curl_exec($ch);
+
+    // Moved inside Modal Body for better display of error messages
+    $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
+    $curl_error_message = null;
+
+    // ERROR HANDLING 
+    if($output === FALSE){
+        $curl_error_message = curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    // $output =  json_decode(json_encode($output), true);
+    $output =  json_decode($output);
+    
+    // Declare variables to be used in this page
+    $ongoing_total = 0;
+    $completed_total = 0;
+    $escalated_total = 0;
+    $transferred_total = 0;
+    $ongoing_tickets = [];
+    $completed_tickets = [];
+    $escalated_tickets = [];
+    $transferred_tickets = [];
+
+
+    if(is_object($output) && $output->success == true){
+        $ongoing_total = $output->response->ongoing_total;
+        $completed_total = $output->response->completed_total;
+        $escalated_total = $output->response->escalated_total;
+        $transferred_total = $output->response->transferred_total;
+        $ongoing_tickets = $output->response->ongoing_tickets;
+        $completed_tickets = $output->response->completed_tickets;
+        $escalated_tickets = $output->response->escalated_tickets;
+        $transferred_tickets = $output->response->transferredTickets;
+    }
+
+
+// HTML starts here
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 
 ?>
@@ -28,27 +121,38 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2">My Tickets</h1>
     </div>
+    <?php
+    // var_dump($_GET['limit']);
+    // var_dump($send_page);
+    // var_dump($send_limit);
+    //    var_dump($_SESSION);
+    //    var_dump($output);
+    // var_dump($output->response->ongoing_total);
+    // var_dump($ongoing_total);
+    // var_dump($ongoing_tickets);
+    ?>
 
     <!-- Tab Header -->
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="true">Ongoing</a>
+            <a onClick="addURLParameter('tab',0)" class="nav-item nav-link <?php echo $current_tab==0?"active":"";?>" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="<?php echo $current_tab==0?"true":"false";?>">Ongoing</a>
 
-            <a class="nav-item nav-link" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</a>
+            <a onClick="addURLParameter('tab',1)" class="nav-item nav-link <?php echo $current_tab==1?"active":"";?>" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="<?php echo $current_tab==1?"true":"false";?>">Completed</a>
             
-            <a class="nav-item nav-link" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="false">Escalations</a>
+            <a onClick="addURLParameter('tab',2)" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php echo $current_tab==2?"true":"false";?>">Escalations</a>
 
-            <a class="nav-item nav-link" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="false">Transferred</a>
+            <a onClick="addURLParameter('tab',3)" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Transferred</a>
 
-            <a class="nav-item nav-link" id="nav-stale-tab" data-toggle="tab" href="#nav-stale" role="tab" aria-controls="nav-stale" aria-selected="false">Stale</a>
+            <!-- <a class="nav-item nav-link" id="nav-stale-tab" data-toggle="tab" href="#nav-stale" role="tab" aria-controls="nav-stale" aria-selected="false">Stale</a> -->
         </div>
     </nav>
 
 
     <!-- Tab Header -->
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
+        <div class="tab-pane fade  <?php echo $current_tab==0?"show active":"";?>" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
             <?php 
+include "$level/components/UX/ticketTableConversion.php";
 /* Note:
  Required Variables to Declare: 
     $tableName -> The name of your table
@@ -58,79 +162,104 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     $tableHeaderLabels = the table headers you want to display, default is ["Ticket No.", "Type", "Status", "Assigned Agent", "Last Updated", "Date Assigned", "Date Created"]
     $tableRows = the table data you want to display
     Example data format for header above is:
+
     $tableRows = [
         ["REG-001", "Registration", "Ongoing", "Ashley Miles", "09/12/2021", "09/12/2021", "09/12/2021", "1"],
         ["DIS-002", "Dispute", "New", "Jim Day", "09/12/2021", "09/12/2021", "09/12/2021", "2"],
         ["REG-003", "Registration", "Resolved", "Ashley Miles", "09/12/2021", "09/12/2021", "09/12/2021", "3"],
     ];
+    
     $statusButton = the number of the column where a button will be; default is 3
 */
+                // $roleSubTypes = ["1,2,3","4,5,6,7,8,9","10,11","12,13,14,15,16"];
+                // // Registration/Verification, Customer Support,GEN, Technical Support
+
                 $tableName = "Ongoing";
                 $basicSearchId = "ongoingSearch";
-                include "$level/components/UX/support-table.php";
 
+                $totalRecords = $ongoing_total;
+                $tableRows = array_map('convertPlainDataToTableRow', $ongoing_tickets);
+
+                include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
                 $basicSearchId = null;
+                $totalRecords = 0;
+                $tableRows = [];
             ?>
         </div>
 
 
 
-        <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+        <div class="tab-pane fade <?php echo $current_tab==1?"show active":"";?>" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
             <?php
                 $tableName = "completed";
                 $basicSearchId = "completedSearch";
-                include "$level/components/UX/support-table.php";
 
+                $totalRecords = $completed_total;
+                $tableRows = array_map('convertPlainDataToTableRow', $completed_tickets);
+
+                include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
                 $basicSearchId = null;
-            
+                $totalRecords = 0;
+                $tableRows = [];
+                
             ?>
         </div>
 
 
 
-        <div class="tab-pane fade" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
+        <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
             <?php
                 $tableName = "escalations";
                 $basicSearchId = "escalationsSearch";
-                include "$level/components/UX/support-table.php";
 
+                $totalRecords = $escalated_total;
+                $tableRows = array_map('convertPlainDataToTableRow', $escalated_tickets);
+
+                include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
                 $basicSearchId = null;
+                $totalRecords = 0;
+                $tableRows = [];
             ?>
         </div>
 
 
 
-        <div class="tab-pane fade" id="nav-transferred" role="tabpanel" aria-labelledby="nav-transferred-tab">
+        <div class="tab-pane fade <?php echo $current_tab==3?"show active":"";?>" id="nav-transferred" role="tabpanel" aria-labelledby="nav-transferred-tab">
             <?php
                 $tableName = "transferred";
                 $basicSearchId = "transferredSearch";
-                include "$level/components/UX/support-table.php";
 
+                $totalRecords = $transferred_total;
+                $tableRows = array_map('convertPlainDataToTableRow', $transferred_tickets);
+
+                include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
                 $basicSearchId = null;
+                $totalRecords = 0;
+                $tableRows = [];
             ?>
         </div>
 
 
 
-        <div class="tab-pane fade" id="nav-stale" role="tabpanel" aria-labelledby="nav-stale-tab">
+        <!-- <div class="tab-pane fade" id="nav-stale" role="tabpanel" aria-labelledby="nav-stale-tab">
             <?php
-                $tableName = "stale";
-                $basicSearchId = "staleSearch";
-                include "$level/components/UX/support-table.php";
+                // $tableName = "stale";
+                // $basicSearchId = "staleSearch";
+                // include "$level/components/UX/support-table.php";
 
-                // Reset Values after to prepare for the next iteration
-                $tableName = null;
-                $basicSearchId = null;
+                // // Reset Values after to prepare for the next iteration
+                // $tableName = null;
+                // $basicSearchId = null;
             ?>
-        </div>
+        </div> -->
     </div>
 
 </main>
