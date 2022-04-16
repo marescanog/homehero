@@ -266,7 +266,7 @@ include "$level/components/UX/ticketTableConversion.php";
         <!-- Number of Entries -->
         <div class="btn-group show-entries-height">
             <button id="btn-entry-select" class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Show 10 Entries
+                Show <?php echo $send_limit; ?> Entries
             </button>
             <div class="dropdown-menu">
                 <button id="btn-select-10" class="dropdown-item" type="button">Show 10 Entries</button>
@@ -280,8 +280,8 @@ include "$level/components/UX/ticketTableConversion.php";
             $ultimatotal = [$ongoing_total,$completed_total,$escalated_total,$transferred_total];
             $paginationBaseTotal = $ultimatotal[$current_tab];
             $numberOfPages =  ceil($paginationBaseTotal/$send_limit);
-            echo var_dump($numberOfPages);
-            echo var_dump($send_page);
+            // echo var_dump($numberOfPages);
+            // echo var_dump($send_page);
         ?>
         <nav aria-label="Page navigation example">
             <ul class="pagination">
@@ -294,10 +294,10 @@ include "$level/components/UX/ticketTableConversion.php";
                 <?php 
                     $starting_send_page = 0; //$send_page   
                     $over_lim = $numberOfPages-5;
-                    $ciel_page =  $over_lim <= 0 ? $send_page : $over_lim+1;
+                    $ciel_page =  $over_lim <= 0 ? ($numberOfPages <= 5 ? 1 : $send_page ) : $over_lim+1; //$send_page
                     for($titi = $send_page > $ciel_page ? $ciel_page : $send_page, $pagLimit = 0; $pagLimit < 5 && $titi <= $numberOfPages; $titi++, $pagLimit++){
                 ?>
-                    <li class="page-item <?php echo $send_page==$titi?"active":"";?>"><a id="pag-<?php echo $titi;?>" class="page-link"><?php echo $titi;?></a></li>
+                    <li id="pag-<?php echo $titi;?>" class="page-item <?php echo $send_page==$titi?"active":"";?>"><a class="page-link"><?php echo $titi;?></a></li>
                 <?php 
                     }
                 ?>
@@ -311,7 +311,7 @@ include "$level/components/UX/ticketTableConversion.php";
         </nav>
     </div>
 
-    <!-- For Javascript pagination manipulation -->
+    <!-- Input for Javascript pagination manipulation -->
     <input id="total-ongoing" type="hidden" value=<?php echo $ongoing_total;?>>
     <input id="total-completed" type="hidden" value=<?php echo $completed_total;?>>
     <input id="total-escalated" type="hidden" value=<?php echo $escalated_total;?>>
@@ -327,58 +327,9 @@ include "$level/components/UX/ticketTableConversion.php";
     <!-- === Your Custom Page Content Goes Here above here === -->
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
+<script src="../../js/pages/my-tickets.js"></script> 
 <!-- Custom JS Scripts Below -->
     <script>
-        // ==================
-        // Show Entries Limit
-        let show_entries = document.getElementById("btn-entry-select");
-        let show_10 = document.getElementById("btn-select-10");
-        let show_20 = document.getElementById("btn-select-20");
-        let show_30 = document.getElementById("btn-select-30");
-
-        show_10.addEventListener("click", ()=>{
-            show_entries.innerText = "Show 10 Entries";
-            addURLParameter("limit",10);
-        });
-
-        show_20.addEventListener("click", ()=>{
-            show_entries.innerText = "Show 20 Entries";
-            addURLParameter("limit",20);
-        });
-
-        show_30.addEventListener("click", ()=>{
-            show_entries.innerText = "Show 30 Entries";
-            addURLParameter("limit",30);
-        });
-
-        // ==================
-        // Pagination
-        // Get Values
-            let my_limit = document.getElementById("limit").value;
-            let my_page = document.getElementById("page").value;
-            let my_tab = document.getElementById("tab").value;
-            let my_ongoing = document.getElementById("total-ongoing").value;
-            let my_completed = document.getElementById("total-completed").value;
-            let my_escalated = document.getElementById("total-escalated").value;
-            let my_transferred = document.getElementById("total-transferred").value;
-            let ultimatotal = [my_ongoing,my_completed,my_escalated,my_transferred];
-        // Get Hooks
-            let prev_page = document.getElementById("pag-prev");
-            let next_page = document.getElementById("pag-next");
-
-        prev_page.addEventListener("click", ()=>{
-            if(my_page != 1){
-                addURLParameter("page",parseInt(my_page)-1);   
-            }
-        });
-
-        next_page.addEventListener("click", ()=>{
-            if(my_page != Math.ceil(ultimatotal[my_tab]/my_limit)){
-                addURLParameter("page",parseInt(my_page)+1);
-            }
-        });
-
-        // TODO, CLICKABLE BUTTONS
     </script>
     
 </body>
