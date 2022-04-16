@@ -206,7 +206,14 @@ const summon_forgotpass_worker = () => {
 const addURLParameter = (name=null,value=null) => {
     if(name != null && value != null){
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set(name, value);
+        if(Array.isArray(name) && Array.isArray(value)){
+            for(let x = 0; x < name.length; x++){
+                urlParams.set(name[x], value[x]);
+                console.log(name[x]+value[x]);
+            }
+        } else {
+            urlParams.set(name, value);
+        }
         window.location.search = urlParams;
     }
 }

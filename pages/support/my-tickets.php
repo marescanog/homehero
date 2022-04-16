@@ -135,13 +135,13 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- Tab Header -->
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a onClick="addURLParameter('tab',0)" class="nav-item nav-link <?php echo $current_tab==0?"active":"";?>" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="<?php echo $current_tab==0?"true":"false";?>">Ongoing</a>
+            <a onClick="addURLParameter(['tab','page'],['0','1'])" class="nav-item nav-link <?php echo $current_tab==0?"active":"";?>" id="nav-ongoing-tab" data-toggle="tab" href="#nav-ongoing" role="tab" aria-controls="nav-ongoing" aria-selected="<?php echo $current_tab==0?"true":"false";?>">Ongoing</a>
 
-            <a onClick="addURLParameter('tab',1)" class="nav-item nav-link <?php echo $current_tab==1?"active":"";?>" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="<?php echo $current_tab==1?"true":"false";?>">Completed</a>
+            <a onClick="addURLParameter(['tab','page'],['1','1'])" class="nav-item nav-link <?php echo $current_tab==1?"active":"";?>" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="<?php echo $current_tab==1?"true":"false";?>">Completed</a>
             
-            <a onClick="addURLParameter('tab',2)" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php echo $current_tab==2?"true":"false";?>">Escalations</a>
+            <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php echo $current_tab==2?"true":"false";?>">Escalations</a>
 
-            <a onClick="addURLParameter('tab',3)" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Transferred</a>
+            <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Transferred</a>
 
             <!-- <a class="nav-item nav-link" id="nav-stale-tab" data-toggle="tab" href="#nav-stale" role="tab" aria-controls="nav-stale" aria-selected="false">Stale</a> -->
         </div>
@@ -261,10 +261,65 @@ include "$level/components/UX/ticketTableConversion.php";
             ?>
         </div> -->
     </div>
+    <!-- Footer (Pagination & Number of Entries) -->
+    <div class="mt-auto d-flex flex-column flex-lg-row justify-content-between align-items-center">
+        <!-- Number of Entries -->
+        <div class="btn-group show-entries-height">
+            <button id="btn-entry-select" class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Show 10 Entries
+            </button>
+            <div class="dropdown-menu">
+                <button id="btn-select-10" class="dropdown-item" type="button">Show 10 Entries</button>
+                <button id="btn-select-20" class="dropdown-item" type="button">Show 20 Entries</button>
+                <button id="btn-select-30" class="dropdown-item" type="button">Show 30 Entries</button>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <?php 
+            // 0-ongoing, 1-completed, 2-escalations, 3-transferred
+            $ultimatotal = [$ongoing_total,$completed_total,$escalated_total,$transferred_total];
+            $paginationBaseTotal = $ultimatotal[$current_tab];
+            $numberOfPages =  ceil($paginationBaseTotal/$send_limit);
+            echo var_dump($numberOfPages);
+            echo var_dump($send_page);
+        ?>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li id="pag-prev"  class="page-item <?php echo $send_page==1?"disabled":"";?>">
+                    <a class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <?php 
+                    $starting_send_page = 0; //$send_page   
+                    $over_lim = $numberOfPages-5;
+                    $ciel_page =  $over_lim <= 0 ? $send_page : $over_lim+1;
+                    for($titi = $send_page > $ciel_page ? $ciel_page : $send_page, $pagLimit = 0; $pagLimit < 5 && $titi <= $numberOfPages; $titi++, $pagLimit++){
+                ?>
+                    <li class="page-item <?php echo $send_page==$titi?"active":"";?>"><a id="pag-<?php echo $titi;?>" class="page-link"><?php echo $titi;?></a></li>
+                <?php 
+                    }
+                ?>
+                <li id="pag-next" class="page-item <?php echo $send_page==$numberOfPages?"disabled":"";?>">
+                    <a class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
+    <!-- For Javascript pagination manipulation -->
+    <input id="total-ongoing" type="hidden" value=<?php echo $ongoing_total;?>>
+    <input id="total-completed" type="hidden" value=<?php echo $completed_total;?>>
+    <input id="total-escalated" type="hidden" value=<?php echo $escalated_total;?>>
+    <input id="total-transferred" type="hidden" value=<?php echo $transferred_total;?>>
+    <input id="limit" type="hidden" value=<?php echo $send_limit;?>>
+    <input id="page" type="hidden" value=<?php echo $send_page;?>>
+    <input id="tab" type="hidden" value=<?php echo $current_tab;?>>
 </main>
-
-
 
 
 
@@ -274,7 +329,57 @@ include "$level/components/UX/ticketTableConversion.php";
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
 <!-- Custom JS Scripts Below -->
     <script>
+        // ==================
+        // Show Entries Limit
+        let show_entries = document.getElementById("btn-entry-select");
+        let show_10 = document.getElementById("btn-select-10");
+        let show_20 = document.getElementById("btn-select-20");
+        let show_30 = document.getElementById("btn-select-30");
 
+        show_10.addEventListener("click", ()=>{
+            show_entries.innerText = "Show 10 Entries";
+            addURLParameter("limit",10);
+        });
+
+        show_20.addEventListener("click", ()=>{
+            show_entries.innerText = "Show 20 Entries";
+            addURLParameter("limit",20);
+        });
+
+        show_30.addEventListener("click", ()=>{
+            show_entries.innerText = "Show 30 Entries";
+            addURLParameter("limit",30);
+        });
+
+        // ==================
+        // Pagination
+        // Get Values
+            let my_limit = document.getElementById("limit").value;
+            let my_page = document.getElementById("page").value;
+            let my_tab = document.getElementById("tab").value;
+            let my_ongoing = document.getElementById("total-ongoing").value;
+            let my_completed = document.getElementById("total-completed").value;
+            let my_escalated = document.getElementById("total-escalated").value;
+            let my_transferred = document.getElementById("total-transferred").value;
+            let ultimatotal = [my_ongoing,my_completed,my_escalated,my_transferred];
+        // Get Hooks
+            let prev_page = document.getElementById("pag-prev");
+            let next_page = document.getElementById("pag-next");
+
+        prev_page.addEventListener("click", ()=>{
+            if(my_page != 1){
+                addURLParameter("page",parseInt(my_page)-1);   
+            }
+        });
+
+        next_page.addEventListener("click", ()=>{
+            if(my_page != Math.ceil(ultimatotal[my_tab]/my_limit)){
+                addURLParameter("page",parseInt(my_page)+1);
+            }
+        });
+
+        // TODO, CLICKABLE BUTTONS
     </script>
+    
 </body>
 </html>

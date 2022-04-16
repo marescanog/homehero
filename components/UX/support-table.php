@@ -112,38 +112,5 @@
             } 
         ?>
     </div>
-    <!-- Footer -->
-    <div class="mt-auto d-flex flex-column flex-lg-row justify-content-between align-items-center">
-        <!-- Number of Entries -->
-        <div class="btn-group show-entries-height">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Show 10 Entries
-            </button>
-            <div class="dropdown-menu">
-                <button class="dropdown-item" type="button">Show 10 Entries</button>
-                <button class="dropdown-item" type="button">Show 20 Entries</button>
-                <button class="dropdown-item" type="button">Show 30 Entries</button>
-            </div>
-        </div>
-        <!-- Pagination -->
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+   
 </div>
