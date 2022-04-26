@@ -20,8 +20,11 @@
         </div>
     </div>
 
-  <form class="form-inline ml-5">
-    <input class="form-control mr-sm-2" type="search" placeholder="Enter Ticket No." aria-label="Search">
+  <form id="header-search-form" type="POST" name="header-search-form" class="form-inline ml-5">
+    <div>
+      <input id="search_input" class="form-control mr-sm-2" name="header_search" type="search" placeholder="Enter Ticket No." aria-label="Search">
+    </div>
     <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
   </form>
 </nav>
+<script src="<?php echo $level?>/js/components/modal-validation/header-search.js"></script>

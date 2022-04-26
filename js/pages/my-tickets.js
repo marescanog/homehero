@@ -1,4 +1,5 @@
-// ==================
+$(document).ready(()=>{
+    // ==================
 // Show Entries Limit
 let show_entries = document.getElementById("btn-entry-select");
 let show_10 = document.getElementById("btn-select-10");
@@ -68,4 +69,22 @@ my_page_buttons.map((btn, index)=>{
             addURLParameter("page",btn.id.split("-")[1]);
         }
     })
+});
+
+
+// Get the button in the table.
+    // Determine the number of entries - paginationBaseTotal & current tab
+    // console.log("Pagination base total is: "+ paginationBaseTotal);
+
+    let button_id_start_labels = ["Ongoing","completed","escalations","transferred"];
+    let current_label = button_id_start_labels[my_tab];
+    for(let x = 0; x < paginationBaseTotal; x++){
+        let idHook = document.getElementById(current_label+'-'+x.toString());
+        let id = parseInt(idHook.innerText.split('-')[1]);
+        let button = document.getElementById(current_label+'-'+id.toString());
+        button.addEventListener("click",()=>{
+            window.location = './ticket.php?id='+id;
+        });
+    }
+
 });

@@ -16,6 +16,10 @@
 
     $statusButton = isset($statusButton) ? $statusButton : 3;
 
+    $hiddenRows = isset($hiddenRows) ? $hiddenRows : 1;
+
+    $ID_row = isset($ID_row) ? $ID_row  : 0;
+
 // Variables for the pagination
 
 
@@ -69,7 +73,9 @@
                     ?>
                     <tr>
                         <?php 
-                            for($y=0; $y < count($tableRows[$x]) -1; $y++){
+                            // This row is for the row with a button
+                            // Which row the button appears can be customized by declaring a status button. Currently the default is at the third row. 
+                            for($y=0; $y < count($tableRows[$x]) - $hiddenRows; $y++){
                                 if(isset($statusButton) && $y == $statusButton-1){
                         ?>
                             <td class="pr-4">
@@ -86,8 +92,10 @@
                             </td>
                         <?php
                                 } else {
+                                    // Otherwise the row would just be a label
                         ?>
-                                    <td><?php echo $tableRows[$x][$y];?></td>
+                                    <!-- If an ID row is indicated, it will echo an id html for a hook to grab the id number -->
+                                    <td <?php echo $ID_row == $y ? "id='".$tableName."-".$x."'" : ""; ?>><?php echo $tableRows[$x][$y];?></td>
                         <?php 
                                 }
                             }
@@ -114,3 +122,4 @@
     </div>
    
 </div>
+

@@ -13,6 +13,6 @@ $("#header-search-form").validate({
         event.preventDefault();
         console.log("test");
         const submitformData = getFormDataAsObj(form);
-        window.location = './ticket.php?'+submitformData.header_search;
+        window.location = './ticket.php?id='+submitformData.header_search;
     }
 });
