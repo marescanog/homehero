@@ -78,7 +78,7 @@ $("#support-login-form").validate({
                                 showConfirmButton: false,
                                 timerProgressBar: true,
                                 }).then(result => {
-                                window.location = getDocumentLevel()+'/pages/support/home.php';
+                                window.location = './home.php';
                             })
                         } else {
                             Swal.fire({

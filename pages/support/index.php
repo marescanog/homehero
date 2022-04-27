@@ -1,5 +1,11 @@
 <?php 
 
+session_start();
+if(isset($_SESSION["token_support"])){
+    header("Location: ./home.php");
+    exit();
+}
+
 $level ="../../";
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 

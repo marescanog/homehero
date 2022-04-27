@@ -1,0 +1,9 @@
+.ticket-title{
+    font-weight: bold;
+    color: #717171 ;
+    font-size: 0.75 rem;
+}
+
+.border-right {
+    border-right: 2px;
+}
