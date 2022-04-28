@@ -148,6 +148,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </nav>
 
 
+
     <!-- Tab Header -->
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade  <?php echo $current_tab==0?"show active":"";?>" id="nav-ongoing" role="tabpanel" aria-labelledby="nav-ongoing-tab">
@@ -180,7 +181,7 @@ include "$level/components/UX/ticketTableConversion.php";
                 $totalRecords = $ongoing_total;
                 $tableRows = array_map('convertPlainDataToTableRow', $ongoing_tickets);
                 $EntriesDisplayed = count($tableRows);
-
+                
                 include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
@@ -328,7 +329,7 @@ include "$level/components/UX/ticketTableConversion.php";
     <input id="page" type="hidden" value=<?php echo $send_page;?>>
     <input id="tab" type="hidden" value=<?php echo $current_tab;?>>
 
-    <?php var_dump($output) ?>
+    <!-- <?php //var_dump($output) ?> -->
 </main>
 
 
@@ -371,8 +372,6 @@ include "$level/components/UX/ticketTableConversion.php";
 ?>
 <script src="../../js/pages/my-tickets.js"></script> 
 <!-- Custom JS Scripts Below -->
-    <script>
-    </script>
-    
+
 </body>
 </html>

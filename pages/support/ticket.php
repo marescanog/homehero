@@ -18,7 +18,7 @@ $idRef = is_numeric($_GET["id"]) ? $idRef : null;
 // Declare variables to be used in this page
 $base_info = 0;
 $history = 0;
-// $closed_tickets = 0;
+$nbi_info = 0;
 
 if($idRef != null){
     $url = "http://localhost/slim3homeheroapi/public/ticket/get-info/".$idRef; // DEV
@@ -74,7 +74,7 @@ if($idRef != null){
         if(is_object($output) && $output->success == true){
             $base_info = $output->response->base_info;
             $history = $output->response->history;
-            // $closed_tickets = $output->response->resolved_total;
+            $nbi_info = $output->response->nbi_info;
         }
 }
 
@@ -132,7 +132,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <div class="col-12 col-lg-6" >
         <div class="card" style="width: 100%;">
             <div class="card-header">
-                <h5 class="card-title mb-0">General Info</h5>
+                <h5 class="card-title mb-0">Ticket Info</h5>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -170,72 +170,135 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             </ul>
         </div>
 
+        <?php 
+        // var_dump($nbi_info);
+        // var_dump($base_info);
+        ?>
         <div class="card mt-4" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title mb-0"><?php echo htmlentities($base_info->category_text)?> Info</h5>
             </div>
+            <!-- WORKER REGISTRATION DISPLAY -->
+            <?php 
+                if($base_info->issue_id == 1){
+            ?>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
+                        <div class="col-4 col-lg-3 border-right ticket-title"> Worker Name</div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($nbi_info[0]->worker_name);?> </div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
+                        <div class="col-4 col-lg-3 border-right ticket-title"> NBI ID</div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($nbi_info[0]->clearance_no);?> </div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
+                        <div class="col-4 col-lg-3 border-right ticket-title"> Expiration Date</div>
+                        <div class="col-8 col-lg-9"> <?php $date = new DateTime($nbi_info[0]->expiration_date);
+                                echo $date->format('M j, Y');?> </div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                        <div class="col-8 col-lg-9"> adsadsd </div>
+                        <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($nbi_info[0]->is_verified);?> </div>
                     </div>
                 </li>
             </ul>
+            <?php 
+                }
+            ?>
         </div>
+
+        <?php 
+            if($base_info->has_images > 0){
+        ?>
+            <div class="card mt-4" style="width: 100%;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Attached Image(s)</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <img src="<?php echo $nbi_info[0]->file_path.$nbi_info[0]->file_name;?>" class="img-fluid" alt="Responsive image">
+                    </li>
+                </ul>
+            </div>
+            <div>
+
+            </div>
+        <?php 
+            }
+        ?>
+
+        <div class= "mb-5"></div>
     </div>
-    <div class="col-12 col-lg-6" >
-    <div class="card" style="width: 100%;">
-            <div class="card-body">
-                <h5 class="card-title">Ticket History</h5>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p><span class="ticket-title">Title</span>: subtitle</p>
-                </div>
+
+
+
+    <div class="col-12 col-lg-6 mt-4 mt-lg-0" >
+        <!-- Top Tab Selection -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="true">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Comments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="assignment-tab" data-toggle="tab" href="#assignment" role="tab" aria-controls="assignment" aria-selected="false">Assignment History</a>
+            </li>
+        </ul>
+        <!-- Tab Content -->
+        <?php
+            // var_dump($history);
+        ?>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+                <div class="card" style="width: 100%;">
+                    <?php 
+                        for($chis = 0; $chis < 3; $chis++){
+                    ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right"> <?php $date = new DateTime($history[$chis]->action_date);
+                                echo $date->format('M j,Y g:i A');?></div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($history[$chis]->system_generated_description)?> </div>
+                            </div>
+                        </li>
+                    <?php } ?>
+                </div>    
+            </div>
+            <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                <div class="card" style="width: 100%;">
+                    <ul class="list-group list-group-flush">
+                        <!-- <?php 
+                            for($chis = 0; $chis < 3; $chis++){
+                        ?>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4 col-lg-3 border-right"> adsadsad</div>
+                                    <div class="col-8 col-lg-9"> adsadsd </div>
+                                </div>
+                            </li>
+                        <?php } ?> -->
+                    </ul>
+                </div>  
+            </div>
+            <div class="tab-pane fade" id="assignment" role="tabpanel" aria-labelledby="assignment-tab">
+                <div class="card" style="width: 100%;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right"> adsadsad</div>
+                                <div class="col-8 col-lg-9"> adsadsd </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>  
             </div>
         </div>
     </div>
