@@ -19,8 +19,8 @@ function convertPlainDataToTableRow($n)
     $c_ticket_no = $c_head."-".str_pad($c_ticket_id,  5, "0",STR_PAD_LEFT);
     $c_type = $c_subTypes[$c_issue_id ];
     $c_status = property_exists($n, 'status') ? $c_statusTypes[$n->status] : "-";
-    $c_lname =property_exists($n, 'last_name') ? $n->last_name[0]."." : "";
-    $c_agent =property_exists($n, 'first_name') ? $n->first_name." ".$c_lname : "-";
+    $c_lname =property_exists($n, 'last_name') ? $n->last_name != null ? $n->last_name[0]."." : "-" : "";
+    $c_agent =property_exists($n, 'first_name') ? $n->first_name != null ? $n->first_name." ".$c_lname: "none" : "-";
 
     $c_dateString_updated = property_exists($n, 'last_updated_on') ? $n->last_updated_on : null;
     $c_dateString_assigned = property_exists($n, 'assigned_on') ? $n->assigned_on : null;

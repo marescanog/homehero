@@ -113,7 +113,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <!-- Cards -->
         <div class="row mb-4">
             <div class="col-12 col-lg-3">
-                <a href="../support/all-Tickets.php?tab=new" class="button-hover">
+                <a href="../support/all-Tickets.php?tab=0" class="button-hover">
                     <div class="card">
                     <div class="card-body purple">
                         <div class="d-flex align-items-center justify-content-between">

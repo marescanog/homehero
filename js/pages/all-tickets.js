@@ -27,11 +27,12 @@ show_30.addEventListener("click", ()=>{
     let my_limit = document.getElementById("limit").value;
     let my_page = document.getElementById("page").value;
     let my_tab = document.getElementById("tab").value;
+    let my_new = document.getElementById("total-new").value;
     let my_ongoing = document.getElementById("total-ongoing").value;
     let my_completed = document.getElementById("total-completed").value;
     let my_escalated = document.getElementById("total-escalated").value;
     let my_transferred = document.getElementById("total-transferred").value;
-    let ultimatotal = [my_ongoing,my_completed,my_escalated,my_transferred];
+    let ultimatotal = [my_new,my_ongoing,my_completed,my_escalated,my_transferred];
 // Get Hooks
     let prev_page = document.getElementById("pag-prev");
     let next_page = document.getElementById("pag-next");
@@ -76,12 +77,14 @@ my_page_buttons.map((btn, index)=>{
     // Determine the number of entries - paginationBaseTotal & current tab
     // console.log("Pagination base total is: "+ paginationBaseTotal);
 
-    let button_id_start_labels = ["Ongoing","completed","escalations","transferred"];
+    let button_id_start_labels = ["New","Ongoing","completed","escalations","transferred"];
     let current_label = button_id_start_labels[my_tab];
+    // console.log(current_label);
     for(let x = 0; x < paginationBaseTotal; x++){
         let idHook = document.getElementById(current_label+'-'+x.toString());
         let id = parseInt(idHook.innerText.split('-')[1]);
         let button = document.getElementById('btn-'+current_label+'-'+id.toString());
+        console.log(button)
         button.addEventListener("click",()=>{
             window.location = './ticket.php?id='+id;
         });

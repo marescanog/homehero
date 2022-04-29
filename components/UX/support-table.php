@@ -82,7 +82,7 @@
                                 <button 
                                     <?php 
                                         echo  $tableName == null ? "" :
-                                        "id='".$tableName."-".$tableRows[$x][count($tableRows[0])-1]."'";
+                                        "id='btn-".$tableName."-".$tableRows[$x][count($tableRows[0])-1]."'";
                                     ?>
                                 class="btn btn-primary btn-table
                                     <?php echo $tableRows[$x][$y];?>
