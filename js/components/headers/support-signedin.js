@@ -1,4 +1,4 @@
-console.log("support-signed-in.js is loaded!");
+// console.log("support-signed-in.js is loaded!");
 
 // appendStyleSheet("/css/headers/header-homeowner.css");
 
