@@ -174,6 +174,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         // var_dump($nbi_info);
         // var_dump($base_info);
         ?>
+
         <div class="card mt-4" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title mb-0"><?php echo htmlentities($base_info->category_text)?> Info</h5>
@@ -181,6 +182,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             <!-- WORKER REGISTRATION DISPLAY -->
             <?php 
                 if($base_info->issue_id == 1){
+                    if(count($nbi_info) > 0){
             ?>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -210,12 +212,18 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 </li>
             </ul>
             <?php 
+                    } else { ?>
+                    <div class="p-2">
+                        <p class="p-0 m-0 pl-3">No worker registration information available</p>
+                    </div>
+            <?php    
+                    }
                 }
             ?>
         </div>
 
         <?php 
-            if($base_info->has_images > 0){
+            if($base_info->has_images > 0 && count($nbi_info) > 0){
         ?>
             <div class="card mt-4" style="width: 100%;">
                 <div class="card-header">
@@ -260,7 +268,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
                 <div class="card" style="width: 100%;">
                     <?php 
-                        for($chis = 0; $chis < 3; $chis++){
+                        if(count($history) > 0){
+                        for($chis = 0; $chis < count($history); $chis++){
                     ?>
                         <li class="list-group-item">
                             <div class="row">
@@ -269,7 +278,14 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                 <div class="col-8 col-lg-9"> <?php echo htmlentities($history[$chis]->system_generated_description)?> </div>
                             </div>
                         </li>
-                    <?php } ?>
+                    <?php } 
+                        } else { ?>
+                        <div class="row">
+                            <div class="col-12 m-2"><p class="pt-2 pb-0 mb-2" style="font-size:0.95rem">No available history</p></div>
+                        </div>
+                    <?php
+                        }
+                    ?>
                 </div>    
             </div>
             <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
