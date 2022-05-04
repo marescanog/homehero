@@ -127,6 +127,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         }    
     ?>
 <?php 
+
+if(isset($idRef) && $idRef != null){
     // var_dump($base_info->agent_name);
     // var_dump($base_info->status);
     // var_dump($_SESSION["role"]);
@@ -180,7 +182,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <button type="button" class="btn btn-primary" id="tkt-accept-btn">Assign to me</button>
   <hr>
   <div class="flex flex-row">
-    <button onclick="history.back()" type="button" class="btn btn-secondary" >< Go Back</button>
+    <button onclick="history.back()" type="button" id="tkt-goBack-btn" class="btn btn-secondary" >< Go Back</button>
   </div>
 </div>
 <?php 
@@ -189,12 +191,15 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
 
 <!-- WHERE THE MAIN INFORMATION STARTS -->
+
 <div class="row" style="min-width:100%">
     <div class="col-12 col-lg-6" >
         <div class="card" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title mb-0">Ticket Info</h5>
             </div>
+            <input type="hidden" id="tkt-id" value="<?php echo htmlentities($idRef);?>">
+            
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="row">
@@ -392,10 +397,10 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         </div>
     </div>
 </div>
+<?php 
+}
+?>
 </main>
-
-
-
     <!-- === Your Custom Page Content Goes Here above here === -->
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
