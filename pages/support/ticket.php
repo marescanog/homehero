@@ -236,16 +236,18 @@ if(isset($idRef) && $idRef != null){
             </ul>
         </div>
 
-        <?php 
-        // var_dump($nbi_info);
-        // var_dump($base_info);
-        ?>
-
+`<?php 
+// var_dump($nbi_info);
+// var_dump($base_info);
+?>`
+<!-- ================================= -->
+<!--       SPECIFIC TICKET INFO        -->
+<!-- ================================= -->
         <div class="card mt-4" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title mb-0"><?php echo htmlentities($base_info->category_text)?> Info</h5>
             </div>
-            <!-- WORKER REGISTRATION DISPLAY -->
+<!-- WORKER REGISTRATION DISPLAY START -->
             <?php 
                 if($base_info->issue_id == 1){
                     if(count($nbi_info) > 0){
@@ -298,8 +300,12 @@ if(isset($idRef) && $idRef != null){
                     }
                 }
             ?>
+<!-- WORKER REGISTRATION DISPLAY END -->
         </div>
 
+<!-- ================================= -->
+<!--             IMAGES                -->
+<!-- ================================= -->
         <?php 
             if($base_info->has_images > 0 && count($nbi_info) > 0){
         ?>
@@ -320,11 +326,55 @@ if(isset($idRef) && $idRef != null){
             }
         ?>
 
+<!-- ================================= -->
+<!--            ACTIONS UI             -->
+<!-- ================================= -->
+        <div class="card mt-4">
+            <div class="card-header d-flex flex-row justify-content-between">
+                <h5 class="card-title mb-0">Actions</h5>
+                <button type="button" class="btn btn-sm btn-danger">Transfer</button>
+            </div>
+            <ul class="list-group list-group-flush">
+                <form name="submit-action" id="submit-action">
+<!-- WORKER REGISTRATION DISPLAY START -->
+                    <li class="list-group-item" disabled>
+                        <h6>Process Worker Registration</h6>
+                        <p class="ml-2 mb-1 font-italic">Select an option</p>
+                        <div class="ml-2">
+                            <div class="d-flex flex-col flex-sm-row">
+                                <button id="btn-worker-reg-approve" type="button" class="mr-2 btn btn-outline-info">Approve</button>
+                                <button id="btn-worker-reg-reject" type="button" class="mr-2 btn btn-outline-info">Reject</button>
+                                <button id="btn-worker-reg-comment" type="button" class="mr-2 btn btn-outline-info">Add Info</button>
+                            </div>
+                        </div>
+                    </li>
+<!-- WORKER REGISTRATION DISPLAY END -->
+                    <li class="list-group-item">
+                        <div class="form-group">
+                            <input type="hidden" id="form_action" name="form_action" value="0">
+                            <input type="hidden" id="form_issue" name="form_issue" value="0">
+                            <label for="exampleInputPassword1" class="h6">Comment</label>
+                            <textarea name="form_comment" class="form-control" id="comment" placeholder="This optional comment visible to the request/ticket author and may be used to request more information."></textarea>
+                        </div>
+                        <button id="RU-submit-btn" type="submit" class="btn btn-lg btn-primary font-weight-bold w-100 mb-3">
+                            <span id="RU-submit-btn-txt">SUBMIT</span>
+                            <div id="RU-submit-btn-load" class="d-none">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                    </li>
+                </form>
+            </ul>
+        </div>
+
         <div class= "mb-5"></div>
     </div>
 
 
-
+<!-- ================================= -->
+<!--            RIGHT TABS             -->
+<!-- ================================= -->
     <div class="col-12 col-lg-6 mt-4 mt-lg-0" >
         <!-- Top Tab Selection -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
