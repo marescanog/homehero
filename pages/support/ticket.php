@@ -278,7 +278,14 @@ if(isset($idRef) && $idRef != null){
                         <div class="col-8 col-lg-9"> 
                             <h3>
                                 <span class="badge <?php 
-                                    $statIndex = is_numeric($nbi_info[0]->is_verified) && $nbi_info[0]->is_verified >=0 && $nbi_info[0]->is_verified <=3 ? $nbi_info[0]->is_verified  : 4;
+                                // 0- No Grade, 1 - Verfified, -1 -Denied
+                                    $statIndex = is_numeric($nbi_info[0]->is_verified) == false  ? 3 
+                                    : (
+                                        $nbi_info[0]->is_verified == -1 ? 2
+                                        : ($nbi_info[0]->is_verified >=0 && $nbi_info[0]->is_verified <=3 ?
+                                        $nbi_info[0]->is_verified  : 3)
+                                    );
+
                                     $badgeColors = ["badge-secondary","badge-success","badge-danger","badge-secondary"];
                                     echo $badgeColors[$statIndex];?>">
                                     <?php 
@@ -329,14 +336,31 @@ if(isset($idRef) && $idRef != null){
 <!-- ================================= -->
 <!--            ACTIONS UI             -->
 <!-- ================================= -->
+<?php 
+
+    if($base_info->status == 2){
+?>
         <div class="card mt-4">
             <div class="card-header d-flex flex-row justify-content-between">
                 <h5 class="card-title mb-0">Actions</h5>
-                <button type="button" class="btn btn-sm btn-danger">Transfer</button>
+                <?php 
+                    if($_SESSION["email"] == $base_info->agent_email){
+                ?>
+                    <button type="button" class="btn btn-sm btn-danger">Transfer</button>
+                <?php 
+                    } else {
+                ?>
+                    <button type="button" class="btn btn-sm btn-danger">Request Override</button>
+                <?php
+                    }
+                ?>
             </div>
             <ul class="list-group list-group-flush">
-                <form name="submit-action" id="submit-action">
+                <form name="submit-action" id="submit-action" method="post">
 <!-- WORKER REGISTRATION DISPLAY START -->
+                <?php 
+                    if($_SESSION["email"] == $base_info->agent_email){
+                ?>
                     <li class="list-group-item" disabled>
                         <h6>Process Worker Registration</h6>
                         <p class="ml-2 mb-1 font-italic">Select an option</p>
@@ -344,17 +368,25 @@ if(isset($idRef) && $idRef != null){
                             <div class="d-flex flex-col flex-sm-row">
                                 <button id="btn-worker-reg-approve" type="button" class="mr-2 btn btn-outline-info">Approve</button>
                                 <button id="btn-worker-reg-reject" type="button" class="mr-2 btn btn-outline-info">Reject</button>
-                                <button id="btn-worker-reg-comment" type="button" class="mr-2 btn btn-outline-info">Add Info</button>
+                                <button id="btn-worker-reg-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
+                                <button id="btn-worker-reg-comment" type="button" class="mr-2 btn btn-info">Add Note</button>
                             </div>
                         </div>
                     </li>
+                <?php 
+                    }
+                ?>
 <!-- WORKER REGISTRATION DISPLAY END -->
                     <li class="list-group-item">
                         <div class="form-group">
-                            <input type="hidden" id="form_action" name="form_action" value="0">
-                            <input type="hidden" id="form_issue" name="form_issue" value="0">
-                            <label for="exampleInputPassword1" class="h6">Comment</label>
-                            <textarea name="form_comment" class="form-control" id="comment" placeholder="This optional comment visible to the request/ticket author and may be used to request more information."></textarea>
+                            <input type="hidden" id="form_action" name="form_action" value="<?php 
+                                echo $_SESSION["email"] == $base_info->agent_email ? 4 : 0; // Default comment
+                            ?>">
+                            <input type="hidden" id="form_issue" name="form_issue" value="<?php echo $base_info->issue_id;?>">
+                            <input type="hidden" id="form_id" name="form_id" value="<?php echo $base_info->id;?>">
+                            <!-- <input type="hidden" id="form_email" name="email" value="<?php echo $_SESSION["email"];?>"> -->
+                            <label for="form_comment" class="h6">Comment</label>
+                            <textarea name="form_comment" class="form-control" id="comment" placeholder="Add a note or relevant information for this ticket."></textarea>
                         </div>
                         <button id="RU-submit-btn" type="submit" class="btn btn-lg btn-primary font-weight-bold w-100 mb-3">
                             <span id="RU-submit-btn-txt">SUBMIT</span>
@@ -368,7 +400,12 @@ if(isset($idRef) && $idRef != null){
             </ul>
         </div>
 
-        <div class= "mb-5"></div>
+
+<?php 
+    }
+?>
+
+<div class= "mb-5"></div>
     </div>
 
 
@@ -459,5 +496,37 @@ if(isset($idRef) && $idRef != null){
     <script>
 
     </script>
+    <?php 
+    if(is_object($output) && $output->success == false){
+        $output_status = $output->response->status;
+        $output_message = $output->response->message; // "JWT - Ex 1:Expired token"
+        ?>
+        <!-- <input type="hidden" id="output_status" value="<?php echo $output_status;?>">
+        <input type="hideen" id="output_message" value="<?php echo $output_message ?>"> -->
+         <script>
+             let o_status  = "<?php echo $output_status;?>";
+             let o_message = "<?php echo $output_message ?>";
+             let o_text = o_message == "JWT - Ex 1:Expired token" ? "Your token has expired. Please login in again." : "Your token is expired or unrecognized. Please login in again."
+             let o_title = o_message == "JWT - Ex 1:Expired token" ? 'Expired Token!' : 'Session Expired!'
+             Swal.fire({
+                title: "Sesion Expired!",
+                text: o_text,
+                icon: 'info',
+                }).then((result) => {
+                    $.ajax({
+                    type : 'GET',
+                    url : '../../auth/signout_action.php',
+                    success : function(response) {
+                        var res = JSON.parse(response);
+                        if(res["status"] == 200){
+                            window.location = getDocumentLevel()+'/pages/support/';
+                        }
+                    }
+                    });
+                })
+         </script>
+        <?php
+     }
+?>
 </body>
 </html>
