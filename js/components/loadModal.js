@@ -34,7 +34,8 @@ const modalTypes = {
     "profile-edit-name" : docLevelModal+"/components/modals/ho-profile-edit-name.php", 
     "profile-add-picture" : docLevelModal+"/components/modals/ho-profile-add-picture.php", 
     "change-phone-sms": docLevelModal+"/components/modals/sms-verification-to-change-ho-pass.php",
-    "notify-worker": docLevelModal+"/components/modals/notify-worker.php"
+    "notify-worker": docLevelModal+"/components/modals/notify-worker.php",
+    "ticket-assignment-history": docLevelModal+"/components/modals/ticket-assignment-history.php"
 }
 
 // This function loads the

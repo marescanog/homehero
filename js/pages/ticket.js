@@ -16,6 +16,29 @@ const killZeSpinner = () => {
     swal.close();
 }
 
+const popThePopper = (id) => {
+  let current_name_el = document.getElementById("ta-new-"+id);
+  let previous_name_el = document.getElementById("ta-prev-"+id);
+  let date_el = document.getElementById("ta-date-"+id);
+  let reason_el = document.getElementById("ta-reason-"+id);
+  let current_name = current_name_el != null ? current_name_el.innerText : "";
+  let previous_name = previous_name_el != null ? previous_name_el.value: "";
+  let date = date_el != null ? date_el.innerText : "";
+  let reason = reason_el != null ? reason_el.value: "";
+  // console.log($id);
+  console.log(current_name);
+  console.log(previous_name);
+  console.log(date);
+  console.log(reason);
+
+  loadModal("ticket-assignment-history",modalTypes,()=>{},getDocumentLevel(),{
+    "current":current_name,
+    "previous":previous_name,
+    "date":date,
+    "reason":reason
+  });
+}
+
 const Process_Worker_Registration = (data = null, button, buttonTxt, buttonLoadSpinner, form) => {
   // Proceed with ajax call using PHP page to add in token
   if(data?.form_action != null){

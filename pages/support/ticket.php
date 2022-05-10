@@ -20,6 +20,7 @@ $base_info = 0;
 $history = [];
 $nbi_info = 0;
 $comments = [];
+$assignment = [];
 
 if($idRef != null){
     $url = "http://localhost/slim3homeheroapi/public/ticket/get-info/".$idRef; // DEV
@@ -77,6 +78,7 @@ if($idRef != null){
             $history = $output->response->history;
             $nbi_info = $output->response->nbi_info;
             $comments = $output->response->comments;
+            $assignment = $output->response->assignment_history;
         }
 }
 
@@ -87,6 +89,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <link rel="stylesheet" href="../../css/headers/support.css">
 <link rel="stylesheet" href="../../css/headers/support-side-nav.css">
 <link rel="stylesheet" href="../../css/pages/support/support-ticket.css">
+<script src="<?php echo $level;?>/js/components/loadModal.js"></script>
 <script src="https://kit.fontawesome.com/d10ff4ba99.js" crossorigin="anonymous"></script>
 <!-- === Link your custom CSS  pages above here ===-->
 </head>
@@ -238,10 +241,10 @@ if(isset($idRef) && $idRef != null){
             </ul>
         </div>
 
-`<?php 
+<?php 
 // var_dump($nbi_info);
 // var_dump($base_info);
-?>`
+?>
 <!-- ================================= -->
 <!--       SPECIFIC TICKET INFO        -->
 <!-- ================================= -->
@@ -498,15 +501,38 @@ if(isset($idRef) && $idRef != null){
                     </ul>
                 </div>  
             </div>
+            <!-- $assignment -->
             <div class="tab-pane fade" id="assignment" role="tabpanel" aria-labelledby="assignment-tab">
                 <div class="card" style="width: 100%;">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                                <div class="col-8 col-lg-9"> adsadsd </div>
-                            </div>
-                        </li>
+
+                            <?php 
+                                if(count($assignment) > 0){
+                                    for($casgn = 0; $casgn < count($assignment) ; $casgn++){
+                            ?>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div id="ta-date-<?php echo htmlentities($assignment[$casgn]->id);?>" class="col-3 border-right"><?php $date = new DateTime($assignment[$casgn]->date_assigned);
+                                            echo $date->format('M j,Y g:i A');?></div>
+                                        <div id="ta-new-<?php echo htmlentities($assignment[$casgn]->id);?>" class="col-6 border-right">
+                                            <?php echo htmlentities($assignment[$casgn]->new_agent_name);?> 
+                                        </div>
+                                        <input id="ta-prev-<?php echo htmlentities($assignment[$casgn]->id);?>" type="hidden" value="<?php echo htmlentities($assignment[$casgn]->previous_agent);?>">
+                                        <input id="ta-reason-<?php echo htmlentities($assignment[$casgn]->id);?>" type="hidden" value="<?php echo htmlentities($assignment[$casgn]->reason_text);?>">
+                                        <div onClick="popThePopper(<?php echo htmlentities($assignment[$casgn]->id);?>)"  class="col-3 cclicky" style="font-size:0.8rem" data-toggle="modal" data-target="#modal"> see more details </div>
+                                    </button>
+                                    </div>
+                                </li>
+                            <?php 
+                                    }
+                                } else {
+                            ?>
+                                <li class="list-group-item">
+                                    <div class="row ml-1">
+                                        No available agent assignment history for this ticket
+                                    </div>
+                                </li>
+                            <?php } ?>
                     </ul>
                 </div>  
             </div>
