@@ -96,6 +96,13 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
     </div>
 
+    <!-- <form action="./messages.php" target="_blank" method="get">
+        <label for="fname">First name:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="lname">Last name:</label><br>
+        <input type="text" id="lname" name="lname">
+        <button type="submit">sfsdf</button>
+    </form> -->
 </main>
 
 

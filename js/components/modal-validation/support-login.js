@@ -29,7 +29,7 @@ $("#support-login-form").validate({
         const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
         
-        // CHANGELINKDEVPROD
+        // NO PROD LINK
         // Ajax request to login
         $.ajax({
             type: 'POST',
