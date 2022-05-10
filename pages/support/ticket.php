@@ -17,8 +17,9 @@ $idRef = is_numeric($_GET["id"]) ? $idRef : null;
 
 // Declare variables to be used in this page
 $base_info = 0;
-$history = 0;
+$history = [];
 $nbi_info = 0;
+$comments = [];
 
 if($idRef != null){
     $url = "http://localhost/slim3homeheroapi/public/ticket/get-info/".$idRef; // DEV
@@ -75,6 +76,7 @@ if($idRef != null){
             $base_info = $output->response->base_info;
             $history = $output->response->history;
             $nbi_info = $output->response->nbi_info;
+            $comments = $output->response->comments;
         }
 }
 
@@ -456,16 +458,43 @@ if(isset($idRef) && $idRef != null){
             <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
                 <div class="card" style="width: 100%;">
                     <ul class="list-group list-group-flush">
-                        <!-- <?php 
-                            for($chis = 0; $chis < 3; $chis++){
+                        <?php 
+                            if(count($comments) > 0){
+                                for($ccom = 0; $ccom < count($comments) ; $ccom++){
                         ?>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-4 col-lg-3 border-right"> adsadsad</div>
-                                    <div class="col-8 col-lg-9"> adsadsd </div>
-                                </div>
-                            </li>
-                        <?php } ?> -->
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                        <div class="col-4 col-lg-3 border-right"> <?php $date = new DateTime($comments[$ccom]->action_date);
+                                            echo $date->format('M j,Y g:i A');?></div>
+                                            <div class="col-8 col-lg-9">
+                                                <div class="row pl-2"> <?php echo htmlentities($comments[$ccom]->agent_notes)?> </div>
+                                                <?php 
+                                                    $pieces_comment = explode(" ", $comments[$ccom]->system_generated_description);
+                                                    $num_comment = 0;
+                                                    if(count($pieces_comment) >= 0 ){
+                                                        $num_comment = explode("#", $pieces_comment[1]);
+                                                        if(count( $num_comment) >= 0){
+                                                ?>
+                                                    <div class="row pl-2 mt-1 font-italic" style="font-size:0.8rem">By Agent #<?php 
+
+                                                        echo htmlentities( $num_comment[1]);
+                                                ?></div>
+                                                <?php 
+                                                    } }
+                                                ?>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                        <?php   }
+                            } else { ?>
+                                    <li class="list-group-item">
+                                        <div class="row ml-1">
+                                            No comments were found for this ticket
+                                        </div>
+                                    </li>
+                        <?php }
+                        ?> 
                     </ul>
                 </div>  
             </div>
