@@ -18,9 +18,13 @@ $idRef = is_numeric($_GET["id"]) ? $idRef : null;
 // Declare variables to be used in this page
 $base_info = 0;
 $history = [];
-$nbi_info = 0;
+$detailed_info = [];
 $comments = [];
 $assignment = [];
+$authy = false;
+
+$err_stat = null;
+$message= null;
 
 if($idRef != null){
     $url = "http://localhost/slim3homeheroapi/public/ticket/get-info/".$idRef; // DEV
@@ -63,7 +67,7 @@ if($idRef != null){
         $curl_error_message = null;
     
         // ERROR HANDLING 
-        if($output === FALSE){
+        if($output === FALSE || $output === NULL){
             $curl_error_message = curl_error($ch);
         }
     
@@ -73,12 +77,17 @@ if($idRef != null){
         $output =  json_decode($output);
     
         // Set the declare variables (refer at the top)
-        if(is_object($output) && $output->success == true){
-            $base_info = $output->response->base_info;
-            $history = $output->response->history;
-            $nbi_info = $output->response->nbi_info;
-            $comments = $output->response->comments;
-            $assignment = $output->response->assignment_history;
+        if(is_object($output) && $output != null && $output->success == true){
+            $data = $output->response->data;
+            $base_info =  $data->base_info;
+            $history =  $data->history;
+            $detailed_info =  $data->detailed_info;
+            $comments =  $data->comments;
+            $assignment =  $data->assignment_history;
+            $authy =  $data->authorization;
+        } else {
+            $err_stat = $output->response->status;
+            $message= $output->response->message;
         }
 }
 
@@ -131,149 +140,117 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <?php
         }    
     ?>
+
 <?php 
-
-if(isset($idRef) && $idRef != null){
-    // var_dump($base_info->agent_name);
-    // var_dump($base_info->status);
-    // var_dump($_SESSION["role"]);
-    //  var_dump($base_info->issue_id);
-
-    // Registration/Verification, Customer Support, Technical Support
-//  $roleSubTypes = ["1,2,3","4,5,6,7,8,9","10,11,12,13,14,15,16"];
-    $roleSubTypes = [];
-    // Registration/verification agent
-    $roleSubTypes["0"] = "0";
-    $roleSubTypes["1"] = "1";
-    $roleSubTypes["2"] = "1";
-    $roleSubTypes["3"] = "1";
-    // Customer support
-    $roleSubTypes["4"] = "2";
-    $roleSubTypes["5"] = "2";
-    $roleSubTypes["6"] = "2";
-    $roleSubTypes["7"] = "2";
-    $roleSubTypes["8"] = "2";
-    $roleSubTypes["9"] = "2";
-    // Technical support
-    $roleSubTypes["10"] = "3";
-    $roleSubTypes["11"] = "3";
-    $roleSubTypes["12"] = "3";
-    $roleSubTypes["13"] = "3";
-    $roleSubTypes["14"] = "3";
-    $roleSubTypes["15"] = "3";
-    $roleSubTypes["16"] = "3";
-    $roleFilter = $base_info->issue_id != null && is_numeric($base_info->issue_id) 
-                && $base_info->issue_id > 0 && $base_info->issue_id < 17 
-                ? number_format($base_info->issue_id,0,"","")
-                : "0";
-    // var_dump($roleSubTypes[$roleFilter]);
-    // var_dump($_SESSION["role"])
+if((isset($idRef) && $idRef != null) && $err_stat == null){
 ?>
-
-<!-- VIEW RESTRICTIONS STARTS -->
-<?php 
-
-?>
-
-<!-- WHERE THE TICKET ACCEPT STARTS -->
-<?php 
-    // Only the agent assigned to a certain role type can accept this ticket when new
-    // Supervisors, Admins & superadmins can also accept this ticket when new
-    if($base_info->status == 1 && ($_SESSION["role"] == $roleSubTypes[$roleFilter] || $_SESSION["role"] == 4 || $_SESSION["role"] == 5 || $_SESSION["role"] == 6)){
-?>
-<div class="alert alert-secondary" role="alert">
-  <h4 class="alert-heading">This ticket is not assigned to an agent</h4>
-    <p>Click the button below to accept this ticket or go back to the All New Tickets Dashboard.</p>
-    <button type="button" class="btn btn-primary" id="tkt-accept-btn">Assign to me</button>
-  <hr>
-  <div class="flex flex-row">
-    <button onclick="history.back()" type="button" id="tkt-goBack-btn" class="btn btn-secondary" >< Go Back</button>
-  </div>
-</div>
-<?php 
-    }
-?>
+    <!-- WHERE THE TICKET ACCEPT STARTS -->
+    <?php 
+        // Only the agent assigned to a certain role type can accept this ticket when new
+        // Supervisors, Admins & superadmins can also accept this ticket when new
+        if($authy == 'true' && $base_info->status == '1'){
+    ?>
+    <div class="alert alert-secondary" role="alert">
+    <h4 class="alert-heading">This ticket is not assigned to an agent</h4>
+        <p>Click the button below to accept this ticket or go back to the All New Tickets Dashboard.</p>
+        <button type="button" class="btn btn-primary" id="tkt-accept-btn">Assign to me</button>
+    <hr>
+    <div class="flex flex-row">
+        <button onclick="history.back()" type="button" id="tkt-goBack-btn" class="btn btn-secondary" >< Go Back</button>
+    </div>
+    </div>
+    <?php 
+        }
+    ?>
 
 
-<!-- WHERE THE MAIN INFORMATION STARTS -->
-
-<div class="row" style="min-width:100%">
-    <div class="col-12 col-lg-6" >
-        <div class="card" style="width: 100%;">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Ticket Info</h5>
+    <!-- WHERE THE MAIN INFORMATION STARTS -->
+    <?php
+        if($authy || $_SESSION["role"] == 2 || $_SESSION["role"] == 4 || $_SESSION["role"] == 5 || $_SESSION["role"] == 6 ){
+    ?>
+    <div class="row" style="min-width:100%">
+        <div class="col-12 col-lg-6" >
+            <div class="card" style="width: 100%;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Ticket Info</h5>
+                </div>
+                <input type="hidden" id="tkt-id" value="<?php echo htmlentities($idRef);?>">
+                
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Created by</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->author_name)?> </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->status_text)?> </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Assigned to</div>
+                            <div class="col-8 col-lg-9"> <?php echo $base_info->agent_name == null ?  "None" : htmlentities($base_info->agent_name);?> </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Created on</div>
+                            <div class="col-8 col-lg-9"> <?php $date = new DateTime($base_info->created_on);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Updated on</div>
+                            <div class="col-8 col-lg-9"> <?php $date = new DateTime($base_info->last_updated_on);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <input type="hidden" id="tkt-id" value="<?php echo htmlentities($idRef);?>">
-            
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right ticket-title"> Created by</div>
-                        <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->author_name)?> </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
-                        <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->status_text)?> </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right ticket-title"> Assigned to</div>
-                        <div class="col-8 col-lg-9"> <?php echo $base_info->agent_name == null ?  "None" : htmlentities($base_info->agent_name);?> </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right ticket-title"> Created on</div>
-                        <div class="col-8 col-lg-9"> <?php $date = new DateTime($base_info->created_on);
-                                echo $date->format('M j,Y g:i A');?> </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 col-lg-3 border-right ticket-title"> Updated on</div>
-                        <div class="col-8 col-lg-9"> <?php $date = new DateTime($base_info->last_updated_on);
-                                echo $date->format('M j,Y g:i A');?> </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
 
-<?php 
+    <?php 
 // var_dump($nbi_info);
 // var_dump($base_info);
 ?>
 <!-- ================================= -->
 <!--       SPECIFIC TICKET INFO        -->
 <!-- ================================= -->
-        <div class="card mt-4" style="width: 100%;">
+    <div class="card mt-4" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title mb-0"><?php echo htmlentities($base_info->category_text)?> Info</h5>
             </div>
 <!-- WORKER REGISTRATION DISPLAY START -->
             <?php 
                 if($base_info->issue_id == 1){
-                    if(count($nbi_info) > 0){
+                    if(count($detailed_info) > 0){
             ?>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-4 col-lg-3 border-right ticket-title"> Worker Name</div>
-                        <div class="col-8 col-lg-9"> <?php echo htmlentities($nbi_info[0]->worker_name);?> </div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info[0]->worker_name);?> </div>
                     </div>
                 </li>
+                <?php 
+                    if($authy == true){
+                ?>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-4 col-lg-3 border-right ticket-title"> NBI ID</div>
-                        <div class="col-8 col-lg-9"> <?php echo htmlentities($nbi_info[0]->clearance_no);?> </div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info[0]->clearance_no);?> </div>
                     </div>
                 </li>
+                <?php 
+                    }
+                ?>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-4 col-lg-3 border-right ticket-title"> Expiration Date</div>
-                        <div class="col-8 col-lg-9"> <?php $date = new DateTime($nbi_info[0]->expiration_date);
+                        <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info[0]->expiration_date);
                                 echo $date->format('M j, Y');?> </div>
                     </div>
                 </li>
@@ -284,11 +261,11 @@ if(isset($idRef) && $idRef != null){
                             <h3>
                                 <span class="badge <?php 
                                 // 0- No Grade, 1 - Verfified, -1 -Denied
-                                    $statIndex = is_numeric($nbi_info[0]->is_verified) == false  ? 3 
+                                    $statIndex = is_numeric($detailed_info[0]->is_verified) == false  ? 3 
                                     : (
-                                        $nbi_info[0]->is_verified == -1 ? 2
-                                        : ($nbi_info[0]->is_verified >=0 && $nbi_info[0]->is_verified <=3 ?
-                                        $nbi_info[0]->is_verified  : 3)
+                                        $detailed_info[0]->is_verified == -1 ? 2
+                                        : ($detailed_info[0]->is_verified >=0 && $detailed_info[0]->is_verified <=3 ?
+                                        $detailed_info[0]->is_verified  : 3)
                                     );
 
                                     $badgeColors = ["badge-secondary","badge-success","badge-danger","badge-secondary"];
@@ -319,7 +296,7 @@ if(isset($idRef) && $idRef != null){
 <!--             IMAGES                -->
 <!-- ================================= -->
         <?php 
-            if($base_info->has_images > 0 && count($nbi_info) > 0){
+            if($base_info->has_images > 0 && count($detailed_info) > 0 && $authy == true){
         ?>
             <div class="card mt-4" style="width: 100%;">
                 <div class="card-header">
@@ -327,7 +304,7 @@ if(isset($idRef) && $idRef != null){
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <img src="<?php echo $nbi_info[0]->file_path.$nbi_info[0]->file_name;?>" class="img-fluid" alt="Responsive image">
+                        <img src="<?php echo $detailed_info[0]->file_path.$detailed_info[0]->file_name;?>" class="img-fluid" alt="Responsive image">
                     </li>
                 </ul>
             </div>
@@ -539,9 +516,53 @@ if(isset($idRef) && $idRef != null){
         </div>
     </div>
 </div>
+
+
+<?php 
+// if authorized
+} else {
+    $issue_index = $base_info->issue_id;
+    $role_sort = array(0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,3);
+    $dept_index = $role_sort[  $issue_index];
+    $roles_dept = ["Verification","Customer Service","Technical support", "Escalations"];
+    $dept_ext = ["203","433","120","243"];
+    ?>
+        <div class="alert alert-danger" role="alert" style="max-width:35em">
+            <h4 class="alert-heading">401: Unauthorized Access</h4>
+            <p><b>You are not authorized to view this information.</b></p>
+            <p>If you are on a call with the concerned party inquiring about information, please transfer them to the 
+                <b><?php echo   $roles_dept[$dept_index]; ?> Department</b> at <b>extension (<?php echo  $dept_ext[$dept_index]; ?>)</p>
+    </b></div>
 <?php 
 }
 ?>
+
+<?php
+} // if idRef is blank or error
+else {
+    if($err_stat != null){
+        switch($err_stat){
+            case 404:
+?>
+            <div class="alert alert-danger" role="alert" style="max-width:35em">
+                <h4 class="alert-heading">404: Ticket was not found</h4>
+                <p>Please check your information.</p>
+            </div>
+<?php
+            break;
+            default:
+?>
+            <div class="alert alert-danger" role="alert" style="max-width:35em">
+                <h4 class="alert-heading">An Error has Occured.</h4>
+                <p>Please reload the page.</p>
+            </div>
+<?php
+            break;
+        } // switch bracket
+    } // if errstat null
+} // if idRef is blank or error
+?>
+
 </main>
     <!-- === Your Custom Page Content Goes Here above here === -->
     </div>
@@ -551,37 +572,38 @@ if(isset($idRef) && $idRef != null){
     <script>
 
     </script>
+    
     <?php 
-    if(is_object($output) && $output->success == false){
-        $output_status = $output->response->status;
-        $output_message = $output->response->message; // "JWT - Ex 1:Expired token"
-        ?>
-        <!-- <input type="hidden" id="output_status" value="<?php echo $output_status;?>">
-        <input type="hideen" id="output_message" value="<?php echo $output_message ?>"> -->
-         <script>
-             let o_status  = "<?php echo $output_status;?>";
-             let o_message = "<?php echo $output_message ?>";
-             let o_text = o_message == "JWT - Ex 1:Expired token" ? "Your token has expired. Please login in again." : "Your token is expired or unrecognized. Please login in again."
-             let o_title = o_message == "JWT - Ex 1:Expired token" ? 'Expired Token!' : 'Session Expired!'
-             Swal.fire({
-                title: "Sesion Expired!",
-                text: o_text,
-                icon: 'info',
-                }).then((result) => {
-                    $.ajax({
-                    type : 'GET',
-                    url : '../../auth/signout_action.php',
-                    success : function(response) {
-                        var res = JSON.parse(response);
-                        if(res["status"] == 200){
-                            window.location = getDocumentLevel()+'/pages/support/';
-                        }
-                    }
-                    });
-                })
-         </script>
-        <?php
-     }
+    // if(is_object($output) && $output->success == false){
+    //     $output_status = $output->response->status;
+    //     $output_message = $output->response->message; // "JWT - Ex 1:Expired token"
+    //     ?>
+    //     <!-- <input type="hidden" id="output_status" value="<?php echo $output_status;?>">
+    //     <input type="hideen" id="output_message" value="<?php echo $output_message ?>"> -->
+    //      <script>
+    //          let o_status  = "<?php echo $output_status;?>";
+    //          let o_message = "<?php echo $output_message ?>";
+    //          let o_text = o_message == "JWT - Ex 1:Expired token" ? "Your token has expired. Please login in again." : "Your token is expired or unrecognized. Please login in again."
+    //          let o_title = o_message == "JWT - Ex 1:Expired token" ? 'Expired Token!' : 'Session Expired!'
+    //          Swal.fire({
+    //             title: "Sesion Expired!",
+    //             text: o_text,
+    //             icon: 'info',
+    //             }).then((result) => {
+    //                 $.ajax({
+    //                 type : 'GET',
+    //                 url : '../../auth/signout_action.php',
+    //                 success : function(response) {
+    //                     var res = JSON.parse(response);
+    //                     if(res["status"] == 200){
+    //                         window.location = getDocumentLevel()+'/pages/support/';
+    //                     }
+    //                 }
+    //                 });
+    //             })
+    //      </script>
+    //     <?php
+    //  }
 ?>
 </body>
 </html>
