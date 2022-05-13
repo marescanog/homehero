@@ -44,6 +44,9 @@
 
     // For phone number display
     $phone_no =  $phone_no == null ?  null :  $phone_no;
+
+    // For cancellation
+    $job_posty_id = isset($job_post_status_id) ? $job_post_status_id   : null;
 ?>
 <div class="card mt-3 mb-4 shadow ">
     <div class="card-header" style="background-color:#FCEBBF;">
@@ -90,11 +93,11 @@
                     } else {
                         echo 'Completed by '.$assigned_to;
                     }
-                } else if  ($job_status == 3){
+                } else if  ($job_status == 3 && $job_posty_id != 4){
                     if($job_order_status_id == null || $job_order_status_id  != 1){ // not assigned
                         echo "Expired";
                     } 
-                } else if  ($job_status == 4 || $job_order_status_id  == 1){
+                } else if  ($job_status == 4 || $job_order_status_id  == 1 || $job_posty_id == 4){
                     echo 'Cancelled';
                 }
                 ?>
@@ -310,7 +313,7 @@
                         </button>
                     <?php 
                         // user can reshedule but not edit only if the post expired
-                        } else if ($job_status == 3) {
+                        } else if ($job_status == 3 && ($job_posty_id == null || $job_posty_id != 4)) {
                     ?>
                         <button class="btn btn-secondary text-white ml-2" data-toggle="modal" data-target="#modal" onclick="reschedule(<?php echo $job_id.',\''.$pref_sched.'\'';?>)">
                             <b>RESCHEDULE</b>
