@@ -398,6 +398,17 @@
 <!-- ====================================== -->
            <?php
                 // Case when worker does not show, user can report the worker
+                if($job_posty_id != 1 && $job_posty_id != 4 && $job_order_status_id != 1 && $date_paid != null || $job_order_status_id == 3 ){
+           ?>
+                <button class="btn btn-primary">
+                    HELP CENTER
+                </button>
+            <?php
+                } 
+           ?>
+
+           <?php
+                // Case when worker does not show, user can report the worker
                 if($job_order_status_id == 1 && $today!= null && $d != null && $today>$d && $jo_start_time == null){
            ?>
             <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportNoShow(<?php echo $job_order_id.',\''.addslashes($assigned_to).'\'';?>)">
