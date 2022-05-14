@@ -93,6 +93,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?php echo $level;?>/pages/homeowner/profile.php">Profile</a>
+                            <a class="dropdown-item" href="<?php echo $level;?>/pages/homeowner/help-center.php">Help Center</a>
                             <!-- Discontinued for now -->
                             <!-- <a class="dropdown-item" href="<?php echo $level;?>/pages/homeowner/help-center.php">Help Center</a> -->
                             <div class="dropdown-divider"></div>

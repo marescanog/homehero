@@ -215,7 +215,7 @@ $output = null;
         </div>
 
         <div class="mb-4 ml-3">
-            <a href="" >View more info or follow-up here</a>
+            <a href="./help-center.php">View more info or follow-up here</a>
         </div>
 <?php 
     if($output->response->support_ticket_info !== false){
