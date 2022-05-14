@@ -22,7 +22,7 @@ $detailed_info = [];
 $comments = [];
 $assignment = [];
 $authy = false;
-
+$owny = null;
 $err_stat = null;
 $message= null;
 
@@ -85,6 +85,7 @@ if($idRef != null){
             $comments =  $data->comments;
             $assignment =  $data->assignment_history;
             $authy =  $data->authorization;
+            $owny =  $data->ownership;
         } else {
             $err_stat = $output->response->status;
             $message= $output->response->message;
@@ -128,6 +129,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         // var_dump($_SESSION);
         // var_dump($base_info);
         // var_dump($history);
+        // var_dump($detailed_info);
     ?>
     
     <?php 
@@ -290,7 +292,311 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 }
             ?>
 <!-- WORKER REGISTRATION DISPLAY END -->
-        </div>
+
+<!-- BILLING INFORMATION DISPLAY START -->
+            <?php 
+                if($base_info->issue_id == 4){
+                    if($detailed_info == null){
+            ?>
+                <div class="p-2">
+                    <div class="alert alert-danger" role="alert" style="max-width:35em">
+                        <h4 class="alert-heading">404 Not found</h4>
+                        <p>Billing information not found! Please contact your administrator.</p>
+                    </div>
+                </div>
+            <?php 
+                    }   else {
+            ?>
+                <ul class="list-group list-group-flush">
+                    <?php if(isset($detailed_info->bill_id)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Bill ID</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities(str_pad($detailed_info->bill_id, 5, "0", STR_PAD_LEFT));?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+                        
+
+                    <?php if(isset($detailed_info->bill_id) && $owny != null & $owny != false){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Issue Details:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->author_Description);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->ho_lname) && isset($detailed_info->ho_fname)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Homeowner Name</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->ho_lname.', '.$detailed_info->ho_fname);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->ho_phone_no)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Homeowner Phone No.</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->ho_phone_no);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->worker_lname) && isset($detailed_info->worker_fname)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Worker Name</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->worker_lname.', '.$detailed_info->worker_fname);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->worker_phone_no)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Worker Phone No.</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->worker_phone_no);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->payment_method)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Payment Method</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->payment_method);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->total_price_billed)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
+                                <div class="col-8 col-lg-9">P <?php echo htmlentities($detailed_info->total_price_billed);?></div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->status)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->status);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php 
+                        if(isset($detailed_info->bill_status_id) && $detailed_info->bill_status_id == 2){
+                    ?>
+                        <?php if(isset($detailed_info->is_received_by_worker)){ ?>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4 col-lg-3 border-right ticket-title"> Payment Received by Worker</div>
+                                    <div class="col-8 col-lg-9"> <?php echo $detailed_info->is_received_by_worker == 1 ? "Yes" : "Pending Receipt from Worker.";?> </div>
+                                </div>
+                            </li>
+                        <?php }?>
+                        <?php if(isset($detailed_info->date_time_completion_paid)){ ?>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4 col-lg-3 border-right ticket-title"> Bill Payment Date</div>
+                                    <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->date_time_completion_paid);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                                </div>
+                            </li>
+                        <?php }?>
+                    <?php 
+                        }
+                    ?>
+
+                <?php if(isset($detailed_info->bill_created_on)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title"> Bill Created On</div>
+                            <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->bill_created_on);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                </ul>
+
+<!-- Template -->
+<!-- <?php if(isset($detailed_info->bill_id)){ ?>
+<?php }?> -->
+
+                <?php 
+                    if(isset($detailed_info->job_order_id ) && $detailed_info->job_order_id != null){
+                ?>
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Job Order Details</h5>
+                    </div>
+
+                    <?php if(isset($detailed_info->job_time_start)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Time Start:</div>
+                                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_time_start);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_time_end)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Time End:</div>
+                                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_time_end);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_created_on)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Accepted On:</div>
+                                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_created_on);
+                                    echo $date->format('M j,Y g:i A');?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_order_status)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Status:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_order_status);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+                <?php 
+                    }
+                ?>
+
+                
+                <?php 
+                    if(isset($detailed_info->job_post_id) && $detailed_info->job_post_id != null){
+                ?>
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Job Post Details</h5>
+                    </div>
+
+                    <?php if(isset($detailed_info->job_post_name)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Post Title:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_post_name);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->post_description)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Description:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->post_description);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_post_status)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Post Status:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_post_status);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->post_offer)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Initial offer:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->post_offer);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->post_rate_type)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Offer type:</div>
+                                <div class="col-8 col-lg-9">Per <?php echo htmlentities($detailed_info->post_rate_type);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_order_size)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Size:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_order_size);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_type)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job SubCategory:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_type);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->job_expertise)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Category:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_expertise);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->street_name)){ 
+                            $snum = isset($detailed_info->street_no) ? $detailed_info->street_no : null;
+                            $sname = isset($detailed_info->street_name) ? $detailed_info->street_name : null;
+                            $scity = isset($detailed_info->city_name) ? $detailed_info->city_name : null;
+                            $sbarangay = isset($detailed_info->barangay_name) ? $detailed_info->barangay_name : null;
+                            $scomplete = ($snum == null ? "" : $snum." ")
+                                        .($sname == null ? "" : $sname)
+                                        .( $scity  == null ? "" :  ", ".$sbarangay )
+                                        .( $scity  == null ? "" :  ", ".$scity );
+                    ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Job Address:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($scomplete);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+                    <?php if(isset($detailed_info->post_created_on)){ ?>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 col-lg-3 border-right ticket-title">Posted On:</div>
+                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->post_created_on);?> </div>
+                            </div>
+                        </li>
+                    <?php }?>
+
+
+                <?php 
+                    }
+                ?>
+                
+            <?php 
+                    }
+                }
+            ?>
+
+<!-- BILLING INFORMATION DISPLAY END -->
+</div>
 
 <!-- ================================= -->
 <!--             IMAGES                -->
@@ -341,7 +647,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <form name="submit-action" id="submit-action" method="post">
 <!-- WORKER REGISTRATION DISPLAY START -->
                 <?php 
-                    if($_SESSION["email"] == $base_info->agent_email){
+                    if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 1){
                 ?>
                     <li class="list-group-item" disabled>
                         <h6>Process Worker Registration</h6>
@@ -359,16 +665,100 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     }
                 ?>
 <!-- WORKER REGISTRATION DISPLAY END -->
+
+<!-- BILLING ISSUES DISPLAY START -->
+                <?php 
+                    if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 4){
+                ?>
                     <li class="list-group-item">
-                        <div class="form-group">
-                            <input type="hidden" id="form_action" name="form_action" value="<?php 
-                                echo $_SESSION["email"] == $base_info->agent_email ? 4 : 0; // Default comment
-                            ?>">
-                            <input type="hidden" id="form_issue" name="form_issue" value="<?php echo $base_info->issue_id;?>">
-                            <input type="hidden" id="form_id" name="form_id" value="<?php echo $base_info->id;?>">
-                            <!-- <input type="hidden" id="form_email" name="email" value="<?php echo $_SESSION["email"];?>"> -->
-                            <label for="form_comment" class="h6">Comment</label>
-                            <textarea name="form_comment" class="form-control" id="comment" placeholder="Add a note or relevant information for this ticket."></textarea>
+                        <h6>Process Bill Issue</h6>
+                        <p class="ml-2 mb-1 font-italic">Select an option</p>
+                        <div class="ml-2">
+                            <div class="d-flex flex-col flex-sm-row">
+                                <button id="btn-bill-edit" type="button" class="mr-2 btn btn-outline-info">Edit Bill</button>
+                                <button id="btn-bill-cancel" type="button" class="mr-2 btn btn-outline-info">Cancel Bill</button>
+                                <button id="btn-bill-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
+                                <button id="btn-bill-comment" type="button" class="mr-2 btn btn-info">Add Note</button>
+                            </div>
+                        </div>
+                    </li>
+                <?php 
+                    }
+                ?>
+<!-- BILLING ISSUES DISPLAY END -->
+
+<!-- ================================= -->
+<!--        FORMS & SUBMISSION         -->
+<!-- ================================= -->
+                    <li class="list-group-item">
+                        <div class="row">
+                            <!-- BILLING FORM START -->
+                            <?php 
+                                if(($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4){
+                            ?>  
+                                    <div id="grp-bill-pay" class="input-group mb-3 ml-3 mr-3 hidden">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="payment_method" style="min-width:3em !important;">Payment Method</label>
+                                        </div>
+                                        <select disabled class="custom-select" id="inpt_bill_payment_method" name="payment_method">
+                                            <option <?php echo $detailed_info->payment_method_id==1?"selected":"";?> value="1">Cash</option>
+                                            <option <?php echo $detailed_info->payment_method_id==2?"selected":"";?> value="2">Credit</option>
+                                            <option <?php echo $detailed_info->payment_method_id==3?"selected":"";?> value="3">Paypal</option>
+                                        </select>
+                                    </div>
+                                    <div id="grp-bill-stat" class="input-group mb-3 ml-3 mr-3 hidden">
+                                        <div class="input-group-prepend" >
+                                            <label class="input-group-text" for="bill_status" style="min-width:9em !important;">Status</label>
+                                        </div>
+                                        <select disabled class="custom-select"  id="inpt_bill_status">
+                                            <option <?php echo $detailed_info->bill_status_id==1?"selected":"";?> value="1">Pending</option>
+                                            <option <?php echo $detailed_info->bill_status_id==2?"selected":"";?> value="2">Paid</option>
+                                            <option <?php echo $detailed_info->bill_status_id==3?"selected":"";?> value="3">Cancelled</option>
+                                        </select>
+                                    </div>
+                                    <div id="grp-bill-fee" class="input-group mb-3 ml-3 mr-3 hidden">
+                                        <div class="input-group-prepend" >
+                                            <span class="input-group-text" style="min-width:4em !important;">Fee Adjustment</span>
+                                        </div>
+                                        <input disabled name="fee_adjustment" type="number" class="form-control" id="inpt_bill_fee_adjustment" aria-describedby="fee_adjustment" placeholder="(Optional) Enter New Fee">
+                                    </div>
+                            <?php 
+                                }
+                            ?>
+                            <!-- BILLING FORM END -->
+                            <!-- GENERAL APPLICABLE TO ALL -->
+                            <div>
+                                <input type="hidden" id="form_action" name="form_action" value="<?php 
+                                    // echo ($_SESSION["email"] == $base_info->agent_email || $owny == true) ? 4 : 0; 
+                                    // Default comment 
+                                    /* 
+                                        0 For authorized but not owned - 0
+                                        1 For worker registration - 4
+                                        4 For billing - 4
+                                    */
+                                    switch($base_info->issue_id){
+                                        case "1":
+                                            echo 4;
+                                        break;
+                                        case "4":
+                                            echo 4;
+                                        break;
+                                        default:
+                                            echo 0;
+                                        break;
+                                    }
+                                ?>">
+                                <input type="hidden" id="form_issue" name="form_issue" value="<?php echo ($_SESSION["email"] == $base_info->agent_email || $owny == true) ?
+                                    $base_info->issue_id : (
+                                        $authy ? 0 : -1
+                                    );
+                                ?>">
+                                <input type="hidden" id="form_id" name="form_id" value="<?php echo $base_info->id;?>">
+                            </div>
+                            <div class="col mb-3">
+                                <label for="form_comment" class="h6">Comment</label>
+                                <textarea name="form_comment" class="form-control" id="comment" placeholder="Add a note or relevant information for this ticket."></textarea>
+                            </div>
                         </div>
                         <button id="RU-submit-btn" type="submit" class="btn btn-lg btn-primary font-weight-bold w-100 mb-3">
                             <span id="RU-submit-btn-txt">SUBMIT</span>
@@ -578,11 +968,11 @@ else {
     //     $output_status = $output->response->status;
     //     $output_message = $output->response->message; // "JWT - Ex 1:Expired token"
     //     ?>
-    //     <!-- <input type="hidden" id="output_status" value="<?php echo $output_status;?>">
-    //     <input type="hideen" id="output_message" value="<?php echo $output_message ?>"> -->
+    //     <!-- <input type="hidden" id="output_status" value="<?php //echo $output_status;?>">
+    //     <input type="hideen" id="output_message" value="<?php //echo $output_message ?>"> -->
     //      <script>
-    //          let o_status  = "<?php echo $output_status;?>";
-    //          let o_message = "<?php echo $output_message ?>";
+    //          let o_status  = "<?php //echo $output_status;?>";
+    //          let o_message = "<?php //echo $output_message ?>";
     //          let o_text = o_message == "JWT - Ex 1:Expired token" ? "Your token has expired. Please login in again." : "Your token is expired or unrecognized. Please login in again."
     //          let o_title = o_message == "JWT - Ex 1:Expired token" ? 'Expired Token!' : 'Session Expired!'
     //          Swal.fire({

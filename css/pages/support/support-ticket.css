@@ -7,3 +7,9 @@
 .border-right {
     border-right: 2px;
 }
+
+.hidden{
+    display: none;
+    opacity: 0;
+    max-width: 0px;
+}

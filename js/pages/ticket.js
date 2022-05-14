@@ -16,6 +16,7 @@ const killZeSpinner = () => {
     swal.close();
 }
 
+// For viweing more details on agent assigned
 const popThePopper = (id) => {
   let current_name_el = document.getElementById("ta-new-"+id);
   let previous_name_el = document.getElementById("ta-prev-"+id);
@@ -26,10 +27,10 @@ const popThePopper = (id) => {
   let date = date_el != null ? date_el.innerText : "";
   let reason = reason_el != null ? reason_el.value: "";
   // console.log($id);
-  console.log(current_name);
-  console.log(previous_name);
-  console.log(date);
-  console.log(reason);
+  // console.log(current_name);
+  // console.log(previous_name);
+  // console.log(date);
+  // console.log(reason);
 
   loadModal("ticket-assignment-history",modalTypes,()=>{},getDocumentLevel(),{
     "current":current_name,
@@ -120,6 +121,10 @@ const Process_Worker_Registration = (data = null, button, buttonTxt, buttonLoadS
 
 
 $(document).ready(()=>{
+
+// ===================================
+//   For Initial Ticket Assignment
+// ===================================
   let btn_accept = document.getElementById("tkt-accept-btn");
 
   if(btn_accept != undefined && btn_accept != null){
@@ -213,13 +218,16 @@ $(document).ready(()=>{
 
 
 let input_form_action = document.getElementById("form_action"); // This is the type
-let input_form_submisssion_type = document.getElementById("form_issue"); 
-// This is the route type  (1 - Registration)
+// let input_form_submisssion_type = document.getElementById("form_issue"); 
 
-// =============================================
-// Process Worker Registration Code
-// =============================================
-
+// This is the route type  
+  /*
+    1 - Worker Registration
+    7 - Billing Issue
+  */
+// ============================================
+//   For Processing a ticket & ticket actions
+// ============================================
 $("#submit-action").validate({
   rules: {
       // form_comment:{
@@ -250,10 +258,18 @@ $("#submit-action").validate({
       const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
       disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
       // console.log(JSON.stringify(submitformData));
+
+      // console.log(JSON.stringify(submitformData));
 // =========================
 // Submission Types
 // =========================
       switch(submitformData?.form_issue){
+        // =========================
+        // Just Submit Comment when not authorized
+        // =========================
+        case "0": 
+          console.log("Submit comment")
+        break;
         // =========================
         // Worker Registration
         // =========================
@@ -317,7 +333,38 @@ $("#submit-action").validate({
               break;
           }
           break;
+        // =========================
+        // Billing Issue
+        // =========================
+        case "4":
+            switch(submitformData?.form_action){
+              case "1":
+                console.log("Edit Bill");
+                break;
+              case "2":
+                console.log("Cancel Bill");
+                break;
+              case "3":
+                console.log("Notify");
+                break;
+              case "4":
+                console.log("Add Note");
+                break;
+              default:
+                break;
+            }
+          break;
+        // =========================
+        // Job Order Issue
+        // =========================
+        case "7":
+          break;
+
+        // =========================
+        // Case Not Found
+        // =========================
         default:
+          console.log("Out of range");
           break;
       }
 
@@ -388,6 +435,118 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
       );
     });
   }
+
+
+// 0 - none selected, 1 - approve, 2 - disapprove, 3 - comment only
+// =============================================
+// Process Bill Issue Code
+// =============================================
+let btn_action_bill_edit = document.getElementById("btn-bill-edit");
+let btn_action_bill_cancel = document.getElementById("btn-bill-cancel");
+let btn_action_bill_notify = document.getElementById("btn-bill-notify");
+let btn_action_bill_addInfo = document.getElementById("btn-bill-comment");
+
+let grp_bill_pay = document.getElementById("grp-bill-pay");
+let grp_bill_stat = document.getElementById("grp-bill-stat");
+let grp_bill_fee = document.getElementById("grp-bill-fee");
+let inpt_bill_pm = document.getElementById("inpt_bill_payment_method");
+let inpt_bill_stat = document.getElementById("inpt_bill_status");
+let inpt_bill_fee = document.getElementById("inpt_bill_fee_adjustment");
+
+let arr_btn_bill_actions = [btn_action_bill_edit,btn_action_bill_cancel,btn_action_bill_notify,btn_action_bill_addInfo];
+  const clear_buttons_bill_actions = () => {
+    arr_btn_bill_actions.forEach((btn)=>{
+      if (btn.classList.contains('btn-info')) {
+        btn.classList.remove('btn-info');
+        if (!btn.classList.contains('btn-outline-info')) {
+          btn.classList.add('btn-outline-info');
+        }
+      } 
+    });
+  }
+
+  const toggleBillForm = () => {
+    if (grp_bill_pay.classList.contains('hidden')) {
+      grp_bill_pay.classList.remove('hidden');
+    } else {
+      grp_bill_pay.classList.add('hidden');
+    }
+    if (grp_bill_stat.classList.contains('hidden')) {
+      grp_bill_stat.classList.remove('hidden');
+    } else {
+      grp_bill_stat.classList.add('hidden');
+    }
+    if (grp_bill_fee.classList.contains('hidden')) {
+      grp_bill_fee.classList.remove('hidden');
+    } else {
+      grp_bill_fee.classList.add('hidden');
+    }
+    if(inpt_bill_pm.getAttribute("disabled") == null){
+      inpt_bill_pm.setAttribute('disabled',true);
+    }else{
+      inpt_bill_pm.removeAttribute('disabled');
+    }
+    if(inpt_bill_stat.getAttribute("disabled") == null){
+      inpt_bill_stat.setAttribute('disabled',true);
+    }else{
+      inpt_bill_stat.removeAttribute('disabled');
+    }
+    if(inpt_bill_fee.getAttribute("disabled") == null){
+      inpt_bill_fee.setAttribute('disabled',true);
+    }else{
+      inpt_bill_fee.removeAttribute('disabled');
+    }
+  }
+
+if(btn_action_bill_edit != null){
+  btn_action_bill_edit.addEventListener("click",()=>{
+    clear_buttons_bill_actions();
+    btn_action_bill_edit.classList.add('btn-info');
+    input_form_action.setAttribute('value',1);
+    input_comment.setAttribute('placeholder',
+    "Please provide a reason as to why this bill is being edited."
+    );
+    // Edit bill form enable 
+    toggleBillForm();
+  });
+}
+
+if(btn_action_bill_cancel != null){
+  btn_action_bill_cancel.addEventListener("click",()=>{
+    clear_buttons_bill_actions();
+    btn_action_bill_cancel.classList.add('btn-info');
+    input_form_action.setAttribute('value',2);
+    input_comment.setAttribute('placeholder',
+    "Please provide the bill cancellation reason."
+    );
+  });
+}
+
+if(btn_action_bill_notify != null){
+  btn_action_bill_notify.addEventListener("click",()=>{
+    clear_buttons_bill_actions();
+    btn_action_bill_notify.classList.add('btn-info');
+    input_form_action.setAttribute('value',3);
+    input_comment.setAttribute('placeholder',
+    "Notify the author of this ticket."
+    );
+  });
+}
+
+if(btn_action_bill_addInfo != null){
+  btn_action_bill_addInfo.addEventListener("click",()=>{
+    clear_buttons_bill_actions();
+    btn_action_bill_addInfo.classList.add('btn-info');
+    input_form_action.setAttribute('value',4);
+    input_comment.setAttribute('placeholder',
+    "Add a note or relevant information for this ticket."
+    );
+  });
+}
+
+
+
+
 
 
 
