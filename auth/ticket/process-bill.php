@@ -33,7 +33,7 @@ if($ticketID  == null){
 }
 
 // Check if there are values submitted
-if($fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
+if($type != 2 && $fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
     $isValid = false;
     $status = 401;
     $retVal = "Please update any of the following: payment method, bill status or fee.";
@@ -115,7 +115,7 @@ if(isset($curlResult->success) && $curlResult->success == false){
 
 // If Curl was successful, update current token to reflect that registration is complete
 if($isValid){
-    $retVal = "Successfully Updated Bill!";
+    $retVal = ($curlResult->response != null && $curlResult->response->data != null ? $curlResult->response->data->message : null) ?? "Successfully Updated Bill!";
     $status = 200;
 }
 

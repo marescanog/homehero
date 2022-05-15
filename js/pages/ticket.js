@@ -423,7 +423,11 @@ $("#submit-action").validate({
                   );
                   break;
                 case "2":
-                  console.log("Cancel Bill");
+                  submitformData["type"] = 2;
+                  Process_Bill(
+                    submitformData, button, buttonTxt, buttonLoadSpinner, form
+                  );
+                  // console.log("Cancel Bill");
                   break;
                 case "3":
                   console.log("Notify");

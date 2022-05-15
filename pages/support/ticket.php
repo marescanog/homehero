@@ -679,7 +679,13 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                         <div class="ml-2">
                             <div class="d-flex flex-col flex-sm-row">
                                 <button id="btn-bill-edit" type="button" class="mr-2 btn btn-outline-info">Edit Bill</button>
-                                <button id="btn-bill-cancel" type="button" class="mr-2 btn btn-outline-info">Cancel Bill</button>
+                                <?php 
+                                    if(isset($detailed_info->bill_status_id) && $detailed_info->bill_status_id != 3){
+                                ?>
+                                    <button id="btn-bill-cancel" type="button" class="mr-2 btn btn-outline-info">Cancel Bill</button>
+                                <?php 
+                                    }
+                                ?>
                                 <button id="btn-bill-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
                                 <button id="btn-bill-comment" type="button" class="mr-2 btn <?php echo $hasStartedProcessBill == true &&
                                 ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4
