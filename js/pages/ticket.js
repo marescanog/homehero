@@ -415,36 +415,39 @@ $("#submit-action").validate({
               });
               enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
             }else {
-              switch(submitformData?.form_action){
-                case "1":
-                  // console.log("Edit Bill");
-                  submitformData["type"] = 1;
+              if(submitformData?.form_action != null && submitformData?.form_action >= 1 && submitformData?.form_action <=5){
+                // Check if Resolution Action
+                if(submitformData?.form_action == 5){
+                  // Validate Resolution
+                  if((submitformData["bill_resolved"] == 1 || submitformData["bill_resolved"] == 2 ) ){
+                    submitformData["type"] = submitformData?.form_action;
+                    Process_Bill(
+                      submitformData, button, buttonTxt, buttonLoadSpinner, form
+                    );
+                  } else {
+                    Swal.fire({
+                      title: 'Incomplete information!',
+                      text: 'Please indicate if the ticket was resolved.',
+                      icon: 'error',
+                      confirmButtonText: 'ok'
+                    }).then(result => {
+                      enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                    });
+                  }
+                } else {
+                  submitformData["type"] = submitformData?.form_action;
                   Process_Bill(
                     submitformData, button, buttonTxt, buttonLoadSpinner, form
                   );
-                  break;
-                case "2":
-                  // console.log("Cancel Bill");
-                  submitformData["type"] = 2;
-                  Process_Bill(
-                    submitformData, button, buttonTxt, buttonLoadSpinner, form
-                  );
-                  break;
-                case "3":
-                  // console.log("Notify");
-                  submitformData["type"] = 3;
-                  Process_Bill(
-                    submitformData, button, buttonTxt, buttonLoadSpinner, form
-                  );
-                  break;
-                case "4":
-                  console.log("Add Note");
-                  break;
-                case "5":
-                  console.log("Close Ticket");
-                  break;
-                default:
-                  break;
+                }
+
+              } else {
+                Swal.fire({
+                  title: 'An Error Occured!',
+                  text: 'Please try again or contact your supervisor or administrator for assistance.',
+                  icon: 'error',
+                  confirmButtonText: 'ok'
+                });
               }
             }
           break;

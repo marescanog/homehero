@@ -17,6 +17,7 @@ $comment= isset($_POST['form_comment']) ? $_POST['form_comment'] : null;
 $fee_adjustment= isset($_POST['fee_adjustment']) ? $_POST['fee_adjustment'] : null;
 $payment_method= isset($_POST['payment_method']) ? $_POST['payment_method'] : null;
 $inpt_bill_status= isset($_POST['inpt_bill_status']) ? $_POST['inpt_bill_status'] : null;
+$bill_resolved = isset($_POST['bill_resolved']) ? $_POST['bill_resolved'] : null;
 
 // Check if the user has a support token set
 if($supportToken == null){
@@ -37,6 +38,12 @@ if($type == 1 && $fee_adjustment  == null && $payment_method  == null && $inpt_b
     $isValid = false;
     $status = 401;
     $retVal = "Please update any of the following: payment method, bill status or fee.";
+}
+
+if($type == 5 && $bill_resolved == null){
+    $isValid = false;
+    $status = 401;
+    $retVal = "Please indicate if the ticket was resolved.";
 }
 
 // If token still valid, send a curl request to process the worker registration
@@ -70,6 +77,11 @@ if($isValid){
     if($inpt_bill_status != null){
         $post_data['inpt_bill_status'] = $inpt_bill_status;
     }
+
+    if($bill_resolved != null){
+        $post_data['bill_resolved'] = $bill_resolved;
+    }
+
 
     // 1. Initialize
     $ch = curl_init();
@@ -115,7 +127,7 @@ if(isset($curlResult->success) && $curlResult->success == false){
 
 // If Curl was successful, update current token to reflect that registration is complete
 if($isValid){
-    $retVal = ($curlResult->response != null && $curlResult->response->data != null ? $curlResult->response->data->message : null) ?? "Successfully Updated Bill!";
+    $retVal = (isset($curlResult->response) && isset($curlResult->response->data) ? $curlResult->response->data->message : null) ?? "Successfully Updated Bill!";
     $status = 200;
 }
 
@@ -123,7 +135,7 @@ if($isValid){
 $myObj = array(
     'status' => $status,
     'message' => $retVal,
-    // 'curlResult' =>$curlResult->response->status,
+    // 'curlResult' =>$output,
     // 'message' =>$curlResult->response->message,
     // 'comment' =>$_POST['form_comment'],
     // 'id' =>$_POST['form_id'],
