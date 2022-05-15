@@ -259,7 +259,7 @@ $("#submit-action").validate({
       disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
       // console.log(JSON.stringify(submitformData));
 
-      // console.log(JSON.stringify(submitformData));
+      console.log(JSON.stringify(submitformData));
 // =========================
 // Submission Types
 // =========================
@@ -349,6 +349,9 @@ $("#submit-action").validate({
                 break;
               case "4":
                 console.log("Add Note");
+                break;
+              case "5":
+                console.log("Close Ticket");
                 break;
               default:
                 break;
@@ -445,6 +448,7 @@ let btn_action_bill_edit = document.getElementById("btn-bill-edit");
 let btn_action_bill_cancel = document.getElementById("btn-bill-cancel");
 let btn_action_bill_notify = document.getElementById("btn-bill-notify");
 let btn_action_bill_addInfo = document.getElementById("btn-bill-comment");
+let btn_action_bill_close = document.getElementById("btn-bill-close");
 
 let grp_bill_pay = document.getElementById("grp-bill-pay");
 let grp_bill_stat = document.getElementById("grp-bill-stat");
@@ -453,10 +457,14 @@ let inpt_bill_pm = document.getElementById("inpt_bill_payment_method");
 let inpt_bill_stat = document.getElementById("inpt_bill_status");
 let inpt_bill_fee = document.getElementById("inpt_bill_fee_adjustment");
 
-let arr_btn_bill_actions = [btn_action_bill_edit,btn_action_bill_cancel,btn_action_bill_notify,btn_action_bill_addInfo];
+let grp_bill_resolve = document.getElementById("bill-grp-close");
+let inpt_bill_resolve1 = document.getElementById("isResolved1");
+let inpt_bill_resolve2 = document.getElementById("isResolved2");
+
+let arr_btn_bill_actions = [btn_action_bill_edit,btn_action_bill_cancel,btn_action_bill_notify,btn_action_bill_addInfo,btn_action_bill_close];
   const clear_buttons_bill_actions = () => {
     arr_btn_bill_actions.forEach((btn)=>{
-      if (btn.classList.contains('btn-info')) {
+      if (btn!= null && btn.classList.contains('btn-info')) {
         btn.classList.remove('btn-info');
         if (!btn.classList.contains('btn-outline-info')) {
           btn.classList.add('btn-outline-info');
@@ -498,6 +506,72 @@ let arr_btn_bill_actions = [btn_action_bill_edit,btn_action_bill_cancel,btn_acti
     }
   }
 
+  const openBillForm = () => {
+    if (grp_bill_pay.classList.contains('hidden')) {
+      grp_bill_pay.classList.remove('hidden');
+    } 
+    if (grp_bill_stat.classList.contains('hidden')) {
+      grp_bill_stat.classList.remove('hidden');
+    } 
+    if (grp_bill_fee.classList.contains('hidden')) {
+      grp_bill_fee.classList.remove('hidden');
+    } 
+    if(inpt_bill_pm.getAttribute("disabled") != null){
+      inpt_bill_pm.removeAttribute('disabled');
+    }
+    if(inpt_bill_stat.getAttribute("disabled") != null){
+      inpt_bill_stat.removeAttribute('disabled');
+    }
+    if(inpt_bill_fee.getAttribute("disabled") != null){
+      inpt_bill_fee.removeAttribute('disabled');
+    }
+  }
+
+  const closeBillForm = () => {
+    if (!grp_bill_pay.classList.contains('hidden')) {
+      grp_bill_pay.classList.add('hidden');
+    } 
+    if (!grp_bill_stat.classList.contains('hidden')) {
+      grp_bill_stat.classList.add('hidden');
+    } 
+    if (!grp_bill_fee.classList.contains('hidden')) {
+      grp_bill_fee.classList.add('hidden');
+    } 
+    if(inpt_bill_pm.getAttribute("disabled") == null){
+      inpt_bill_pm.setAttribute('disabled',true);
+    }
+    if(inpt_bill_stat.getAttribute("disabled") == null){
+      inpt_bill_stat.setAttribute('disabled',true);
+    }
+    if(inpt_bill_fee.getAttribute("disabled") == null){
+      inpt_bill_fee.setAttribute('disabled',true);
+    }
+  }
+
+  const openTicketStatForm = () => {
+    if (grp_bill_resolve.classList.contains('hidden')) {
+      grp_bill_resolve.classList.remove('hidden');
+    } 
+    if(inpt_bill_resolve1.getAttribute("disabled") != null){
+      inpt_bill_resolve1.removeAttribute('disabled');
+    }
+    if(inpt_bill_resolve2.getAttribute("disabled") != null){
+      inpt_bill_resolve2.removeAttribute('disabled');
+    }
+  }
+
+  const closeTicketStatForm = () => {
+    if (!grp_bill_resolve.classList.contains('hidden')) {
+      grp_bill_resolve.classList.add('hidden');
+    } 
+    if(inpt_bill_resolve1.getAttribute("disabled") == null){
+      inpt_bill_resolve1.setAttribute('disabled',true);
+    }
+    if(inpt_bill_resolve2.getAttribute("disabled") == null){
+      inpt_bill_resolve2.setAttribute('disabled',true);
+    }
+  }
+
 if(btn_action_bill_edit != null){
   btn_action_bill_edit.addEventListener("click",()=>{
     clear_buttons_bill_actions();
@@ -507,7 +581,10 @@ if(btn_action_bill_edit != null){
     "Please provide a reason as to why this bill is being edited."
     );
     // Edit bill form enable 
-    toggleBillForm();
+    openBillForm();
+    if(grp_bill_resolve != null){
+      closeTicketStatForm();
+    }
   });
 }
 
@@ -519,6 +596,10 @@ if(btn_action_bill_cancel != null){
     input_comment.setAttribute('placeholder',
     "Please provide the bill cancellation reason."
     );
+    closeBillForm();
+    if(grp_bill_resolve != null){
+      closeTicketStatForm();
+    }
   });
 }
 
@@ -530,6 +611,10 @@ if(btn_action_bill_notify != null){
     input_comment.setAttribute('placeholder',
     "Notify the author of this ticket."
     );
+    closeBillForm();
+    if(grp_bill_resolve != null){
+      closeTicketStatForm();
+    }
   });
 }
 
@@ -541,9 +626,27 @@ if(btn_action_bill_addInfo != null){
     input_comment.setAttribute('placeholder',
     "Add a note or relevant information for this ticket."
     );
+    closeBillForm();
+    if(grp_bill_resolve != null){
+      closeTicketStatForm();
+    }
   });
 }
 
+if(btn_action_bill_close != null){
+  btn_action_bill_close.addEventListener("click",()=>{
+    clear_buttons_bill_actions();
+    btn_action_bill_close.classList.add('btn-info');
+    input_form_action.setAttribute('value',5);
+    input_comment.setAttribute('placeholder',
+    "Add a note or relevant information for this ticket."
+    );
+    closeBillForm();
+    if(grp_bill_resolve != null){
+      closeTicketStatForm();
+    }
+  });
+}
 
 
 

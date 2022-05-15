@@ -668,6 +668,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
 <!-- BILLING ISSUES DISPLAY START -->
                 <?php 
+
+                    $hasStartedProcessBill = count($history) > 2;
+
                     if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 4){
                 ?>
                     <li class="list-group-item">
@@ -678,7 +681,16 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                 <button id="btn-bill-edit" type="button" class="mr-2 btn btn-outline-info">Edit Bill</button>
                                 <button id="btn-bill-cancel" type="button" class="mr-2 btn btn-outline-info">Cancel Bill</button>
                                 <button id="btn-bill-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
-                                <button id="btn-bill-comment" type="button" class="mr-2 btn btn-info">Add Note</button>
+                                <button id="btn-bill-comment" type="button" class="mr-2 btn <?php echo $hasStartedProcessBill == true &&
+                                ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4
+                                ? "btn-outline-info" : "btn-info";?>">Add Note</button>
+                                <?php 
+                                    if($hasStartedProcessBill == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4){
+                                ?>
+                                    <button id="btn-bill-close" type="button" class="mr-2 btn btn-info">Close Ticket</button>
+                                <?php 
+                                    }
+                                ?>
                             </div>
                         </div>
                     </li>
@@ -690,6 +702,30 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 <!-- ================================= -->
 <!--        FORMS & SUBMISSION         -->
 <!-- ================================= -->
+
+                    <!-- TICKET ACTIONS START -->
+                    <?php 
+                        if($hasStartedProcessBill == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4){
+                    ?>
+                    <li id="bill-grp-close" class="list-group-item">
+                        <h6>Update Support Ticket</h6>
+                        <p class="ml-2 mb-1 font-italic">Was the Support Ticket Resolved?</p>
+                        <div class="ml-2">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="isResolved1" name="bill_resolved" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="isResolved1">Yes</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="isResolved2" name="bill_resolved" class="custom-control-input" value="2">
+                                <label class="custom-control-label" for="isResolved2">No</label>
+                            </div>
+                        </div>
+                    </li>
+                    <?php 
+                        }
+                    ?>
+                    <!-- TICKET ACTIONS END -->
+
                     <li class="list-group-item">
                         <div class="row">
                             <!-- BILLING FORM START -->
@@ -710,7 +746,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                         <div class="input-group-prepend" >
                                             <label class="input-group-text" for="bill_status" style="min-width:9em !important;">Status</label>
                                         </div>
-                                        <select disabled class="custom-select"  id="inpt_bill_status">
+                                        <select disabled class="custom-select"  id="inpt_bill_status" name="inpt_bill_status">
                                             <option <?php echo $detailed_info->bill_status_id==1?"selected":"";?> value="1">Pending</option>
                                             <option <?php echo $detailed_info->bill_status_id==2?"selected":"";?> value="2">Paid</option>
                                             <option <?php echo $detailed_info->bill_status_id==3?"selected":"";?> value="3">Cancelled</option>
@@ -722,10 +758,13 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                         </div>
                                         <input disabled name="fee_adjustment" type="number" class="form-control" id="inpt_bill_fee_adjustment" aria-describedby="fee_adjustment" placeholder="(Optional) Enter New Fee">
                                     </div>
+                                    
                             <?php 
                                 }
                             ?>
                             <!-- BILLING FORM END -->
+
+
                             <!-- GENERAL APPLICABLE TO ALL -->
                             <div>
                                 <input type="hidden" id="form_action" name="form_action" value="<?php 
@@ -741,7 +780,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                             echo 4;
                                         break;
                                         case "4":
-                                            echo 4;
+                                            echo $hasStartedProcessBill == true ? 5 : 4;
                                         break;
                                         default:
                                             echo 0;
