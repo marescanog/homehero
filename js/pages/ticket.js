@@ -417,20 +417,25 @@ $("#submit-action").validate({
             }else {
               switch(submitformData?.form_action){
                 case "1":
+                  // console.log("Edit Bill");
                   submitformData["type"] = 1;
                   Process_Bill(
                     submitformData, button, buttonTxt, buttonLoadSpinner, form
                   );
                   break;
                 case "2":
+                  // console.log("Cancel Bill");
                   submitformData["type"] = 2;
                   Process_Bill(
                     submitformData, button, buttonTxt, buttonLoadSpinner, form
                   );
-                  // console.log("Cancel Bill");
                   break;
                 case "3":
-                  console.log("Notify");
+                  // console.log("Notify");
+                  submitformData["type"] = 3;
+                  Process_Bill(
+                    submitformData, button, buttonTxt, buttonLoadSpinner, form
+                  );
                   break;
                 case "4":
                   console.log("Add Note");

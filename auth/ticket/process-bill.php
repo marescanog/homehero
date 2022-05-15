@@ -33,7 +33,7 @@ if($ticketID  == null){
 }
 
 // Check if there are values submitted
-if($type != 2 && $fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
+if($type == 1 && $fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
     $isValid = false;
     $status = 401;
     $retVal = "Please update any of the following: payment method, bill status or fee.";
