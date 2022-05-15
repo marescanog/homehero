@@ -375,7 +375,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <?php if(isset($detailed_info->total_price_billed)){ ?>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-4 col-lg-3 border-right ticket-title"> Status</div>
+                                <div class="col-4 col-lg-3 border-right ticket-title"> Job Order Fee</div>
                                 <div class="col-8 col-lg-9">P <?php echo htmlentities($detailed_info->total_price_billed);?></div>
                             </div>
                         </li>

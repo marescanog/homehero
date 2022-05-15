@@ -40,6 +40,10 @@ const popThePopper = (id) => {
   });
 }
 
+
+// =======================================
+//    PROCESS WORKER REGISTRATION AJAX
+// =======================================
 const Process_Worker_Registration = (data = null, button, buttonTxt, buttonLoadSpinner, form) => {
   // Proceed with ajax call using PHP page to add in token
   if(data?.form_action != null){
@@ -117,7 +121,70 @@ const Process_Worker_Registration = (data = null, button, buttonTxt, buttonLoadS
   }
 }
 
+// ====================================
+//    PROCESS BILL AJAX
+// ====================================
+const Process_Bill = (data = null, button, buttonTxt, buttonLoadSpinner, form) => {
+  // Proceed with ajax call using PHP page to add in token
+  if(data?.form_action != null){
+    console.log("Form Data inside of Process Bill"+JSON.stringify(data));
+    $.ajax({
+      type : 'POST',
+      url : getDocumentLevel()+'/auth/ticket/process-bill.php',
+      data : data,
+      success : function(response) {
+        var res = JSON.parse(response);
+        // console.log("Your response after submission is:");
+        console.log("Response JSON: "+response);
 
+        let status = res["status"];
+        let message = res["message"];
+
+        if(status == 200){
+              // Unfreeze & Reset
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+              form.reset();
+              Swal.fire({
+                  title: 'Bill Issue Updated!',
+                  text: message ?? "The bill issue was sucessfully updated",
+                  icon: "success",
+                  }).then(result => {
+                    window.location.reload(true);
+              })
+        } else if (status == 400){
+          Swal.fire({
+            title: 'Oops! Error!',
+            text: message ?? 'Something went wrong. Please try again!',
+            icon: "error",
+            confirmButtonText: 'ok'
+            }).then(result => {
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+          });
+        }else {
+          Swal.fire({
+            title: 'Oops! Error!',
+            text: message ?? 'Something went wrong. Please try again!',
+            icon: "error",
+            confirmButtonText: 'ok'
+            }).then(result => {
+              window.location.reload(true);
+          });
+        }
+      },
+      error: function(response) {
+        console.log("ERROR - Response JSON: "+response);
+        Swal.fire({
+          title: 'An error occured!',
+          text: 'Something went wrong. Please try again!',
+          icon: "error",
+          confirmButtonText: 'ok'
+          }).then(result => {
+            window.location.reload(true);
+        });
+      }
+    });
+  }
+}
 
 
 $(document).ready(()=>{
@@ -259,7 +326,7 @@ $("#submit-action").validate({
       disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
       // console.log(JSON.stringify(submitformData));
 
-      console.log(JSON.stringify(submitformData));
+      console.log("Form Data Before Switch Types: "+JSON.stringify(submitformData));
 // =========================
 // Submission Types
 // =========================
@@ -337,24 +404,39 @@ $("#submit-action").validate({
         // Billing Issue
         // =========================
         case "4":
-            switch(submitformData?.form_action){
-              case "1":
-                console.log("Edit Bill");
-                break;
-              case "2":
-                console.log("Cancel Bill");
-                break;
-              case "3":
-                console.log("Notify");
-                break;
-              case "4":
-                console.log("Add Note");
-                break;
-              case "5":
-                console.log("Close Ticket");
-                break;
-              default:
-                break;
+            // console.log("Edit Bill");
+            // comment is required
+            if(submitformData?.form_comment == null || submitformData?.form_comment == ""){
+              Swal.fire({
+                title: 'Required information!',
+                text: 'Please provide a comment when processing your bill issue.',
+                icon: 'error',
+                confirmButtonText: 'ok'
+              });
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+            }else {
+              switch(submitformData?.form_action){
+                case "1":
+                  submitformData["type"] = 1;
+                  Process_Bill(
+                    submitformData, button, buttonTxt, buttonLoadSpinner, form
+                  );
+                  break;
+                case "2":
+                  console.log("Cancel Bill");
+                  break;
+                case "3":
+                  console.log("Notify");
+                  break;
+                case "4":
+                  console.log("Add Note");
+                  break;
+                case "5":
+                  console.log("Close Ticket");
+                  break;
+                default:
+                  break;
+              }
             }
           break;
         // =========================
@@ -643,7 +725,7 @@ if(btn_action_bill_close != null){
     );
     closeBillForm();
     if(grp_bill_resolve != null){
-      closeTicketStatForm();
+      openTicketStatForm();
     }
   });
 }
