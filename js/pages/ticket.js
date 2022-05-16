@@ -485,6 +485,9 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
         if (!btn.classList.contains('btn-outline-info')) {
           btn.classList.add('btn-outline-info');
         }
+        if(btn.classList.contains('text-white')){
+          btn.classList.remove('text-white');
+        }
       } 
     });
   }
@@ -493,6 +496,7 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
     btn_action_worker_approve.addEventListener("click",()=>{
       clear_buttons_worker_reg();
       btn_action_worker_approve.classList.add('btn-info');
+      btn_action_worker_approve.classList.add('text-white');
       input_form_action.setAttribute('value',1);
       input_comment.setAttribute('placeholder',
       "This optional comment visible to the request/ticket author and may be used to add notes or relevatant information."
@@ -504,6 +508,7 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
     btn_action_worker_reject.addEventListener("click",()=>{
       clear_buttons_worker_reg();
       btn_action_worker_reject.classList.add('btn-info');
+      btn_action_worker_reject.classList.add('text-white');
       input_form_action.setAttribute('value',2);
       input_comment.setAttribute('placeholder',
       "Please provide a reason as to why the application is declined."
@@ -515,6 +520,7 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
     btn_action_worker_notify.addEventListener("click",()=>{
       clear_buttons_worker_reg();
       btn_action_worker_notify.classList.add('btn-info');
+      btn_action_worker_notify.classList.add('text-white');
       input_form_action.setAttribute('value',3);
       input_comment.setAttribute('placeholder',
       "Please provide a note as to why the ticket author is being notified."
@@ -526,6 +532,7 @@ let arr_btn_worker_reg = [btn_action_worker_approve,btn_action_worker_reject,btn
     btn_action_worker_addInfo.addEventListener("click",()=>{
       clear_buttons_worker_reg();
       btn_action_worker_addInfo.classList.add('btn-info');
+      btn_action_worker_addInfo.classList.add('text-white');
       input_form_action.setAttribute('value',4);
       input_comment.setAttribute('placeholder',
       "Add a note or relevant information for this ticket."
@@ -563,41 +570,11 @@ let arr_btn_bill_actions = [btn_action_bill_edit,btn_action_bill_cancel,btn_acti
         if (!btn.classList.contains('btn-outline-info')) {
           btn.classList.add('btn-outline-info');
         }
+        if(btn.classList.contains('text-white')){
+          btn.classList.remove('text-white');
+        }
       } 
     });
-  }
-
-  const toggleBillForm = () => {
-    if (grp_bill_pay.classList.contains('hidden')) {
-      grp_bill_pay.classList.remove('hidden');
-    } else {
-      grp_bill_pay.classList.add('hidden');
-    }
-    if (grp_bill_stat.classList.contains('hidden')) {
-      grp_bill_stat.classList.remove('hidden');
-    } else {
-      grp_bill_stat.classList.add('hidden');
-    }
-    if (grp_bill_fee.classList.contains('hidden')) {
-      grp_bill_fee.classList.remove('hidden');
-    } else {
-      grp_bill_fee.classList.add('hidden');
-    }
-    if(inpt_bill_pm.getAttribute("disabled") == null){
-      inpt_bill_pm.setAttribute('disabled',true);
-    }else{
-      inpt_bill_pm.removeAttribute('disabled');
-    }
-    if(inpt_bill_stat.getAttribute("disabled") == null){
-      inpt_bill_stat.setAttribute('disabled',true);
-    }else{
-      inpt_bill_stat.removeAttribute('disabled');
-    }
-    if(inpt_bill_fee.getAttribute("disabled") == null){
-      inpt_bill_fee.setAttribute('disabled',true);
-    }else{
-      inpt_bill_fee.removeAttribute('disabled');
-    }
   }
 
   const openBillForm = () => {
@@ -670,6 +647,7 @@ if(btn_action_bill_edit != null){
   btn_action_bill_edit.addEventListener("click",()=>{
     clear_buttons_bill_actions();
     btn_action_bill_edit.classList.add('btn-info');
+    btn_action_bill_edit.classList.add('text-white');
     input_form_action.setAttribute('value',1);
     input_comment.setAttribute('placeholder',
     "Please provide a reason as to why this bill is being edited."
@@ -686,6 +664,7 @@ if(btn_action_bill_cancel != null){
   btn_action_bill_cancel.addEventListener("click",()=>{
     clear_buttons_bill_actions();
     btn_action_bill_cancel.classList.add('btn-info');
+    btn_action_bill_cancel.classList.add('text-white');
     input_form_action.setAttribute('value',2);
     input_comment.setAttribute('placeholder',
     "Please provide the bill cancellation reason."
@@ -701,6 +680,7 @@ if(btn_action_bill_notify != null){
   btn_action_bill_notify.addEventListener("click",()=>{
     clear_buttons_bill_actions();
     btn_action_bill_notify.classList.add('btn-info');
+    btn_action_bill_notify.classList.add('text-white');
     input_form_action.setAttribute('value',3);
     input_comment.setAttribute('placeholder',
     "Notify the author of this ticket."
@@ -716,6 +696,7 @@ if(btn_action_bill_addInfo != null){
   btn_action_bill_addInfo.addEventListener("click",()=>{
     clear_buttons_bill_actions();
     btn_action_bill_addInfo.classList.add('btn-info');
+    btn_action_bill_addInfo.classList.add('text-white');
     input_form_action.setAttribute('value',4);
     input_comment.setAttribute('placeholder',
     "Add a note or relevant information for this ticket."
@@ -731,6 +712,7 @@ if(btn_action_bill_close != null){
   btn_action_bill_close.addEventListener("click",()=>{
     clear_buttons_bill_actions();
     btn_action_bill_close.classList.add('btn-info');
+    btn_action_bill_close.classList.add('text-white');
     input_form_action.setAttribute('value',5);
     input_comment.setAttribute('placeholder',
     "Add a note or relevant information for this ticket."
@@ -742,6 +724,122 @@ if(btn_action_bill_close != null){
   });
 }
 
+
+// 0 - none selected, 1 - approve, 2 - disapprove, 3 - comment only
+// =============================================
+// Process Bill Issue Code
+// =============================================
+let btn_jo_edit = document.getElementById("btn-job-issue-edit");
+let btn_jo_cancel = document.getElementById("btn-job-issue-cancel");
+let btn_jo_notify = document.getElementById("btn-job-issue-notify");
+let btn_jo_addInfo = document.getElementById("btn-job-issue-comment");
+let btn_jo_close = document.getElementById("btn-job-issue-close");
+
+// let grp_bill_pay = document.getElementById("grp-bill-pay");
+// let grp_bill_stat = document.getElementById("grp-bill-stat");
+// let grp_bill_fee = document.getElementById("grp-bill-fee");
+// let inpt_bill_pm = document.getElementById("inpt_bill_payment_method");
+// let inpt_bill_stat = document.getElementById("inpt_bill_status");
+// let inpt_bill_fee = document.getElementById("inpt_bill_fee_adjustment");
+
+// let grp_bill_resolve = document.getElementById("bill-grp-close");
+// let inpt_bill_resolve1 = document.getElementById("isResolved1");
+// let inpt_bill_resolve2 = document.getElementById("isResolved2");
+
+let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addInfo, btn_jo_close];
+  const clear_buttons_jo_actions = () => {
+    arr_btn_jo_actions.forEach((btn)=>{
+      if (btn!= null && btn.classList.contains('btn-info')) {
+        btn.classList.remove('btn-info');
+        if (!btn.classList.contains('btn-outline-info')) {
+          btn.classList.add('btn-outline-info');
+        }
+        if(btn.classList.contains('text-white')){
+          btn.classList.remove('text-white');
+        }
+      } 
+    });
+  }
+  
+  if(btn_jo_edit != null){
+    btn_jo_edit.addEventListener("click",()=>{
+      clear_buttons_jo_actions();
+      btn_jo_edit.classList.add('btn-info');
+      btn_jo_edit.classList.add('text-white');
+      input_form_action.setAttribute('value',1);
+      input_comment.setAttribute('placeholder',
+      "Please provide a reason as to why you are editing this job order."
+      );
+      // closeBillForm();
+      // if(grp_bill_resolve != null){
+      //   openTicketStatForm();
+      // }
+    });
+  }
+
+  if(btn_jo_cancel != null){
+    btn_jo_cancel.addEventListener("click",()=>{
+      clear_buttons_jo_actions();
+      btn_jo_cancel.classList.add('btn-info');
+      btn_jo_cancel.classList.add('text-white');
+      input_form_action.setAttribute('value',2);
+      input_comment.setAttribute('placeholder',
+      "Please provide a reason as to why this job order is being cancelled."
+      );
+      // closeBillForm();
+      // if(grp_bill_resolve != null){
+      //   openTicketStatForm();
+      // }
+    });
+  }
+
+  if(btn_jo_notify != null){
+    btn_jo_notify.addEventListener("click",()=>{
+      clear_buttons_jo_actions();
+      btn_jo_notify.classList.add('btn-info');
+      btn_jo_notify.classList.add('text-white');
+      input_form_action.setAttribute('value',3);
+      input_comment.setAttribute('placeholder',
+      "Add a note or relevant information when notifying the author on this ticket."
+      );
+      // closeBillForm();
+      // if(grp_bill_resolve != null){
+      //   openTicketStatForm();
+      // }
+    });
+  }
+
+  if(btn_jo_addInfo != null){
+    btn_jo_addInfo.addEventListener("click",()=>{
+      clear_buttons_jo_actions();
+      btn_jo_addInfo.classList.add('btn-info');
+      btn_jo_addInfo.classList.add('text-white');
+      input_form_action.setAttribute('value',4);
+      input_comment.setAttribute('placeholder',
+      "Add a note or relevant information for this ticket."
+      );
+      // closeBillForm();
+      // if(grp_bill_resolve != null){
+      //   openTicketStatForm();
+      // }
+    });
+  }
+
+  if(btn_jo_close != null){
+    btn_jo_close.addEventListener("click",()=>{
+      clear_buttons_jo_actions();
+      btn_jo_close.classList.add('btn-info');
+      btn_jo_close.classList.add('text-white');
+      input_form_action.setAttribute('value',5);
+      input_comment.setAttribute('placeholder',
+      "Add a note or relevant information for this ticket."
+      );
+      // closeBillForm();
+      // if(grp_bill_resolve != null){
+      //   openTicketStatForm();
+      // }
+    });
+  }
 
 
 

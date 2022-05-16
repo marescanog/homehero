@@ -13,3 +13,8 @@
     opacity: 0;
     max-width: 0px;
 }
+
+.smol-fat {
+    font-size: small !important;
+    font-weight: 600 !important;
+}

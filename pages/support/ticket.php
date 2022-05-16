@@ -648,6 +648,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             </div>
         </li>
     <?php }?>
+
     <?php if(isset($detailed_info->ho_fname) && isset($detailed_info->ho_lname)){ 
             $ho_complete_name = $detailed_info->ho_lname.",".$detailed_info->ho_fname;
         ?>
@@ -658,6 +659,16 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             </div>
         </li>
     <?php }?>
+
+    <?php if(isset($detailed_info->ho_phone)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Homeowner Phone No:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->ho_phone);?> </div>
+            </div>
+        </li>
+    <?php }?>
+
     <?php if(isset($detailed_info->worker_fname) && isset($detailed_info->worker_lname)){ 
             $worker_complete_name = $detailed_info->worker_lname.",".$detailed_info->worker_fname;
         ?>
@@ -667,6 +678,17 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <div class="col-8 col-lg-9"> <?php echo htmlentities($worker_complete_name);?> </div>
             </div>
         </li>
+    <?php }?>
+
+    <?php if(isset($detailed_info->worker_phone)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Homeowner Phone No:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->worker_phone);?> </div>
+            </div>
+        </li>
+    <?php }?>
+
     <?php if(isset($detailed_info->job_order_status_text)){ ?>
         <li class="list-group-item">
             <div class="row">
@@ -675,6 +697,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             </div>
         </li>
     <?php }?>
+
     <?php if(isset($detailed_info->job_start)){ ?>
         <li class="list-group-item">
             <div class="row">
@@ -684,7 +707,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             </div>
         </li>
     <?php }?>
-    <?php }?>
+
+    
+
     <?php if(isset($detailed_info->job_end)){ ?>
         <li class="list-group-item">
             <div class="row">
@@ -719,7 +744,8 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-4 col-lg-3 border-right ticket-title">Job Posted On:</div>
-                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_post_created_on);?> </div>
+                            <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_post_created_on);
+                                    echo $date->format('M j,Y g:i A');?></div>
                         </div>
                     </li>
                 <?php }?>
@@ -812,7 +838,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             </div>
             <ul class="list-group list-group-flush">
                 <form name="submit-action" id="submit-action" method="post">
-<!-- WORKER REGISTRATION DISPLAY START -->
+<!-- ACTION WORKER REGISTRATION DISPLAY START -->
                 <?php 
                     if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 1){
                 ?>
@@ -824,18 +850,17 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                 <button id="btn-worker-reg-approve" type="button" class="mr-2 btn btn-outline-info">Approve</button>
                                 <button id="btn-worker-reg-reject" type="button" class="mr-2 btn btn-outline-info">Reject</button>
                                 <button id="btn-worker-reg-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
-                                <button id="btn-worker-reg-comment" type="button" class="mr-2 btn btn-info">Add Note</button>
+                                <button id="btn-worker-reg-comment" type="button" class="mr-2 btn btn-info text-white">Add Note</button>
                             </div>
                         </div>
                     </li>
                 <?php 
                     }
                 ?>
-<!-- WORKER REGISTRATION DISPLAY END -->
+<!-- ACTION WORKER REGISTRATION DISPLAY END -->
 
-<!-- BILLING ISSUES DISPLAY START -->
+<!-- ACTION BILLING ISSUES DISPLAY START -->
                 <?php 
-
                     $hasStartedProcessBill = count($history) > 2;
 
                     if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 4){
@@ -856,11 +881,11 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                 <button id="btn-bill-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
                                 <button id="btn-bill-comment" type="button" class="mr-2 btn <?php echo $hasStartedProcessBill == true &&
                                 ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4
-                                ? "btn-outline-info" : "btn-info";?>">Add Note</button>
+                                ? "btn-outline-info" : "btn-info text-white";?>">Add Note</button>
                                 <?php 
                                     if($hasStartedProcessBill == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4){
                                 ?>
-                                    <button id="btn-bill-close" type="button" class="mr-2 btn btn-info">Close Ticket</button>
+                                    <button id="btn-bill-close" type="button" class="mr-2 btn btn-info text-white">Close Ticket</button>
                                 <?php 
                                     }
                                 ?>
@@ -870,7 +895,36 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <?php 
                     }
                 ?>
-<!-- BILLING ISSUES DISPLAY END -->
+<!-- ACTION BILLING ISSUES DISPLAY END -->
+
+
+<!-- ACTION JOB ORDER ISSUES DISPLAY START -->
+                <?php 
+                    $hasStartedProcessJobIssue = count(($history)) > 2;
+                    if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 7){
+                ?>
+                    <li class="list-group-item" disabled>
+                        <h6>Process Job Order Issue</h6>
+                        <p class="ml-2 mb-1 font-italic">Select an option</p>
+                        <div class="ml-2">
+                            <div class="d-flex flex-col flex-sm-row">
+                                <button id="btn-job-issue-edit" type="button" class="mr-2 btn <?php echo $hasStartedProcessJobIssue?"btn-outline-info":"btn-info text-white";?>">Edit</button>
+                                <button id="btn-job-issue-cancel" type="button" class="mr-2 btn btn-outline-info">Cancel</button>
+                                <button id="btn-job-issue-notify" type="button" class="mr-2 btn btn-outline-info">Notify</button>
+                                <button id="btn-job-issue-comment" type="button" class="mr-2 btn btn-outline-info">Add Note</button>
+                                <?php 
+                                    if($hasStartedProcessJobIssue == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 7){
+                                ?>
+                                    <button id="btn-job-issue-close" type="button" class="mr-2 btn btn-info text-white">Close</button>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php 
+                    }
+                ?>
+<!-- ACTION JOB ORDER ISSUES DISPLAY END -->
+
 
 <!-- ================================= -->
 <!--        FORMS & SUBMISSION         -->
@@ -898,6 +952,71 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                         }
                     ?>
                     <!-- TICKET ACTIONS END -->
+
+                    
+                    <!-- JOB ORDER FORM START -->
+                    <?php 
+                        if(($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 7){
+                    ?>  
+                        <li id="bill-grp-close" class="list-group-item">
+                            <h6 >Edit Job Order</h6>
+                            <p class="ml-2 Pb-3 font-italic">Change the Job Post key details</p>
+                            <div class="pl-2">
+                                <div id="grp-bill-pay" class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="job_order_status" style="min-width:3em !important;">Job Status</label>
+                                    </div>
+                                    <select class="custom-select" id="inpt_job_order_status" name="job_order_status">
+                                        <option <?php echo $detailed_info->job_order_status_id==1?"selected":"";?> value="1">Confirmed</option>
+                                        <option <?php echo $detailed_info->job_order_status_id==2?"selected":"";?> value="2">Completed</option>
+                                        <option <?php echo $detailed_info->job_order_status_id==3?"selected":"";?> value="3">Cancelled</option>
+                                    </select>
+                                </div>
+                                
+                                <label for="inputPassword5" class="smol-fat">Date & Time Started</label>
+                                <div class="input-group mb-3 pl-2 pr-2">
+                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
+                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                    </div>
+                                </div>
+
+                                <label for="inputPassword5" class="smol-fat">Date & Time Completed</label>
+                                <div class="input-group mb-3 pl-2 pr-2">
+                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
+                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                    </div>
+                                </div>
+
+                                <label for="inputPassword5" class="smol-fat">Address</label>
+                                <div class="input-group mb-3 pl-2 pr-2">
+                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php echo htmlentities($jo_complete_address);?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                    </div>
+                                </div>
+
+                                <!-- To Consider, Verification Code Authroization Before Submission -->
+                                <!-- <label for="inputPassword5" class="smol-fat">Verification Code</label>
+                                <div class="input-group mb-3 pl-2 pr-2">
+                                    <input type="text" class="form-control" placeholder="Enter the Code Sent to Account Holder" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-info" type="button" id="button-addon2">Send PIN</button>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3 justify-content-end pr-2">
+                                    <button class="btn btn-sm btn-secondary" type="button" id="button-addon2">Override Code</button>
+                                </div> -->
+                            </div>
+                        </li>
+                    <?php 
+                        }
+                    ?>
+                    <!-- JOB ORDER FORM END -->
+
 
                     <li class="list-group-item">
                         <div class="row">
@@ -937,7 +1056,6 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                             ?>
                             <!-- BILLING FORM END -->
 
-
                             <!-- GENERAL APPLICABLE TO ALL -->
                             <div>
                                 <input type="hidden" id="form_action" name="form_action" value="<?php 
@@ -954,6 +1072,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                         break;
                                         case "4":
                                             echo $hasStartedProcessBill == true ? 5 : 4;
+                                        break;
+                                        case "7": 
+                                            echo $hasStartedProcessJobIssue == true ? 1 : 4;
                                         break;
                                         default:
                                             echo 0;
