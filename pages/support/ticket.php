@@ -975,15 +975,19 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                 
                                 <label for="jo_time_start" class="smol-fat">Date & Time Started</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
+                                    <input name="jo_start_date_time" id="input_jo_time_start_value_submit" type="hidden" value="" >
+                                    <input id="input_jo_time_start_value" type="hidden" value="<?php echo $detailed_info->job_start;?>" >
                                     <input id="input_jo_time_start" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
-                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Job Time Start" aria-describedby="jo_time_start">
+                                    echo $date->format('M j, Y - g:i A');?>" aria-label="Job Time Start" aria-describedby="jo_time_start">
                                     <div class="input-group-append">
                                         <button id="btn_jo_time_start" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
                                     </div>
                                 </div>
-
+ 
                                 <label for="jo_time_end" class="smol-fat">Date & Time Completed</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
+                                    <input name="jo_end_date_time" id="input_jo_time_end_value_submit" type="hidden" value="" >
+                                    <input id="input_jo_time_end_value" type="hidden" value="<?php echo $detailed_info->job_end;?>" >
                                     <input id="input_jo_time_end" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
                                     echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Job Time End" aria-describedby="jo_time_end">
                                     <div class="input-group-append">
@@ -1292,6 +1296,7 @@ else {
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
 <!-- Custom JS Scripts Below -->
 <script src="../../js/pages/ticket.js"></script>
+
     <script>
 
     </script>
