@@ -735,17 +735,37 @@ let btn_jo_notify = document.getElementById("btn-job-issue-notify");
 let btn_jo_addInfo = document.getElementById("btn-job-issue-comment");
 let btn_jo_close = document.getElementById("btn-job-issue-close");
 
-// let grp_bill_pay = document.getElementById("grp-bill-pay");
-// let grp_bill_stat = document.getElementById("grp-bill-stat");
-// let grp_bill_fee = document.getElementById("grp-bill-fee");
-// let inpt_bill_pm = document.getElementById("inpt_bill_payment_method");
-// let inpt_bill_stat = document.getElementById("inpt_bill_status");
-// let inpt_bill_fee = document.getElementById("inpt_bill_fee_adjustment");
+// let grp_jo_ = document.getElementById("job-issue-grp-close");
 
-// let grp_bill_resolve = document.getElementById("bill-grp-close");
-// let inpt_bill_resolve1 = document.getElementById("isResolved1");
-// let inpt_bill_resolve2 = document.getElementById("isResolved2");
+// let inpt_jo_ = document.getElementById("inpt_job_order_status");
+// let inpt_jo_ = document.getElementById("input_jo_time_start");
+// let inpt_jo_ = document.getElementById("input_jo_time_end");
+// let inpt_jo_ = document.getElementById("input_jo_address");
 
+// Job Order Form Modal Activators
+let btn_jo_start = document.getElementById("btn_jo_time_start");
+let btn_jo_end = document.getElementById("btn_jo_time_end");
+let btn_jo_address = document.getElementById("btn_jo_address");
+
+if(btn_jo_start != null){
+  btn_jo_start.addEventListener("click",()=>{
+    loadModal("sup-edit-jo-start",modalTypes,()=>{},getDocumentLevel());
+  });
+}
+
+if(btn_jo_end != null){
+  btn_jo_end.addEventListener("click",()=>{
+    loadModal("sup-edit-jo-end",modalTypes,()=>{},getDocumentLevel());
+  });
+}
+
+if(btn_jo_address != null){
+  btn_jo_address.addEventListener("click",()=>{
+    loadModal("sup-edit-jo-address",modalTypes,()=>{},getDocumentLevel());
+  });
+}
+
+// Job Order Actions Buttons
 let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addInfo, btn_jo_close];
   const clear_buttons_jo_actions = () => {
     arr_btn_jo_actions.forEach((btn)=>{

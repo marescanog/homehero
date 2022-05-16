@@ -958,44 +958,44 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <?php 
                         if(($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 7){
                     ?>  
-                        <li id="bill-grp-close" class="list-group-item">
+                        <li id="job-issue-grp-close" class="list-group-item">
                             <h6 >Edit Job Order</h6>
                             <p class="ml-2 Pb-3 font-italic">Change the Job Post key details</p>
                             <div class="pl-2">
-                                <div id="grp-bill-pay" class="input-group mb-3">
+                                <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="job_order_status" style="min-width:3em !important;">Job Status</label>
                                     </div>
-                                    <select class="custom-select" id="inpt_job_order_status" name="job_order_status">
+                                    <select id="inpt_job_order_status" class="custom-select"  name="job_order_status">
                                         <option <?php echo $detailed_info->job_order_status_id==1?"selected":"";?> value="1">Confirmed</option>
                                         <option <?php echo $detailed_info->job_order_status_id==2?"selected":"";?> value="2">Completed</option>
                                         <option <?php echo $detailed_info->job_order_status_id==3?"selected":"";?> value="3">Cancelled</option>
                                     </select>
                                 </div>
                                 
-                                <label for="inputPassword5" class="smol-fat">Date & Time Started</label>
+                                <label for="jo_time_start" class="smol-fat">Date & Time Started</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
-                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <input id="input_jo_time_start" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
+                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Job Time Start" aria-describedby="jo_time_start">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                        <button id="btn_jo_time_start" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
                                     </div>
                                 </div>
 
-                                <label for="inputPassword5" class="smol-fat">Date & Time Completed</label>
+                                <label for="jo_time_end" class="smol-fat">Date & Time Completed</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
-                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <input id="input_jo_time_end" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
+                                    echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Job Time End" aria-describedby="jo_time_end">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                        <button id="btn_jo_time_end" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
                                     </div>
                                 </div>
 
-                                <label for="inputPassword5" class="smol-fat">Address</label>
+                                <label for="jo_address" class="smol-fat">Address</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input readonly type="text" class="form-control bg-white" placeholder="<?php echo htmlentities($jo_complete_address);?>" Value="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <input id="input_jo_address" readonly type="text" class="form-control bg-white" placeholder="<?php echo htmlentities($jo_complete_address);?>" Value="" aria-label="Job Order Address" aria-describedby="jo_address">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-info" type="button" id="button-addon2">Click to Edit</button>
+                                        <button  id="btn_jo_address" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
                                     </div>
                                 </div>
 
