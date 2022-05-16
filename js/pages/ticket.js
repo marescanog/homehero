@@ -1,3 +1,16 @@
+// UNIVERSAL DATE
+let today = new Date();
+let hours = today.getHours();
+let minutes = today.getMinutes();
+let seconds = today.getSeconds();
+  // // Commented out since military time will be used
+  // hours = hours % 12;
+  // hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  let strTime = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+  let dateString_today = today.getFullYear() + "-" + (today.getMonth()+1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0')  + " " + strTime;
+
+
 const summonZeSpinner = () => {
     Swal.fire({
         title: "",
@@ -737,25 +750,43 @@ let btn_jo_close = document.getElementById("btn-job-issue-close");
 
 // let grp_jo_ = document.getElementById("job-issue-grp-close");
 
-// let inpt_jo_ = document.getElementById("inpt_job_order_status");
-// let inpt_jo_ = document.getElementById("input_jo_time_start");
-// let inpt_jo_ = document.getElementById("input_jo_time_end");
-// let inpt_jo_ = document.getElementById("input_jo_address");
+let inpt_jo_start_display = document.getElementById("input_jo_time_start");
+let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
+let input_jo_time_start_value_submit = document.getElementById("input_jo_time_start_value_submit");
 
+let inpt_jo_end_display = document.getElementById("input_jo_time_end");
+let inpt_jo_end_value = document.getElementById("input_jo_time_end_value");
+let input_jo_time_end_value_submit = document.getElementById("input_jo_time_end_value_submit");
+
+// let inpt_jo_ = document.getElementById("inpt_job_order_status");
+ 
 // Job Order Form Modal Activators
 let btn_jo_start = document.getElementById("btn_jo_time_start");
 let btn_jo_end = document.getElementById("btn_jo_time_end");
 let btn_jo_address = document.getElementById("btn_jo_address");
 
+
 if(btn_jo_start != null){
   btn_jo_start.addEventListener("click",()=>{
-    loadModal("sup-edit-jo-start",modalTypes,()=>{},getDocumentLevel());
+    let jo_start_val = inpt_jo_start_value?.value ?? "";
+    let jo_submit_val = input_jo_time_start_value_submit?.value ?? "";
+    loadModal("sup-edit-jo-start",modalTypes,()=>{},getDocumentLevel(),
+      { old_date_time:jo_start_val,
+        today:dateString_today,
+        changedValue: jo_submit_val
+      });
   });
 }
 
 if(btn_jo_end != null){
   btn_jo_end.addEventListener("click",()=>{
-    loadModal("sup-edit-jo-end",modalTypes,()=>{},getDocumentLevel());
+    let jo_end_val = inpt_jo_end_value?.value ?? "";
+    let jo_submit_val = input_jo_time_end_value_submit?.value ?? "";
+    loadModal("sup-edit-jo-end",modalTypes,()=>{},getDocumentLevel(),{ 
+      old_date_time:jo_end_val,
+      today: dateString_today,
+      changedValue: jo_submit_val
+    });
   });
 }
 
