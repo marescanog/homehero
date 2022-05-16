@@ -118,7 +118,14 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2">Ticket <?php echo htmlentities($idRef); ?></h1>
+        <h1 class="h2">Ticket <?php echo  isset($base_info->issue_id) ? 
+            ($base_info->issue_id >= 1 && $base_info->issue_id <= 3 ?  "REG" : 
+                ($base_info->issue_id >= 4 && $base_info->issue_id <= 9 ? "DIS" : (
+                    $base_info->issue_id >= 12 && $base_info->issue_id <= 16 ?  "TEC" : "GEN"
+                    )
+                )
+            )."-".str_pad($idRef, 5, "0", STR_PAD_LEFT)
+            : ""; ?></h1>
     </div>
 
 <!-- DECLARE 404 SERVER OR SERVER ERROR ALERTS HERE -->
@@ -425,10 +432,6 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <?php }?>
                 </ul>
 
-<!-- Template -->
-<!-- <?php if(isset($detailed_info->bill_id)){ ?>
-<?php }?> -->
-
                 <?php 
                     if(isset($detailed_info->job_order_id ) && $detailed_info->job_order_id != null){
                 ?>
@@ -580,7 +583,8 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-4 col-lg-3 border-right ticket-title">Posted On:</div>
-                                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->post_created_on);?> </div>
+                                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->post_created_on);
+                                    echo $date->format('M j,Y g:i A');?> </div> 
                             </div>
                         </li>
                     <?php }?>
@@ -596,6 +600,169 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             ?>
 
 <!-- BILLING INFORMATION DISPLAY END -->
+
+<!-- Template -->
+<!-- <?php if(isset($detailed_info->bill_id)){ ?>
+    <?php }?> -->
+
+<!-- JOB ORDER ISSUE DISPLAY START -->
+
+<?php 
+    // var_dump($base_info->author_Description);
+    if(isset($base_info->issue_id) && $base_info->issue_id == 7){
+        // var_dump($detailed_info);
+        // check if author
+?>
+    <?php if(isset($detailed_info->job_order_id)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order ID:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities(str_pad($detailed_info->job_order_id, 5, "0", STR_PAD_LEFT));?> </div>
+            </div>
+        </li>
+    <?php }?>
+
+    <?php if(isset($base_info->author_Description) && $owny == true){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Issue Details:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($base_info->author_Description);?> </div>
+            </div>
+        </li>
+    <?php }?>
+
+    <?php if(isset($detailed_info->job_post_name)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order Name:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_post_name);?> </div>
+            </div>
+        </li>
+    <?php }?>
+
+    <?php if(isset($detailed_info->job_description)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order Details:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_description);?> </div>
+            </div>
+        </li>
+    <?php }?>
+    <?php if(isset($detailed_info->ho_fname) && isset($detailed_info->ho_lname)){ 
+            $ho_complete_name = $detailed_info->ho_lname.",".$detailed_info->ho_fname;
+        ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Homeowner Name:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($ho_complete_name);?> </div>
+            </div>
+        </li>
+    <?php }?>
+    <?php if(isset($detailed_info->worker_fname) && isset($detailed_info->worker_lname)){ 
+            $worker_complete_name = $detailed_info->worker_lname.",".$detailed_info->worker_fname;
+        ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Worker Asigned:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($worker_complete_name);?> </div>
+            </div>
+        </li>
+    <?php if(isset($detailed_info->job_order_status_text)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order Status:</div>
+                <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_order_status_text);?> </div>
+            </div>
+        </li>
+    <?php }?>
+    <?php if(isset($detailed_info->job_start)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order Start Date:</div>
+                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_start);
+                                    echo $date->format('M j,Y g:i A');?> </div> 
+            </div>
+        </li>
+    <?php }?>
+    <?php }?>
+    <?php if(isset($detailed_info->job_end)){ ?>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-4 col-lg-3 border-right ticket-title">Job Order Completed On:</div>
+                <div class="col-8 col-lg-9"> <?php $date = new DateTime($detailed_info->job_end);
+                                    echo $date->format('M j,Y g:i A');?> </div> 
+            </div>
+        </li>
+    <?php }?>
+
+    <!-- Job Order Issue Job Post Details -->
+                <?php if(isset($detailed_info->street_name)){ 
+                        $jo_complete_address = 
+                        $detailed_info->street_no." ".$detailed_info->street_name.", ".$detailed_info->barangay_name.", ".$detailed_info->city_name;
+                    ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Home Address:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($jo_complete_address);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->home_type_name)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Home Type:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->home_type_name);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->job_post_created_on)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Job Posted On:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_post_created_on);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->job_order_size)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Job Size:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_order_size);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->job_category)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Job Category:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_category);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->job_subcategory)){ ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Job Subcategory:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_subcategory);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+                <?php if(isset($detailed_info->rate_offer)){ 
+                        $jo_rtype = isset($detailed_info->rate_type_name) && $detailed_info->rate_type_name != null ? " per ".$detailed_info->rate_type_name : "";
+                    ?>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4 col-lg-3 border-right ticket-title">Rate Offer:</div>
+                            <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->rate_offer.$jo_rtype);?> </div>
+                        </div>
+                    </li>
+                <?php }?>
+<?php 
+    } // if base info 7 - closing brk
+?>
+
+
+<!-- JOB ORDER ISSUE DISPLAY END -->
 </div>
 
 <!-- ================================= -->
