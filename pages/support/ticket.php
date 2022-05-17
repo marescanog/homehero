@@ -900,7 +900,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
 <!-- ACTION JOB ORDER ISSUES DISPLAY START -->
                 <?php 
-                    $hasStartedProcessJobIssue = count(($history)) > 1;
+                    $hasStartedProcessJobIssue = count(($history)) > 2;
                     if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 7){
                 ?>
                     <li class="list-group-item" disabled>
@@ -932,7 +932,15 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
                     <!-- TICKET ACTIONS START -->
                     <?php 
-                        $hasStartedProcesses = $hasStartedProcessJobIssue || $hasStartedProcessBill;
+                        $hasStartedProcesses = false;
+                        switch($base_info->issue_id){
+                            case 4:
+                                $hasStartedProcesses = $hasStartedProcessBill;
+                                break;
+                            case 7:
+                                $hasStartedProcesses = $hasStartedProcessJobIssue;
+                                break;
+                        }
                         if($hasStartedProcesses == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && ($base_info->issue_id == 4 || $base_info->issue_id == 7)){
                     ?>
                     <li id="bill-grp-close" class="list-group-item">

@@ -1,6 +1,21 @@
 let jo_selected_option_text = null;
 let jo_selected_option_value = null;
 
+let close_one_address = document.getElementById("close_one_address");
+let close_no_address = document.getElementById("close_no_address"); 
+
+if(close_one_address != null){
+    close_one_address.addEventListener("click",()=>{
+        $('#modal').modal('hide');
+    });
+}
+
+if(close_no_address != null){
+    close_no_address.addEventListener("click",()=>{
+        $('#modal').modal('hide');
+    })
+}
+
 if($("#modal-enter-address") != null){
     $("#modal-enter-address").ready(()=>{   
         let jo_select_change_address = document.getElementById("jo_change_address_select");
