@@ -217,3 +217,12 @@ const addURLParameter = (name=null,value=null) => {
         window.location.search = urlParams;
     }
 }
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+ }
