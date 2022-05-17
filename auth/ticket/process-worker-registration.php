@@ -15,14 +15,14 @@ $type= isset($_POST['form_action']) && is_numeric($_POST['form_action']) ? $_POS
 $comment= isset($_POST['form_comment']) ? $_POST['form_comment'] : null;
 
 // Check if the user has a support token set
-if($supportToken == null){
+if($isValid == true && $supportToken == null){
     $isValid = false;
     $status = 401;
     $retVal = "Your session timed out. Please log into your support account";
 }
 
 // Check if there is a ticket ID
-if($ticketID  == null){
+if($isValid == true && $ticketID  == null){
     $isValid = false;
     $status = 401;
     $retVal = "There was an error pulling up the ticket. Please try again.";
