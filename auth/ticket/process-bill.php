@@ -20,27 +20,27 @@ $inpt_bill_status= isset($_POST['inpt_bill_status']) ? $_POST['inpt_bill_status'
 $bill_resolved = isset($_POST['bill_resolved']) ? $_POST['bill_resolved'] : null;
 
 // Check if the user has a support token set
-if($supportToken == null){
+if($isValid == true && $supportToken == null){
     $isValid = false;
     $status = 401;
     $retVal = "Your session timed out. Please log into your support account";
 }
 
 // Check if there is a ticket ID
-if($ticketID  == null){
+if($isValid == true && $ticketID  == null){
     $isValid = false;
     $status = 401;
     $retVal = "There was an error pulling up the ticket. Please try again.";
 }
 
 // Check if there are values submitted
-if($type == 1 && $fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
+if($isValid == true && $type == 1 && $fee_adjustment  == null && $payment_method  == null && $inpt_bill_status  == null){
     $isValid = false;
     $status = 401;
     $retVal = "Please update any of the following: payment method, bill status or fee.";
 }
 
-if($type == 5 && $bill_resolved == null){
+if($isValid == true && $type == 5 && $bill_resolved == null){
     $isValid = false;
     $status = 401;
     $retVal = "Please indicate if the ticket was resolved.";
@@ -119,7 +119,7 @@ if($isValid){
         curl_close($ch);
 }
 
-if(isset($curlResult->success) && $curlResult->success == false){
+if($isValid == true && isset($curlResult->success) && $curlResult->success == false){
     $isValid = false;
     $status = $curlResult->response->status ?? 500;
     $retVal = $curlResult->response->message ?? "An error occured while updating the bill issue details please try again.";
