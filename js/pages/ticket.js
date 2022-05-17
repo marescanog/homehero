@@ -758,7 +758,9 @@ let inpt_jo_end_display = document.getElementById("input_jo_time_end");
 let inpt_jo_end_value = document.getElementById("input_jo_time_end_value");
 let input_jo_time_end_value_submit = document.getElementById("input_jo_time_end_value_submit");
 
-// let inpt_jo_ = document.getElementById("inpt_job_order_status");
+let input_jo_address_display = document.getElementById("input_jo_address");
+let input_jo_address_value = document.getElementById("input_jo_address_value");
+let input_jo_address_value_submit = document.getElementById("input_jo_address_value_submit");
  
 // Job Order Form Modal Activators
 let btn_jo_start = document.getElementById("btn_jo_time_start");
@@ -792,7 +794,15 @@ if(btn_jo_end != null){
 
 if(btn_jo_address != null){
   btn_jo_address.addEventListener("click",()=>{
-    loadModal("sup-edit-jo-address",modalTypes,()=>{},getDocumentLevel());
+    let homeownerId_hook = document.getElementById("input_jo_ho_ID");
+    let jo_home_val = input_jo_address_value?.value ?? "";
+    let jo_submit_val = input_jo_address_value_submit?.value ?? "";
+    console.log(homeownerId_hook.value);
+    loadModal("sup-edit-jo-address",modalTypes,()=>{},getDocumentLevel(),{
+      homeownerID: homeownerId_hook?.value,
+      home_id: jo_home_val,
+      homeIDSubmit: jo_submit_val
+    });
   });
 }
 

@@ -983,7 +983,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                         <button id="btn_jo_time_start" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
                                     </div>
                                 </div>
- 
+
                                 <label for="jo_time_end" class="smol-fat">Date & Time Completed</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
                                     <input name="jo_end_date_time" id="input_jo_time_end_value_submit" type="hidden" value="" >
@@ -997,6 +997,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
                                 <label for="jo_address" class="smol-fat">Address</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
+                                    <input id="input_jo_ho_ID" type="hidden" value="<?php echo $detailed_info->homeowner_id;?>">
+                                    <input name="jo_address_submit" id="input_jo_address_value_submit" type="hidden" value="" >
+                                    <input name="jo_address" id="input_jo_address_value" type="hidden" value="<?php echo $detailed_info->home_id;?>">
                                     <input id="input_jo_address" readonly type="text" class="form-control bg-white" placeholder="<?php echo htmlentities($jo_complete_address);?>" Value="" aria-label="Job Order Address" aria-describedby="jo_address">
                                     <div class="input-group-append">
                                         <button  id="btn_jo_address" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
