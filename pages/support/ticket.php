@@ -900,7 +900,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
 <!-- ACTION JOB ORDER ISSUES DISPLAY START -->
                 <?php 
-                    $hasStartedProcessJobIssue = count(($history)) > 2;
+                    $hasStartedProcessJobIssue = count(($history)) > 1;
                     if(($_SESSION["email"] == $base_info->agent_email || $owny) && $base_info->issue_id == 7){
                 ?>
                     <li class="list-group-item" disabled>
@@ -932,7 +932,8 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
                     <!-- TICKET ACTIONS START -->
                     <?php 
-                        if($hasStartedProcessBill == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 4){
+                        $hasStartedProcesses = $hasStartedProcessJobIssue || $hasStartedProcessBill;
+                        if($hasStartedProcesses == true && ($_SESSION["email"] == $base_info->agent_email || $owny == true) && ($base_info->issue_id == 4 || $base_info->issue_id == 7)){
                     ?>
                     <li id="bill-grp-close" class="list-group-item">
                         <h6>Update Support Ticket</h6>
@@ -958,7 +959,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <?php 
                         if(($_SESSION["email"] == $base_info->agent_email || $owny == true) && $base_info->issue_id == 7){
                     ?>  
-                        <li id="job-issue-grp-close" class="list-group-item">
+                        <li id="job-issue-grp-close" class="list-group-item <?php echo $hasStartedProcessJobIssue == true ? "hidden" : "";?>">
                             <h6 >Edit Job Order</h6>
                             <p class="ml-2 Pb-3 font-italic">Change the Job Post key details</p>
                             <div class="pl-2">
@@ -966,7 +967,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="job_order_status" style="min-width:3em !important;">Job Status</label>
                                     </div>
-                                    <select id="inpt_job_order_status" class="custom-select"  name="job_order_status">
+                                    <select <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="inpt_job_order_status" class="custom-select"  name="job_order_status">
                                         <option <?php echo $detailed_info->job_order_status_id==1?"selected":"";?> value="1">Confirmed</option>
                                         <option <?php echo $detailed_info->job_order_status_id==2?"selected":"";?> value="2">Completed</option>
                                         <option <?php echo $detailed_info->job_order_status_id==3?"selected":"";?> value="3">Cancelled</option>
@@ -975,9 +976,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                 
                                 <label for="jo_time_start" class="smol-fat">Date & Time Started</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input name="jo_start_date_time" id="input_jo_time_start_value_submit" type="hidden" value="" >
-                                    <input id="input_jo_time_start_value" type="hidden" value="<?php echo $detailed_info->job_start;?>" >
-                                    <input id="input_jo_time_start" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> name="jo_start_date_time" id="input_jo_time_start_value_submit" type="hidden" value="" >
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="input_jo_time_start_value" type="hidden" value="<?php echo $detailed_info->job_start;?>" >
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="input_jo_time_start" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_start);
                                     echo $date->format('M j, Y - g:i A');?>" aria-label="Job Time Start" aria-describedby="jo_time_start">
                                     <div class="input-group-append">
                                         <button id="btn_jo_time_start" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
@@ -986,9 +987,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
                                 <label for="jo_time_end" class="smol-fat">Date & Time Completed</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input name="jo_end_date_time" id="input_jo_time_end_value_submit" type="hidden" value="" >
-                                    <input id="input_jo_time_end_value" type="hidden" value="<?php echo $detailed_info->job_end;?>" >
-                                    <input id="input_jo_time_end" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> name="jo_end_date_time" id="input_jo_time_end_value_submit" type="hidden" value="" >
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="input_jo_time_end_value" type="hidden" value="<?php echo $detailed_info->job_end;?>" >
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="input_jo_time_end" readonly type="text" class="form-control bg-white" placeholder="<?php $date = new DateTime($detailed_info->job_end);
                                     echo $date->format('M j, Y - g:i A');?>" Value="" aria-label="Job Time End" aria-describedby="jo_time_end">
                                     <div class="input-group-append">
                                         <button id="btn_jo_time_end" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>
@@ -997,9 +998,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 
                                 <label for="jo_address" class="smol-fat">Address</label>
                                 <div class="input-group mb-3 pl-2 pr-2">
-                                    <input id="input_jo_ho_ID" type="hidden" value="<?php echo $detailed_info->homeowner_id;?>">
-                                    <input name="jo_address_submit" id="input_jo_address_value_submit" type="hidden" value="" >
-                                    <input name="jo_address" id="input_jo_address_value" type="hidden" value="<?php echo $detailed_info->home_id;?>">
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> id="input_jo_ho_ID" type="hidden" value="<?php echo $detailed_info->homeowner_id;?>">
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> name="jo_address_submit" id="input_jo_address_value_submit" type="hidden" value="" >
+                                    <input <?php echo $hasStartedProcessJobIssue == true ? "disabled='true'" : "";?> name="jo_address" id="input_jo_address_value" type="hidden" value="<?php echo $detailed_info->home_id;?>">
                                     <input id="input_jo_address" readonly type="text" class="form-control bg-white" placeholder="<?php echo htmlentities($jo_complete_address);?>" Value="" aria-label="Job Order Address" aria-describedby="jo_address">
                                     <div class="input-group-append">
                                         <button  id="btn_jo_address" data-toggle="modal" data-target="#modal" class="btn btn-outline-info" type="button" >Click to Edit</button>

@@ -740,7 +740,7 @@ if(btn_action_bill_close != null){
 
 // 0 - none selected, 1 - approve, 2 - disapprove, 3 - comment only
 // =============================================
-// Process Bill Issue Code
+// Process JOB ORDER Issue Code
 // =============================================
 let btn_jo_edit = document.getElementById("btn-job-issue-edit");
 let btn_jo_cancel = document.getElementById("btn-job-issue-cancel");
@@ -748,7 +748,7 @@ let btn_jo_notify = document.getElementById("btn-job-issue-notify");
 let btn_jo_addInfo = document.getElementById("btn-job-issue-comment");
 let btn_jo_close = document.getElementById("btn-job-issue-close");
 
-// let grp_jo_ = document.getElementById("job-issue-grp-close");
+let grp_jo_edit = document.getElementById("job-issue-grp-close");
 
 let inpt_jo_start_display = document.getElementById("input_jo_time_start");
 let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
@@ -761,11 +761,15 @@ let input_jo_time_end_value_submit = document.getElementById("input_jo_time_end_
 let input_jo_address_display = document.getElementById("input_jo_address");
 let input_jo_address_value = document.getElementById("input_jo_address_value");
 let input_jo_address_value_submit = document.getElementById("input_jo_address_value_submit");
+
+let inpt_job_order_status = document.getElementById("inpt_job_order_status");
+let input_jo_ho_ID = document.getElementById("input_jo_ho_ID");
  
 // Job Order Form Modal Activators
 let btn_jo_start = document.getElementById("btn_jo_time_start");
 let btn_jo_end = document.getElementById("btn_jo_time_end");
 let btn_jo_address = document.getElementById("btn_jo_address");
+
 
 
 if(btn_jo_start != null){
@@ -806,7 +810,10 @@ if(btn_jo_address != null){
   });
 }
 
-// Job Order Actions Buttons
+
+// ----------------------------------
+// Job Order Actions Functions
+  // ----------------------------------
 let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addInfo, btn_jo_close];
   const clear_buttons_jo_actions = () => {
     arr_btn_jo_actions.forEach((btn)=>{
@@ -821,7 +828,55 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       } 
     });
   }
+
+  const edit_job_order_form_inputs = [
+    inpt_jo_start_display,
+    inpt_jo_start_value,
+    input_jo_time_start_value_submit,
+    inpt_jo_end_display,
+    inpt_jo_end_value,
+    input_jo_time_end_value_submit,
+    input_jo_address_display,
+    input_jo_address_value,
+    input_jo_address_value_submit,
+    inpt_job_order_status,
+    input_jo_ho_ID,
+  ];
+
+  const edit_job_order_show = () => {
+    if(grp_jo_edit != null){
+      if (grp_jo_edit.classList.contains('hidden')) {
+        grp_jo_edit.classList.remove('hidden');
+      } 
+    }
+    edit_job_order_form_inputs.forEach(item=>{
+      if(item != null){
+        if(item.getAttribute("disabled") != null){
+          item.removeAttribute('disabled');
+        }
+      }
+    });
+
+  }
+
+  const edit_job_order_hide = () => {
+    if(grp_jo_edit != null){
+      if (!grp_jo_edit.classList.contains('hidden')) {
+        grp_jo_edit.classList.add('hidden');
+      } 
+    }
+    edit_job_order_form_inputs.forEach(item=>{
+      if(item != null){
+        if(item.getAttribute("disabled") == null){
+          item.setAttribute('disabled',true);
+        }
+      }
+    });
+  }
   
+  // ----------------------------------
+  // Job Order Actions Buttons
+  // ----------------------------------
   if(btn_jo_edit != null){
     btn_jo_edit.addEventListener("click",()=>{
       clear_buttons_jo_actions();
@@ -831,10 +886,10 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       input_comment.setAttribute('placeholder',
       "Please provide a reason as to why you are editing this job order."
       );
-      // closeBillForm();
-      // if(grp_bill_resolve != null){
-      //   openTicketStatForm();
-      // }
+      edit_job_order_show();
+      if(grp_bill_resolve != null){
+        closeTicketStatForm();
+      }
     });
   }
 
@@ -847,10 +902,10 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       input_comment.setAttribute('placeholder',
       "Please provide a reason as to why this job order is being cancelled."
       );
-      // closeBillForm();
-      // if(grp_bill_resolve != null){
-      //   openTicketStatForm();
-      // }
+      edit_job_order_hide();
+      if(grp_bill_resolve != null){
+        closeTicketStatForm();
+      }
     });
   }
 
@@ -863,10 +918,10 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       input_comment.setAttribute('placeholder',
       "Add a note or relevant information when notifying the author on this ticket."
       );
-      // closeBillForm();
-      // if(grp_bill_resolve != null){
-      //   openTicketStatForm();
-      // }
+      edit_job_order_hide();
+      if(grp_bill_resolve != null){
+        closeTicketStatForm();
+      }
     });
   }
 
@@ -879,10 +934,10 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       input_comment.setAttribute('placeholder',
       "Add a note or relevant information for this ticket."
       );
-      // closeBillForm();
-      // if(grp_bill_resolve != null){
-      //   openTicketStatForm();
-      // }
+      edit_job_order_hide();
+      if(grp_bill_resolve != null){
+          closeTicketStatForm();
+      }
     });
   }
 
@@ -895,16 +950,12 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       input_comment.setAttribute('placeholder',
       "Add a note or relevant information for this ticket."
       );
-      // closeBillForm();
-      // if(grp_bill_resolve != null){
-      //   openTicketStatForm();
-      // }
+      edit_job_order_hide();
+      if(grp_bill_resolve != null){
+        openTicketStatForm();
+      }
     });
   }
-
-
-
-
 
 
 
