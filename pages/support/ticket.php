@@ -650,7 +650,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
     <?php }?>
 
     <?php if(isset($detailed_info->ho_fname) && isset($detailed_info->ho_lname)){ 
-            $ho_complete_name = $detailed_info->ho_lname.",".$detailed_info->ho_fname;
+            $ho_complete_name = $detailed_info->ho_lname.", ".$detailed_info->ho_fname;
         ?>
         <li class="list-group-item">
             <div class="row">
@@ -670,7 +670,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
     <?php }?>
 
     <?php if(isset($detailed_info->worker_fname) && isset($detailed_info->worker_lname)){ 
-            $worker_complete_name = $detailed_info->worker_lname.",".$detailed_info->worker_fname;
+            $worker_complete_name = $detailed_info->worker_lname.", ".$detailed_info->worker_fname;
         ?>
         <li class="list-group-item">
             <div class="row">
@@ -696,6 +696,27 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->job_order_status_text);?> </div>
             </div>
         </li>
+            <?php 
+                if(isset($detailed_info->job_order_status_id) && $detailed_info->job_order_status_id == 3){   
+            ?>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-4 col-lg-3 border-right ticket-title">Cancelled By:</div>
+                        <div class="col-8 col-lg-9"> <?php 
+                        $cancelled_by = $detailed_info->cancelled_by;
+                        $hoID = $detailed_info->homeowner_id;
+                        $wID = $detailed_info->worker_id;
+                        echo $cancelled_by == $hoID ? "Homeowner" : ($cancelled_by == $wID ? "Worker" : "Assigned Agent" );
+                        ?> </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-4 col-lg-3 border-right ticket-title">Cancellation Reason:</div>
+                        <div class="col-8 col-lg-9"> <?php echo htmlentities($detailed_info->order_cancellation_reason);?> </div>
+                    </div>
+                </li>
+            <?php } ?>
     <?php }?>
 
     <?php if(isset($detailed_info->job_start)){ ?>
@@ -1090,7 +1111,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                             echo $hasStartedProcessBill == true ? 5 : 4;
                                         break;
                                         case "7": 
-                                            echo $hasStartedProcessJobIssue == true ? 1 : 4;
+                                            echo $hasStartedProcessJobIssue == true ? 5 : 1;
                                         break;
                                         default:
                                             echo 0;

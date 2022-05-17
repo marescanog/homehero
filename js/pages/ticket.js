@@ -140,7 +140,7 @@ const Process_Worker_Registration = (data = null, button, buttonTxt, buttonLoadS
 const Process_Bill = (data = null, button, buttonTxt, buttonLoadSpinner, form) => {
   // Proceed with ajax call using PHP page to add in token
   if(data?.form_action != null){
-    console.log("Form Data inside of Process Bill"+JSON.stringify(data));
+    // console.log("Form Data inside of Process Bill"+JSON.stringify(data));
     $.ajax({
       type : 'POST',
       url : getDocumentLevel()+'/auth/ticket/process-bill.php',
@@ -200,8 +200,90 @@ const Process_Bill = (data = null, button, buttonTxt, buttonLoadSpinner, form) =
 }
 
 
-$(document).ready(()=>{
+// ====================================
+//    PROCESS ORDER ISSUE AJAX
+// ====================================
+const Process_Order_Issue = (data = null, button, buttonTxt, buttonLoadSpinner, form) => {
+  // Proceed with ajax call using PHP page to add in token
+  if(data?.form_action != null){
+    console.log("Form Data inside of Process Bill"+JSON.stringify(data));
+    $.ajax({
+      type : 'POST',
+      url : getDocumentLevel()+'/auth/ticket/process-job-order.php',
+      data : data,
+      success : function(response) {
 
+        if(!isJson(response)){
+          Swal.fire({
+            title: '500: Server Error',
+            text: 'An error occured with the request. Please contact the administrator and try again!',
+            icon: "error",
+            confirmButtonText: 'ok'
+            }).then(result => {
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+          });
+        } else { // else foro check if JSON
+          var res = JSON.parse(response);
+          console.log("Your response after submission is:");
+          console.log("Response JSON: "+response);
+
+          let status = res["status"];
+          let message = res["message"];
+
+          if(status == 200){
+                // Unfreeze & Reset
+                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                form.reset();
+                Swal.fire({
+                    title: 'Job Issue Updated!',
+                    text: message ?? "The bill issue was sucessfully updated",
+                    icon: "success",
+                    }).then(result => {
+                      window.location.reload(true);
+                })
+          } else if (status == 400){
+            Swal.fire({
+              title: 'Oops! Error!',
+              text: message ?? 'Something went wrong. Please try again!',
+              icon: "error",
+              confirmButtonText: 'ok'
+              }).then(result => {
+                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+            });
+          }else {
+            Swal.fire({
+              title: 'Oops! Error!',
+              text: message ?? 'Something went wrong. Please try again!',
+              icon: "error",
+              confirmButtonText: 'ok'
+              }).then(result => {
+                window.location.reload(true);
+            });
+          }
+        } // closing to check if JSON
+      },
+      error: function(response) {
+        console.log("ERROR - Response JSON: "+response);
+        Swal.fire({
+          title: 'An error occured!',
+          text: 'Something went wrong. Please try again!',
+          icon: "error",
+          confirmButtonText: 'ok'
+          }).then(result => {
+            window.location.reload(true);
+        });
+      }
+    });
+  }
+}
+
+
+
+
+
+
+
+$(document).ready(()=>{
 // ===================================
 //   For Initial Ticket Assignment
 // ===================================
@@ -348,7 +430,19 @@ $("#submit-action").validate({
         // Just Submit Comment when not authorized
         // =========================
         case "0": 
-          console.log("Submit comment")
+            // comment is required
+            if(submitformData?.form_comment == null || submitformData?.form_comment == ""){
+              Swal.fire({
+                title: 'Required information!',
+                text: 'Please provide a comment when processing the job order issue.',
+                icon: 'error',
+                confirmButtonText: 'ok'
+              });
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+            }else {
+              // Submit a comment
+              console.log("Submit a comment?");
+            }
         break;
         // =========================
         // Worker Registration
@@ -468,6 +562,52 @@ $("#submit-action").validate({
         // Job Order Issue
         // =========================
         case "7":
+        // console.log("Edit Job Order Issue");
+            // comment is required
+            if(submitformData?.form_comment == null || submitformData?.form_comment == ""){
+              Swal.fire({
+                title: 'Required information!',
+                text: 'Please provide a comment when processing the job order issue.',
+                icon: 'error',
+                confirmButtonText: 'ok'
+              });
+              enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+            }else {
+              if(submitformData?.form_action != null && submitformData?.form_action >= 1 && submitformData?.form_action <=5){
+                // Check if Resolution Action
+                if(submitformData?.form_action == 5){
+                  // Validate Resolution
+                  if((submitformData["bill_resolved"] == 1 || submitformData["bill_resolved"] == 2 ) ){
+                    submitformData["type"] = submitformData?.form_action;
+                    Process_Order_Issue(
+                      submitformData, button, buttonTxt, buttonLoadSpinner, form
+                    );
+                  } else {
+                    Swal.fire({
+                      title: 'Incomplete information!',
+                      text: 'Please indicate if the ticket was resolved.',
+                      icon: 'error',
+                      confirmButtonText: 'ok'
+                    }).then(result => {
+                      enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                    });
+                  }
+                } else {
+                  submitformData["type"] = submitformData?.form_action;
+                  Process_Order_Issue(
+                    submitformData, button, buttonTxt, buttonLoadSpinner, form
+                  );
+                }
+
+              } else {
+                Swal.fire({
+                  title: 'An Error Occured!',
+                  text: 'Please try again or contact your supervisor or administrator for assistance.',
+                  icon: 'error',
+                  confirmButtonText: 'ok'
+                });
+              }
+            }
           break;
 
         // =========================
