@@ -39,7 +39,8 @@ const modalTypes = {
     "sup-edit-jo-start":  docLevelModal+"/components/modals/sup-edit-jo-start.php",
     "sup-edit-jo-end":  docLevelModal+"/components/modals/sup-edit-jo-end.php",
     "sup-edit-jo-address":  docLevelModal+"/components/modals/sup-edit-jo-address.php",
-    "sup-transfer":  docLevelModal+"/components/modals/sup-transfer.php"
+    "sup-transfer":  docLevelModal+"/components/modals/sup-transfer.php",
+    "sup-perm-enter-pass":  docLevelModal+"/components/modals/sup-perm-enter-pass.php"
 }
 
 // This function loads the
