@@ -2,29 +2,19 @@
     date_default_timezone_set('Asia/Manila');
     $data = isset($_POST['data']) ? $_POST['data'] : null;
     $transferType = null; // 1-transfer, 2-request override, 3-escalte to supervisor
-    // $projectID = null;
-    // $oldSched = null;
-    // $changedVal = null;
-    // $today = isset($_POST['data']) && isset($_POST['data']['today']) ? $_POST['data']['today'] : date("YYYY-MM-DD H:i:s");
-    // $reformattedTime = null;
-    // $changedDate = "1212-12-12";
-    // $changedTime = "00:00:00";
+    $transferType = null;
+    $agent_id = null;
+    $agent_name = null;
+    $assigned_on = null;
     if($data != null){
         $transferType = isset($_POST['data']['transferType']) ? $_POST['data']['transferType'] : null;
-    //     // $projectID = isset($_POST['data']['projectID']) ? $_POST['data']['projectID'] : null;
-    //     $oldSched = isset($_POST['data']['old_date_time']) ? $_POST['data']['old_date_time'] : null;
-    //     $changedVal = isset($_POST['data']['changedValue']) ? ($_POST['data']['changedValue'] == "" ? null : $_POST['data']['changedValue']) : null;
-
-    //     if($changedVal != null){
-    //         $explodedChangedDate = explode(" ",$changedVal);
-    //         $changedTime = $explodedChangedDate[1];
-    //         $changedDate = $explodedChangedDate[0];
-    //     }
+        $agent_id = isset($_POST['data']['assigned_agent_id']) ? $_POST['data']['assigned_agent_id'] : null;
+        $agent_name = isset($_POST['data']['assigned_agent_name']) ? $_POST['data']['assigned_agent_name'] : null;
+        $assigned_on = isset($_POST['data']['assigned_on']) ? $_POST['data']['assigned_on'] : null;
     }
 ?>
 <div class="modal-content">
     <?php 
-        // var_dump($_POST);
         // if($projectID == null || $oldSched == null){
     ?> 
         <!-- Error handler (Not needed for this modal) -->
@@ -71,21 +61,25 @@
             //     $reformattedTime = $hours.':'.$time[1].' '.$period ;
         ?>
 
-        <!-- <div class="card  mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Current Agent</h5> 
-                <div class="d-flex flex-row justify-content-between">
-                    <div style="width:49%">
-                        <h6 class="card-subtitle mb-2 text-muted">Name</h6>
-                        <p class="card-text"><?php //echo $reformattedDate;?></p>
-                    </div>
-                    <div style="width:49%">
-                        <h6 class="card-subtitle mb-2 text-muted">Assigned On</h6>
-                        <p class="card-text"><?php //echo $reformattedTime;?></p>
+        <?php 
+            if($transferType == 1 ){   
+        ?>
+            <div class="card  mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Current Agent</h5> 
+                    <div class="d-flex flex-row justify-content-between">
+                        <div style="width:49%">
+                            <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                            <p class="card-text"><?php echo $agent_name;?></p>
+                        </div>
+                        <div style="width:49%">
+                            <h6 class="card-subtitle mb-2 text-muted">Assigned On</h6>
+                            <p class="card-text"><?php echo $assigned_on;?></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> -->
+        <?php }?>
 
         <div class="card  mb-3">
             <div class="card-body">
@@ -150,6 +144,7 @@
 
                     <div class="row desc" id="trans_UI_2" style="display: none;">
                         <div class="col p-0">
+                            <input type="hidden" name="transfer_type" value="<?php echo htmlentities($transferType);?>">
                             <hr class="mb-3">
                             <div class="input-group pt-2 pb-2 pl-3 pr-3">
                                 <div class="input-group-prepend">

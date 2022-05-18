@@ -865,6 +865,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
         <div class="card mt-4">
             <div class="card-header d-flex flex-row justify-content-between">
                 <h5 class="card-title mb-0">Actions</h5>
+                    <input type="hidden" id="trans_assigned_on" value="<?php echo isset($base_info->assigned_on) ? $base_info->assigned_on : ""; ?>">
+                    <input type="hidden" id="trans_assigned_agent_name" value="<?php echo isset($base_info->agent_name) ? $base_info->agent_name : ""; ?>">
+                    <input type="hidden" id="trans_assigned_agent_ID" value="<?php echo isset($base_info->assigned_agent) ? $base_info->assigned_agent : ""; ?>">
                 <?php 
                     if($_SESSION["email"] == $base_info->agent_email){
                 ?>
@@ -901,7 +904,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     }
                 ?>
 <!-- ACTION WORKER REGISTRATION DISPLAY END -->
-
+                
 <!-- ACTION BILLING ISSUES DISPLAY START -->
                 <?php 
                     $hasStartedProcessBill = count($history) > 2;
