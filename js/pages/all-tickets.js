@@ -77,7 +77,7 @@ my_page_buttons.map((btn, index)=>{
     // Determine the number of entries - paginationBaseTotal & current tab
     // console.log("Pagination base total is: "+ paginationBaseTotal);
 
-    let button_id_start_labels = ["New","Ongoing","completed","escalations","transferred"];
+    let button_id_start_labels = ["New","Ongoing","Completed","escalations","transferred"];
     let current_label = button_id_start_labels[my_tab];
     // console.log(current_label);
     for(let x = 0; x < paginationBaseTotal; x++){

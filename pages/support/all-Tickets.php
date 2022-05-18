@@ -84,12 +84,12 @@ $ch = curl_init();
     if(is_object($output) && $output->success == true){
         $new_tickets = $output->response->new;
         $ongoing_tickets = $output->response->ongoing;
-        // $completed_tickets = $output->response->completed_tickets;
+        $completed_tickets = $output->response->completed;
         // $escalated_tickets = $output->response->escalated_tickets;
         // $transferred_tickets = $output->response->transferredTickets;
         $new_total = $output->response->new_total;
         $ongoing_total = $output->response->ongoing_total;
-        // $completed_total = $output->response->completed_total;
+        $completed_total = $output->response->completed_total;
         // $escalated_total = $output->response->escalated_total;
         // $transferred_total = $output->response->transferred_total;
     }
@@ -123,7 +123,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <h1 class="h2">All Tickets</h1>
     </div>
     <?php 
-        // echo var_dump($output->response->new);
+        // echo var_dump($output);
+        // echo var_dump($output->response->completed);
         // echo var_dump($new_total);
         // echo var_dump($output->response->new_total);
     ?>
@@ -201,14 +202,19 @@ include "$level/components/UX/ticketTableConversion.php";
 
         <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
             <?php
-                // $tableName = "completed";
-                // $basicSearchId = "completedSearch";
-                // include "$level/components/UX/support-table.php";
+                $tableName = "Completed";
+                $basicSearchId = "completedSearch";
+                $totalRecords = $completed_total;
+                $tableRows = array_map('convertPlainDataToTableRow', $completed_tickets);
+                $EntriesDisplayed = count($tableRows);
+                include "$level/components/UX/support-table.php";
 
-                // // Reset Values after to prepare for the next iteration
-                // $tableName = null;
-                // $basicSearchId = null;
-            
+                // Reset Values after to prepare for the next iteration
+                $tableName = null;
+                $basicSearchId = null;
+                $totalRecords = 0;
+                $tableRows = [];
+                $EntriesDisplayed = 0;
             ?>
         </div>
 

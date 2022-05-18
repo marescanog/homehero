@@ -816,21 +816,32 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
 <!--             IMAGES                -->
 <!-- ================================= -->
         <?php 
+            // var_dump($_SESSION['role']);
             if($base_info->has_images > 0 && count($detailed_info) > 0 && $authy == true){
         ?>
-            <div class="card mt-4" style="width: 100%;">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Attached Image(s)</h5>
+            <?php 
+                if(($owny != NULL && $owny == true) || (isset($_SESSION['role']) && ($_SESSION['role'] == 4 || $_SESSION['role'] == 5 || $_SESSION['role'] == 6))){
+            ?>
+                <div class="card mt-4" style="width: 100%;">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Attached Image(s)</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <img src="<?php echo $detailed_info[0]->file_path.$detailed_info[0]->file_name;?>" class="img-fluid" alt="Responsive image">
+                        </li>
+                    </ul>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <img src="<?php echo $detailed_info[0]->file_path.$detailed_info[0]->file_name;?>" class="img-fluid" alt="Responsive image">
-                    </li>
-                </ul>
-            </div>
-            <div>
-
-            </div>
+            <?php 
+                } else {
+            ?>
+                <div class="alert alert-info mt-4" role="alert">
+                    <h4 class="alert-heading">401: Unauthorized to view Image</h4>
+                    <p>You are not authorized to view this image. Please contact the owner of this ticket or transfer ownership to your name to view this resource.</p>
+                </div>
+            <?php 
+                }
+            ?>
         <?php 
             }
         ?>
@@ -851,9 +862,11 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <button type="button" class="btn btn-sm btn-danger">Transfer</button>
                 <?php 
                     } else {
+                        if($authy == true){
                 ?>
                     <button type="button" class="btn btn-sm btn-danger">Request Override</button>
                 <?php
+                        }
                     }
                 ?>
             </div>
