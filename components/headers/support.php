@@ -1,9 +1,9 @@
 <?php
   $email = isset($_SESSION["email"]) ? $_SESSION["email"] : "agent@support.com";
   $role = isset($_SESSION["role"]) ? $_SESSION["role"] : "HomeHero Support";
-  $roleTypes = ["Verification Support","Customer Support","Technical Support","Supervisor","Admin","Super Admin"];
+  $roleTypes = ["Verification Support","Customer Support","Technical Support","Supervisor","Admin","Super Admin", "Manager"];
 
-  if($role < 0 || $role > 6){
+  if($role < 0 || $role > 7){
     $role = null;
   }
 ?>
