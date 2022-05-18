@@ -38,7 +38,8 @@ const modalTypes = {
     "ticket-assignment-history": docLevelModal+"/components/modals/ticket-assignment-history.php",
     "sup-edit-jo-start":  docLevelModal+"/components/modals/sup-edit-jo-start.php",
     "sup-edit-jo-end":  docLevelModal+"/components/modals/sup-edit-jo-end.php",
-    "sup-edit-jo-address":  docLevelModal+"/components/modals/sup-edit-jo-address.php"
+    "sup-edit-jo-address":  docLevelModal+"/components/modals/sup-edit-jo-address.php",
+    "sup-transfer":  docLevelModal+"/components/modals/sup-transfer.php"
 }
 
 // This function loads the

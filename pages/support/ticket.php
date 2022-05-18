@@ -835,10 +835,19 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             <?php 
                 } else {
             ?>
-                <div class="alert alert-info mt-4" role="alert">
-                    <h4 class="alert-heading">401: Unauthorized to view Image</h4>
-                    <p>You are not authorized to view this image. Please contact the owner of this ticket or transfer ownership to your name to view this resource.</p>
-                </div>
+                    <?php 
+                        if($base_info->status == 1){
+                    ?>
+                        <div class="alert alert-info mt-4" role="alert">
+                            <h4 class="alert-heading">This Ticket Contains Image(s)</h4>
+                            <p>Only the ticket owners/supervisors are authorized to view this image. Assign this ticket to your workload to view this image and process the registration request.</p>
+                        </div>
+                    <?php } else {?>
+                        <div class="alert alert-info mt-4" role="alert">
+                            <h4 class="alert-heading">401: Unauthorized to view Image</h4>
+                            <p>You are not authorized to view this image. Please contact the owner of this ticket or transfer ownership to your name to view this resource.</p>
+                        </div>
+                    <?php } ?>
             <?php 
                 }
             ?>
@@ -859,12 +868,12 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                 <?php 
                     if($_SESSION["email"] == $base_info->agent_email){
                 ?>
-                    <button type="button" class="btn btn-sm btn-danger">Transfer</button>
+                    <button id="btn-transfer" type="button" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-danger">Transfer</button>
                 <?php 
                     } else {
                         if($authy == true){
                 ?>
-                    <button type="button" class="btn btn-sm btn-danger">Request Override</button>
+                    <button id="btn-request-override" type="button" class="btn btn-sm btn-danger">Request Override</button>
                 <?php
                         }
                     }

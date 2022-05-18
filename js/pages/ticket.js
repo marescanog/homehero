@@ -941,7 +941,7 @@ if(btn_jo_address != null){
     let homeownerId_hook = document.getElementById("input_jo_ho_ID");
     let jo_home_val = input_jo_address_value?.value ?? "";
     let jo_submit_val = input_jo_address_value_submit?.value ?? "";
-    console.log(homeownerId_hook.value);
+    // console.log(homeownerId_hook.value);
     loadModal("sup-edit-jo-address",modalTypes,()=>{},getDocumentLevel(),{
       homeownerID: homeownerId_hook?.value,
       home_id: jo_home_val,
@@ -1096,6 +1096,32 @@ let arr_btn_jo_actions = [btn_jo_edit, btn_jo_cancel, btn_jo_notify, btn_jo_addI
       }
     });
   }
+
+
+// =========================================
+//   For Transfers and Transfer Requests
+// =========================================
+
+let btn_transfer = document.getElementById("btn-transfer");
+let btn_request_override = document.getElementById("btn-request-override");
+
+if(btn_transfer != null){
+  btn_transfer.addEventListener("click",()=>{
+    loadModal("sup-transfer",modalTypes,()=>{},getDocumentLevel(),{
+      transferType: 1, // 1-transfer, 2-request override, 3-escalte to supervisor
+    });
+  });
+}
+
+if(btn_request_override != null){
+  btn_request_override.addEventListener("click",()=>{
+    loadModal("sup-transfer",modalTypes,()=>{},getDocumentLevel(),{
+      transferType: 2, // 1-transfer, 2-request override, 3-escalte to supervisor
+    });
+  });
+}
+
+
 
 
 
