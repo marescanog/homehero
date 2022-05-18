@@ -4,9 +4,12 @@ if(!isset($_SESSION["token_support"])){
     header("Location: ../../");
     exit();
 }
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 && $_SESSION["role"]!=6 && $_SESSION["role"]!=8)){
+    header("Location: ../support/home.php");
+    exit();
+}
 
 $level ="../../";
-
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 ?>
 <!-- === Link your custom CSS pages below here ===-->
@@ -24,13 +27,13 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- === Your Custom Page Content Goes Here below here === -->
 
     <?php
-        $current_side_tab = "Account Settings";
+        $current_side_tab = "My Team";
         require_once dirname(__FILE__)."/$level/components/headers/support-side-nav.php"; 
     ?>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2">Account Settings</h1>
+        <h1 class="h2">My Team</h1>
     </div>
 
 

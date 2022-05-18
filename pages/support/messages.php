@@ -1,8 +1,14 @@
 <?php 
+session_start();
+if(!isset($_SESSION["token_support"])){
+    header("Location: ../../");
+    exit();
+}
+
 
 $level ="../../";
-require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 
+require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 ?>
 <!-- === Link your custom CSS pages below here ===-->
 <link rel="stylesheet" href="../../css/headers/support.css">
