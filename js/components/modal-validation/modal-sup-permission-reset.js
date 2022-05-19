@@ -17,52 +17,91 @@ $("#modal-perm-password").validate({
         const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("EDIT JOB START DATE");
+        // console.log("GET NEW CODE");
         console.log(formData);
-        // console.log(formData?.date);
-        // console.log(formData?.time);
-        // let newDate = formData?.date ?? "";
-        // let newTime = formData?.time+":00" ?? "";
-        // let newDateTime = newDate + " " + newTime;
-        // // console.log(newDateTime);
 
-        // const monthArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        // let displayString = "";
+        data = {};
 
-        // // Reformat values for display
-        // if(newDate != ""){
-        //     // Format Date
-        //     let dateArr = newDate.split("-"); 
-        //     let dateIndex = dateArr[1] >= 1 && dateArr[1] <= 12 ?  dateArr[1] : 1;
-        //     let monthStr = monthArr[dateIndex-1];
-        //     let dayStr = parseInt(dateArr[2]).toString();
+        data["password"] = formData?.password;
+        data["permission_id"] = formData?.permission_id;
 
-        //     // Format Time
-        //     let timeArr = newTime.split(":"); 
-        //     let hours = timeArr[0];
-        //     let minStr = timeArr[1];
-        //     let hoursStr = (hours % 12).toString();
+        // Proceed with ajax call to request a new code
+        $.ajax({
+        type : 'POST',
+        url : getDocumentLevel()+'/auth/support/generate-code.php',
+        data : data,
+        success : function(response) {
+            // console.log("Your response after submission is:");
+            console.log("Response JSON: "+response);
+            if(isJson(response)){
+                let res = JSON.parse(response);
+                // // console.log("Your response after submission is:");
+                // console.log("Response JSON: "+res);
+                let status = res["status"];
+                let message = res["message"];
 
-        //     displayString = monthStr + " " + dayStr + ", "+ dateArr[0] + " - " + hoursStr + ":" + minStr + " " + (parseInt(hours) > 12 ? "PM" : "AM");
+                if(status==200){
+                    
+                    // Unfreeze & Reset
+                    Swal.fire({
+                        title: 'Permission Code Updated!',
+                        text: message ?? "The code  was sucessfully updated",
+                        icon: "success",
+                        }).then(result => {
+                            form.reset();
+                            $('#modal').modal('hide');
+                            $('#modal-perm-password')[0].reset();
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE NEW CODE");
+                            window.location.reload(true);
+                     });
+                } else if (status == 400){
+                    Swal.fire({
+                        title: 'Oops! Error!',
+                        text: message ?? 'Something went wrong. Please try again!',
+                        icon: "error",
+                        confirmButtonText: 'ok'
+                        }).then(result => {
+                        enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Oops! Error!',
+                        text: message ?? 'Something went wrong. Please try again!',
+                        icon: "error",
+                        confirmButtonText: 'ok'
+                        }).then(result => {
+                        window.location.reload(true);
+                    });
+                }
+            } else {
+                // Error
 
-        //     // console.log(JSON.stringify(monthArr[dateIndex-1]));
-        // }
+                // // console.log("Your response after submission is:");
+                // console.log("Response JSON: "+res);
+                Swal.fire({
+                    title: 'Oops! Error!',
+                    text: message ?? 'Something went wrong. Please try again!',
+                    icon: "error",
+                    confirmButtonText: 'ok'
+                    }).then(result => {
+                    window.location.reload(true);
+                });
+            }
+        }, 
+        error: function(response) {
+            console.log("ERROR - Response JSON: "+response);
+            Swal.fire({
+            title: 'An error occured!',
+            text: 'Something went wrong. Please try again!',
+            icon: "error",
+            confirmButtonText: 'ok'
+            }).then(result => {
+                window.location.reload(true);
+            });
+        }
+    });
+        
 
-        // let inpt_jo_start_display = document.getElementById("input_jo_time_start");
-        // // let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
-        // let input_jo_time_start_value_submit = document.getElementById("input_jo_time_start_value_submit");
 
-        // // FORMAT FOR DISPLAY IS MM dd, yyyy - h:m am   ex: May 25, 2022 - 1:00 PM
-
-        // input_jo_time_start_value_submit.value = newDateTime;
-        // inpt_jo_start_display.value = displayString;
-
-        // // console.log(inpt_jo_start_display);
-        // // console.log(inpt_jo_start_value);
-        // // console.log(inpt_jo_start_value.value);
-        // // console.log(inpt_jo_start_display.placeholder);
-
-        // $('#modal').modal('hide');
-        // $('#modal-edit-jo-start-date')[0].reset();
     }
 });

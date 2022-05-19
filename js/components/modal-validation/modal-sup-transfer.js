@@ -11,59 +11,105 @@ $("#modal-transfer").ready(()=>{
 
 $("#modal-transfer").validate({
     rules: {
-        // date:{
-        //     required: true,
-        // },
-        // time:{
-        //     required: true,
-        // }
+        transfer_reason:{
+            required: true,
+        },
+        agent_notes:{
+            required: true,
+        }
     },
     messages: {
-        // date:{
-        //     required: "Please select the new start date."
-        // },
-        // time:{
-        //     required: "Please select the new start time."
-        // }
+        transfer_reason:{
+            required: "Please select a transfer reason."
+        },
+        agent_notes:{
+            required: "Please explain the reason for the transfer."
+        }
     },
     submitHandler: function(form, event) { 
         event.preventDefault();
 
-        // const button = document.getElementById("RU-submit-btn");
-        // const buttonTxt = document.getElementById("RU-submit-btn-txt");
-        // const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
+        const button = document.getElementById("RU-submit-btn");
+        const buttonTxt = document.getElementById("RU-submit-btn-txt");
+        const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
-        // disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("EDIT JOB START DATE");
-        console.log(formData);
+        disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
+        // console.log("Request Transfer");
+
+        // console.log(formData);
         // console.log(formData?.date);
         // console.log(formData?.time);
-        // let newDate = formData?.date ?? "";
-        // let newTime = formData?.time+":00" ?? "";
-        // let newDateTime = newDate + " " + newTime;
-        // // console.log(newDateTime);
+
+        let isValid = true;
+        let errMessage = "";
+        let data = [];
+
+        let supervisor_type = formData?.supervisor_type ?? "";
+        let my_sup = formData?.my_sup ?? "";
+        let sup_ID = formData?.sup_ID ?? "";
+        let trans_code_1 = formData?.trans_code_1 ?? "";
+        let trans_code_2 = formData?.trans_code_2 ?? "";
+
+        // Basic Validation to Check if trans code/sup id is blank based on the supervisor type selected
+        if((supervisor_type =="" || supervisor_type == null) || (supervisor_type == 2) ){
+            // console.log("Different Supervisor");
+            if(isValid == true && sup_ID == ""){
+                errMessage = "Please enter a Supervisor ID for the transfer request.";
+                isValid = false;    
+            } 
+
+            if(isValid == true && trans_code_2 ==""){
+                errMessage = "Please enter a transfer code for the transfer request.";
+                isValid = false; 
+            }
+
+            if(isValid == true){
+                data['sup_id'] = sup_ID;
+                data['transfer_code'] = trans_code_2;
+            }
+        } else {
+            // console.log("Same Sup");
+            if(isValid == true && my_sup == ""){
+                errMessage = "There was an error processing the request. Please refresh and try again.";
+                isValid = false;    
+            } 
+
+            if(isValid == true && trans_code_1==""){
+                errMessage = "Please enter a transfer code for the transfer request.";
+                isValid = false; 
+            }
+
+            if(isValid == true){
+                data['sup_id'] = my_sup;
+                data['transfer_code'] = trans_code_1;
+            }
+        }
+
+        // Get Relevant Data & Filter
+        data['transfer_reason'] = formData?.transfer_reason ?? null;
+        data['comments'] = formData?.agent_notes ?? null;
+
+        console.log("Your data to submit to the api.");
+        console.log(data);
+
+        if(isValid != true){
+            // Swal Error
+            Swal.fire({
+                title: 'Incomplete information!',
+                text: errMessage == ""? 'Something went wrong. Please try again!' : errMessage,
+                icon: "error",
+                confirmButtonText: 'ok'
+                }).then(result => {
+                    enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT REQUEST");
+                });
+        } else{
+            // Call Api
+            console.log("Call API");
+        }
+
 
         // const monthArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
         // let displayString = "";
-
-        // // Reformat values for display
-        // if(newDate != ""){
-        //     // Format Date
-        //     let dateArr = newDate.split("-"); 
-        //     let dateIndex = dateArr[1] >= 1 && dateArr[1] <= 12 ?  dateArr[1] : 1;
-        //     let monthStr = monthArr[dateIndex-1];
-        //     let dayStr = parseInt(dateArr[2]).toString();
-
-        //     // Format Time
-        //     let timeArr = newTime.split(":"); 
-        //     let hours = timeArr[0];
-        //     let minStr = timeArr[1];
-        //     let hoursStr = (hours % 12).toString();
-
-        //     displayString = monthStr + " " + dayStr + ", "+ dateArr[0] + " - " + hoursStr + ":" + minStr + " " + (parseInt(hours) > 12 ? "PM" : "AM");
-
-        //     // console.log(JSON.stringify(monthArr[dateIndex-1]));
-        // }
 
         // let inpt_jo_start_display = document.getElementById("input_jo_time_start");
         // // let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
