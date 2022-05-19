@@ -9,7 +9,72 @@ if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 &&
     exit();
 }
 
+// CURL STARTS HERE
 $level ="../../";
+
+// NEWLINKDEV
+// Declare variables to be used in this page
+$codesRes = [];
+
+$url = "http://localhost/slim3homeheroapi/public/support/get-my-codes"; // DEV
+// $url = ""; // NO PROD LINK
+
+$headers = array(
+    "Authorization: Bearer ".$_SESSION["token_support"],
+    'Content-Type: application/json',
+);
+
+$post_data = array(
+    'email' => $_SESSION["email"]
+    // 'email' => 'mdenyys@support.com'
+);
+
+// 1. Initialize
+$ch = curl_init();
+
+// 2. set options
+    // URL to submit to
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // Return output instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Type of request = POST
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    // Adding the post variables to the request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+
+    // Set headers for auth
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+    // Execute the request and fetch the response. Check for errors
+    $output = curl_exec($ch);
+
+    // Moved inside Modal Body for better display of error messages
+    $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
+    $curl_error_message = null;
+
+    // ERROR HANDLING 
+    if($output === FALSE || $output === NULL){
+        $curl_error_message = curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    // $output =  json_decode(json_encode($output), true);
+    $output =  json_decode($output);
+
+    // Set the declare variables (refer at the top)
+    if(is_object($output) && $output != null && $output->success == true){
+        $codesRes = $output->response->codesRes;
+    } else {
+        $err_stat = $output->response->status;
+        $message= $output->response->message;
+    }
+
+
+// // HTML STARTS HERE
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
 ?>
 <!-- === Link your custom CSS pages below here ===-->
@@ -40,6 +105,11 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <p><i>Manage your request codes and reset permissions. You can generate a new permission code or request a code from your manager.</i></p>
     </div>
 
+    <?php 
+        // var_dump($codesRes->DEFAULT_3);
+        // var_dump($output);
+    ?>
+
     <div class="card mb-4 ml-2 mt-3" style="width: 30rem;">
         <div class="card-header text-muted">
             <b>My Permission Codes</b>
@@ -51,9 +121,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="col-8 col-lg-8 align-items-center"> 
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                <span id="btn-see-transfer-code" class="btn-secondary input-group-text">
+                                    <i id="b-3-key" class="fa fa-key"></i>
+                                    <i id="b-3-eye" class="far fa-eye d-none"></i>
+                                </span>
                             </div>
-                            <input readonly type="text" class="form-control" placeholder="" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input readonly id="input-see-transfer-code" type="password" class="form-control" placeholder="No code saved" value="<?php echo isset($codesRes->DEFAULT_3)?$codesRes->DEFAULT_3:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
                             <div class="input-group-append">
                                 <button id="btn_gen_transfer" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
                             </div>
@@ -89,15 +162,18 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row align-items-center">
-                    <div class="col-4 col-lg-4 border-right ticket-title">Transfer</div>
+                    <div class="col-4 col-lg-4 border-right ticket-title">Test</div>
                     <div class="col-8 col-lg-8 align-items-center"> 
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                <span id="btn-see-transfer-code-0" class="btn-secondary input-group-text">
+                                    <i id="b-3-key-0" class="fa fa-key"></i>
+                                    <i id="b-3-eye-0" class="far fa-eye d-none"></i>
+                                </span>
                             </div>
-                            <input readonly type="text" class="form-control" placeholder="" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input readonly id="input-see-transfer-code-0" type="password" class="form-control" placeholder="No code saved" value="<?php echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
                             <div class="input-group-append">
-                                <button class="btn btn-sm btn-outline-secondary" type="button">Request New</button>
+                                <button id="btn_gen_transfer" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
                             </div>
                         </div>
                     </div>

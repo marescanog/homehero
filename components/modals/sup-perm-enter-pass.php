@@ -1,16 +1,9 @@
 <?php
     date_default_timezone_set('Asia/Manila');
     $data = isset($_POST['data']) ? $_POST['data'] : null;
-    $transferType = null; // 1-transfer, 2-request override, 3-escalte to supervisor
-    $transferType = null;
-    $agent_id = null;
-    $agent_name = null;
-    $assigned_on = null;
+    $permission_code = null; // 1-transfer, 2-request override, 3-escalte to supervisor
     if($data != null){
-        $transferType = isset($_POST['data']['transferType']) ? $_POST['data']['transferType'] : null;
-        $agent_id = isset($_POST['data']['assigned_agent_id']) ? $_POST['data']['assigned_agent_id'] : null;
-        $agent_name = isset($_POST['data']['assigned_agent_name']) ? $_POST['data']['assigned_agent_name'] : null;
-        $assigned_on = isset($_POST['data']['assigned_on']) ? $_POST['data']['assigned_on'] : null;
+        $permission_code = isset($_POST['data']['permission_code']) ? $_POST['data']['permission_code'] : null;
     }
 ?>
 <div class="modal-content">
@@ -46,7 +39,7 @@
         <?php 
 
         ?>
-        <input type="hidden" name="permission_id" value="">
+        <input type="hidden" name="permission_id" value="<?php echo htmlentities($permission_code);?>">
         <div class="form-group">
             <input type="password" name="password" class="form-control" id="sup-perm-pass" placeholder="">
         </div>
