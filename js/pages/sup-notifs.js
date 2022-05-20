@@ -64,7 +64,7 @@ for(let titi = my_page > ciel_page ? ciel_page : my_page, pagLimit = 0; pagLimit
     // console.log(document.getElementById("pag-"+titi));
 }
 
-console.log(my_page_buttons);
+// console.log(my_page_buttons);
 my_page_buttons.map((btn, index)=>{
     btn.addEventListener("click", ()=>{
         if(numberOfPages <= 5){
@@ -121,7 +121,15 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
 
         let supportTicket_col_num_arr = [10,0,0,0]; // index is tab number, starts at 0 for columns
         let type_col_num = 3; // index is tab number
-        let noButtons = ["Follow Up","Override Req.","Override Notice"];
+        let noButtons = [
+                [],
+                [],
+                [],
+                ["Follow Up","Override Req.","Override Notice"], // Supervisor
+                [],
+                [],
+                [] // Manager
+        ]; // first index is role
 
         // // prints out the button names based on tab displayed - for debugging
         // for(let x_b = 0; x_b < (buttons_matrix[my_tab]).length; x_b++){
@@ -139,7 +147,7 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
 
                     // let noButtons = table.rows[type_col_num].cells[2].innerText; // For reference
                     let row_type = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" : table?.rows[x+1]?.cells[type_col_num-1]?.innerText);
-                    let row_has_no_buttons = noButtons.includes(row_type);
+                    let row_has_no_buttons = noButtons[role-1].includes(row_type);
 
                     let support_ticket_id_col_num = supportTicket_col_num_arr[my_tab];
                     let support_ticket_id = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" :table?.rows[x+1]?.cells[support_ticket_id_col_num]?.innerText);
@@ -151,6 +159,18 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
                             let button_hook = document.getElementById(button_hook_id);
                             if(row_has_no_buttons){
                                 // Add Disable & Gray Out
+                                if(button_name=="read"){
+                                    button_hook.addEventListener("click",()=>{
+                                        console.log("row-"+x+"-read");
+                                    });
+                                } else {
+                                    button_hook.setAttribute("disabled", "true");
+                                    button_hook.classList.remove("btn-primary");
+                                    button_hook.classList.remove("btn-danger");
+                                    button_hook.classList.remove("btn-success");
+                                    button_hook.classList.add("btn-secondary");
+                                    button_hook.style.opacity = "0.25";
+                                }
                             } else {
                                 // Add Event Listener
                                 if(button_hook != null){

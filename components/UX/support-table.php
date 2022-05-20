@@ -28,6 +28,8 @@
 
     $modalButtons = isset($modalButtons) ? $modalButtons  : [];
 
+    $hasClass = isset($hasClass) ? $hasClass  : false;
+
     // Variables for the pagination
     // Function to check if it is a status button
     
@@ -100,16 +102,16 @@
                         ?>
                             <td class="pr-4">
                                 <button 
-                                    <?php echo isset($modalButtons) && count($modalButtons) != 0 &&  cass($y, $modalButtons) ? "data-toggle='modal' data-target='#modal' " : "c"; ?>
+                                    <?php echo isset($modalButtons) && count($modalButtons) != 0 &&  cass($y, $modalButtons) ? "data-toggle='modal' data-target='#modal' " : ""; ?>
 
                                     <?php 
                                         echo  $tableName == null ? "" :
                                         "id='btn-".$tableName."-".
-                                        (count($statusButton)==1?"":$buttonName[$y]."-".$x."-")
+                                        (count($statusButton)==1 && $hasClass==false?"":$buttonName[$y]."-".$x."-")
                                         .$tableRows[$x][count($tableRows[0])-1]."'";
                                     ?>
                                 class="btn btn-primary btn-table
-                                    <?php echo count($statusButton)==1?$tableRows[$x][$y]:$buttonClass[$y];?>
+                                    <?php echo count($statusButton)==1 && $hasClass==false?$tableRows[$x][$y]:$buttonClass[$y];?>
                                 ">
                                     <?php echo $tableRows[$x][$y];?>
                                 </button>

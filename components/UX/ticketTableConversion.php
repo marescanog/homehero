@@ -42,7 +42,6 @@ function convertNotification_PlainDataToTableRow_accept_read_decline_delete($n, 
 {
     $c_read_btn = $read==null?"<i class='far fa-eye-slash'></i>":"<i class='far fa-eye'></i>";
     $c_notif_arr = array("Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice");
-    // $c_notif_arr[2] = "Transfer Req.";
     $c_sender = property_exists($n, 'sender') ? $n->sender : "-";
     $c_empID = property_exists($n, 'generated_by') && is_numeric($n->generated_by) ? $n->generated_by : "-";                   
     $c_notif_type_ID = property_exists($n, 'notification_type_id') && is_numeric($n->notification_type_id) ? $n->notification_type_id : "-";
@@ -70,37 +69,9 @@ function convertNotification_PlainDataToTableRow_accept_read_decline_delete($n, 
 
 
 
-function convertNotification_PlainDataToTableRow_accept_decline_delete($n, $read=null)
+function convertNotification_PlainDataToTableRow_accept_decline_delete($n)
 {    
     $c_notif_arr = array("Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice");
-    // $c_notif_arr[2] = "Transfer Req.";
-    $c_sender = property_exists($n, 'sender') ? $n->sender : "-";
-    $c_empID = property_exists($n, 'generated_by') && is_numeric($n->generated_by) ? $n->generated_by : "-";                   
-    $c_notif_type_ID = property_exists($n, 'notification_type_id') && is_numeric($n->notification_type_id) ? $n->notification_type_id : "-";
-    
-    $c_notif_type = $c_notif_type_ID >count( $c_notif_arr) || $c_notif_type_ID < 0 ? "-" :  $c_notif_arr[$c_notif_type_ID-1];
-    $c_notes = property_exists($n, 'system_generated_description') ? $n->system_generated_description : "-";
-
-    $c_date_time = property_exists($n, 'created_on') ? $n->created_on : "-";
-    $c_date = "-";
-    $c_time = "-";
-    if( $c_date_time != "-"){
-        $date = new DateTime($c_date_time);
-        $c_date = $date->format('M j, Y');
-        $c_time = $date->format('g:i A');
-    }
-
-    $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
-
-    return [$c_empID,$c_sender, $c_notif_type,
-    "<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  
-    $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
-}
-
-function convertNotification_PlainDataToTableRow_delete($n, $read=null)
-{   
-    $c_notif_arr = array("Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice");
-    // $c_notif_arr[2] = "Transfer Req.";
     $c_sender = property_exists($n, 'sender') ? $n->sender : "-";
     $c_empID = property_exists($n, 'generated_by') && is_numeric($n->generated_by) ? $n->generated_by : "-";                   
     $c_notif_type_ID = property_exists($n, 'notification_type_id') && is_numeric($n->notification_type_id) ? $n->notification_type_id : "-";
@@ -120,9 +91,42 @@ function convertNotification_PlainDataToTableRow_delete($n, $read=null)
     $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
     $c_notif_ID = property_exists($n, 'id') ? $n->id : "-";
 
+    return[$c_empID, $c_sender,$c_notif_type,
+    "<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",
+    $c_notes ,$c_date ,$c_time,$c_ticket_ID,$c_notif_ID
+    ];
+}
+
+
+function convertNotification_PlainDataToTableRow_delete($n)
+{   
+    $c_notif_arr = array("Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice");
+    $c_sender = property_exists($n, 'sender') ? $n->sender : "-";
+    $c_empID = property_exists($n, 'generated_by') && is_numeric($n->generated_by) ? $n->generated_by : "-";                   
+    $c_notif_type_ID = property_exists($n, 'notification_type_id') && is_numeric($n->notification_type_id) ? $n->notification_type_id : "-";
+    
+    $c_notif_type = $c_notif_type_ID >count( $c_notif_arr) || $c_notif_type_ID < 0 ? "-" :  $c_notif_arr[$c_notif_type_ID-1];
+    $c_notes = property_exists($n, 'system_generated_description') ? $n->system_generated_description : "-";
+
+    $c_date_time = property_exists($n, 'created_on') ? $n->created_on : "-";
+    $c_date = "-";
+    $c_time = "-";
+    if( $c_date_time != "-"){
+        $date = new DateTime($c_date_time);
+        $c_date = $date->format('M j, Y');
+        $c_time = $date->format('g:i A');
+    }
+
+    $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
+    $c_notif_ID = property_exists($n, 'id') ? $n->id : "-";
+
+    // return [$c_empID,$c_sender, $c_notif_type,
+    // "<i class='fas fa-trash-alt'></i>",  
+    // $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
     return [$c_empID,$c_sender, $c_notif_type,
-    "<i class='fas fa-trash-alt'></i>",  
-    $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
+    "<i class='fas fa-trash-alt'></i>",
+    $c_notes,$c_date,$c_time, $c_ticket_ID, $c_notif_ID
+    ];
 }
 
 
