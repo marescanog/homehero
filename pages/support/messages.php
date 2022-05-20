@@ -71,29 +71,25 @@ $ch = curl_init();
     $output =  json_decode($output);
     
     // Declare variables to be used in this page
-    $new_total = 0;
-    $ongoing_total = 0;
-    // $completed_total = 0;
-    // $escalated_total = 0;
-    // $transferred_total = 0;
-    $new_notifs = [];
-    $read_notifs = [];
-    $all_notifs = [];
-    // $escalated_tickets = [];
-    // $transferred_tickets = [];
-
+        $new_total = 0;
+        $read_total = 0;
+        $all_total = 0;
+        $done_total = 0;
+        $new_notifs = [];
+        $read_notifs = [];
+        $all_notifs = [];
+        $done_notifs = [];
 
     if(is_object($output) && $output->success == true){
         $new_notifs = $output->response->data->new;
         $read_notifs = $output->response->data->read;
         $all_notifs = $output->response->data->all;
-        // // $escalated_tickets = $output->response->escalated_tickets;
-        // // $transferred_tickets = $output->response->transferredTickets;
-        // $new_total = $output->response->new_total;
-        // $ongoing_total = $output->response->ongoing_total;
-        // $completed_total = $output->response->completed_total;
-        // // $escalated_total = $output->response->escalated_total;
-        // // $transferred_total = $output->response->transferred_total;
+        $done_notifs = $output->response->data->done;
+        $new_total = $output->response->data->new_total;
+        $read_total = $output->response->data->read_total;
+        $all_total = $output->response->data->all_total;
+        $done_total = $output->response->data->done_total;
+
     }
 
 // HTML starts here
@@ -324,15 +320,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         </div>
         <!-- Pagination -->
         <?php 
-            $ultimatotal = [];
-            $paginationBaseTotal = 10;
-            $numberOfPages = 1;
-            // // 0-new, 1-ongoing, 2-completed, 3-escalations, 4-transferred
-            // $ultimatotal = [$new_total,$ongoing_total,$completed_total,$escalated_total,$transferred_total];
-            // $paginationBaseTotal = $ultimatotal[$current_tab];
-            // $numberOfPages =  ceil($paginationBaseTotal/$send_limit);
-            // // echo var_dump($numberOfPages);
-            // // echo var_dump($send_page);
+            // 0-new, 1-read, 2-all, 3-done
+            $ultimatotal = [$new_total,$read_total,$all_total,$done_total];
+            $paginationBaseTotal = $ultimatotal[$current_tab];
+            $numberOfPages =  ceil($paginationBaseTotal/$send_limit);
+            // echo var_dump($numberOfPages);
+            // echo var_dump($send_page);
         ?>
         <nav aria-label="Page navigation example">
             <ul class="pagination">
@@ -343,7 +336,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     </a>
                 </li>
                 <?php 
-                    $starting_send_page = 0; //$send_page   
+                    // $starting_send_page = 0; //$send_page   
                     $over_lim = $numberOfPages-5;
                     $ciel_page =  $over_lim <= 0 ? ($numberOfPages <= 5 ? 1 : $send_page ) : $over_lim+1; //$send_page
                     for($titi = $send_page > $ciel_page ? $ciel_page : $send_page, $pagLimit = 0; $pagLimit < 5 && $titi <= $numberOfPages; $titi++, $pagLimit++){
@@ -363,13 +356,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </div>
 
     <!-- Input for Javascript pagination manipulation -->
-    <!-- <input id="total-new" type="hidden" value=<?php //echo $new_total;?>>
-    <input id="total-ongoing" type="hidden" value=<?php //echo $ongoing_total;?>>
-    <input id="total-completed" type="hidden" value=<?php //echo $completed_total;?>>
-    <input id="total-escalated" type="hidden" value=<?php //echo $escalated_total;?>>
-    <input id="total-transferred" type="hidden" value=<?php //echo $transferred_total;?>>
-    <input id="limit" type="hidden" value=<?php //echo $send_limit;?>>
-    <input id="page" type="hidden" value=<?php //echo $send_page;?>> -->
+    <input id="total-new" type="hidden" value=<?php echo $new_total;?>>
+    <input id="total-read" type="hidden" value=<?php echo $read_total;?>>
+    <input id="total-all" type="hidden" value=<?php echo $all_total;?>>
+    <input id="total-done" type="hidden" value=<?php echo $done_total;?>>
+    <input id="limit" type="hidden" value=<?php echo $send_limit;?>>
+    <input id="page" type="hidden" value=<?php echo $send_page;?>> 
     <input id="tab" type="hidden" value=<?php echo $current_tab;?>>
 
 </main>
