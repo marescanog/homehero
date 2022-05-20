@@ -118,7 +118,7 @@
                             }  else if (cass($y-1, $hiddenRows)) {
                                 // If it is a hidden row
                         ?>
-                               <td style="opacity:0; width:1px" <?php echo $ID_row == $y ? "id='".$tableName."-".$x."'" : ""; ?>><?php echo $tableRows[$x][$y];?></td>
+                               <td unselectable="on" style="opacity:0; width:1px;cursor: default;" <?php echo $ID_row == $y ? "id='".$tableName."-".$x."'" : ""; ?>><?php echo $tableRows[$x][$y];?></td>
                         <?php
                                 } else {
                                     // Otherwise the row would just be a label

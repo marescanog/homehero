@@ -74,111 +74,264 @@ show_30.addEventListener("click", ()=>{
 // });
 
 
-let paginationBaseTotal = 4; //temp
-// Get the button in the table.
-    // Determine the number of entries - paginationBaseTotal & current tab
-    // console.log("Pagination base total is: "+ paginationBaseTotal);
 
-    let button_id_start_labels = ["new","read","all"]; //no buttons on deleted
-    let button_id_mid = ["accept","read","decline","delete"];
-    let current_label = button_id_start_labels[my_tab];
-    let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]);
+// ==================
+// Show Notifications List based on Role & Tab
+//      Role -> Number of Cols are different
+//      Tabs -> Number of Buttons are different
+/* 
+    Supervisor, Manager, Admin & SuperAdmin: (4,5,6,7) greater than or equal to 4... Matrix?
+        New - 4 (Accept, Read, Decline, Delete)
+        Read - 4 (Accept, Read, Decline, Delete)
+        All - 3 Accept, Decline, Delete)
+        Done -1 (Delete)
 
-    // console.log(table.rows[3].cells[2].innerText);
-    // console.log(current_label);
-    for(let x = 0; x < paginationBaseTotal; x++){
-        let idHook = document.getElementById(current_label+'-'+x.toString());
-        let id = parseInt(idHook.innerText);
+    Agents (Verification, etc..); Less than 4
+        New -
+        Read -
+        All -
+        Done -
+*/
+// -----------------------------------------------
+// Variables used by all in notifications display
+let paginationBaseTotal = 1; //temp
+let button_id_start_labels = ["new","read","all","done"]; // All pages have this
+let current_label = button_id_start_labels[my_tab]; // console.log(current_label);
+let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]);
+// For reference
+// let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice"];
 
-        let noButtons = table.rows[x+1].cells[2].innerText == "Override Notif";
+// Separate by role
+    // Grab Role ID
+    roleHook = document.getElementById("r");
+    role = roleHook == null ? 0 : roleHook?.value;
+    // -----------------------------------
+    // Operations
+    if(role >= 4){
+        // console.log("This is operations!");
+        let buttons_matrix // index is tab number
+                = [
+                    ["accept","read","decline","delete"],
+                    ["accept","read","decline","delete"],
+                    ["accept","decline","delete"],
+                    ["delete"]
+                  ]; 
 
-        // console.log(idHook.innerText);
-        // console.log('btn-'+current_label+'-'+'accept'+'-'+x+'-'+id.toString());
-        //     console.log(button)
-        for(let y = 0; y < button_id_mid.length; y++){            
+        let supportTicket_col_num_arr = [10,0,0,0]; // index is tab number, starts at 0 for columns
+        let type_col_num = 3; // index is tab number
+        let noButtons = ["Follow Up","Override Req.","Override Notice"];
 
-            let button = document.getElementById('btn-'+current_label+'-'+button_id_mid[y]+'-'+x+'-'+id.toString());
-     
-            if(!noButtons){
-                if(button_id_mid[y]=="accept"){
-                    // console.log(button);
-                    button.addEventListener("click",()=>{
-                        console.log("Accept-Row-"+x);
-                        loadModal("sup-trans-accept",modalTypes,()=>{},getDocumentLevel(),{
-                            // "current":current_name,
-                            // "previous":previous_name,
-                            // "date":date,
-                            // "reason":reason
+        // // prints out the button names based on tab displayed - for debugging
+        // for(let x_b = 0; x_b < (buttons_matrix[my_tab]).length; x_b++){
+        //     console.log(buttons_matrix[my_tab][x_b]);
+        // }
+
+        // Get the button in the table.
+            // Determine the number of entries - paginationBaseTotal & current tab
+            // console.log("Pagination base total is: "+ paginationBaseTotal);
+            let button_id_mid = buttons_matrix[my_tab];
+            for(let x = 0; x < paginationBaseTotal; x++){
+                // Variables Based on Row
+                    let idHook = document.getElementById(current_label+'-'+x.toString());
+                    let id = idHook==null?"":parseInt(idHook.innerText); // This is the notification ID
+
+                    // let noButtons = table.rows[type_col_num].cells[2].innerText; // For reference
+                    let row_type = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" : table?.rows[x+1]?.cells[type_col_num-1]?.innerText);
+                    let row_has_no_buttons = noButtons.includes(row_type);
+
+                    let support_ticket_id_col_num = supportTicket_col_num_arr[my_tab];
+                    let support_ticket_id = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" :table?.rows[x+1]?.cells[support_ticket_id_col_num]?.innerText);
+
+                    if(row_type != null){
+                        button_id_mid.forEach((button_name)=>{
+                            let button_hook_id = 'btn-'+current_label+'-'+button_name+'-'+x+'-'+id.toString();
+                            // console.log(button_hook_id);
+                            let button_hook = document.getElementById(button_hook_id);
+                            if(row_has_no_buttons){
+                                // Add Disable & Gray Out
+                            } else {
+                                // Add Event Listener
+                                if(button_hook != null){
+                                    button_hook.addEventListener("click", ()=>{
+                                        switch(button_name){
+                                            case "accept":
+                                                console.log("row-"+x+"-accept");
+                                                runAccept();
+                                                break;
+                                            case "read":
+                                                console.log("row-"+x+"-read");
+                                                runRead();
+                                                break;
+                                            case "decline":
+                                                runDecline();
+                                                console.log("row-"+x+"-decline");
+                                                break;
+                                            case "delete":
+                                                console.log("row-"+x+"-delete");
+                                                runDelete();
+                                                break;
+                                        }
+                                    });
+                                }
+                            }
+
                         });
-                    });
-                }
-    
-                if(button_id_mid[y]=="read"){
-                    // console.log(button);
-                    button.addEventListener("click",()=>{
-                        console.log("Read-Row-"+x);
-                        // DERECHO AJAX API
-                    });
-                }
-    
-                if(button_id_mid[y]=="decline"){
-                    // console.log(button);
-                    button.addEventListener("click",()=>{
-                        console.log("Decline-Row-"+x);
-                        loadModal("sup-trans-decline",modalTypes,()=>{},getDocumentLevel(),{
-                            // "current":current_name,
-                            // "previous":previous_name,
-                            // "date":date,
-                            // "reason":reason
-                          });
-                    });
-                }
-    
-                if(button_id_mid[y]=="delete"){
-                    // console.log(button);
-                    button.addEventListener("click",()=>{
-                        // console.log("Delete-Row-"+x);
-                        Swal.fire({  
-                            title: 'Delete Request Permanently?',  
-                            text: 'The request and its notes will be permanently deleted. This action cannot be reversed.',
-                            // showDenyButton: true,  
-                            showCancelButton: true,  
-                            confirmButtonText: `YES`,  
-                            // denyButtonText: `Don't save`,
-                          }).then((result) => {  
-                              /* Read more about isConfirmed, isDenied below */  
-                              if (result.isConfirmed) {    
-                                //  ajax to process delete
-                                console.log("DELETE NOTIFICATION"); 
-                              } 
-                            //   else if (result.isDenied) {    
-                            //       Swal.fire('Changes are not saved', '', 'info')  
-                            //    }
-                          });
-                    });
-                }
-            } else {
-                // Exceptions to notifications
-                if(button_id_mid[y]=="read"){
-                    // console.log(button);
-                    button.addEventListener("click",()=>{
-                        console.log("Read-Row-"+x);
-                    });
-                } else {
-                    button.setAttribute("disabled", "true");
-                    button.classList.remove("btn-primary");
-                    button.classList.remove("btn-danger");
-                    button.classList.remove("btn-success");
-                    button.classList.add("btn-secondary");
-                    button.style.opacity = "0.25";
-                }
+                    }
+
             }
             
-
-            //     button.addEventListener("click",()=>{
-            //         window.location = './ticket.php?id='+id;
-            //     });
-        }
+    } else {
+    // ----------------------------------- 
+    // Agents
+        console.log("This is an agent!");
     }
+
+
+const runAccept = () => {
+    loadModal("sup-trans-accept",modalTypes,()=>{},getDocumentLevel(),{
+        // "current":current_name,
+        // "previous":previous_name,
+        // "date":date,
+        // "reason":reason
+    });
+}
+
+const runRead = () => {
+    console.log("Running Red Api");
+}
+
+const runDecline = () => {
+    loadModal("sup-trans-decline",modalTypes,()=>{},getDocumentLevel(),{
+        // "current":current_name,
+        // "previous":previous_name,
+        // "date":date,
+        // "reason":reason
+        });
+}
+
+const runDelete = () => {
+    Swal.fire({  
+        title: 'Delete Request Permanently?',  
+        text: 'The request and its notes will be permanently deleted. This action cannot be reversed.',
+        // showDenyButton: true,  
+        showCancelButton: true,  
+        confirmButtonText: `YES`,  
+        // denyButtonText: `Don't save`,
+        }).then((result) => {  
+            /* Read more about isConfirmed, isDenied below */  
+            if (result.isConfirmed) {    
+            //  ajax to process delete
+            console.log("DELETE NOTIFICATION"); 
+        } 
+        //   else if (result.isDenied) {    
+        //       Swal.fire('Changes are not saved', '', 'info')  
+        //    }
+    });
+}
+    
+
+
+
+
+
+
+//     // console.log(table.rows[3].cells[2].innerText);
+//     // console.log(current_label);
+//     for(let x = 0; x < paginationBaseTotal; x++){
+
+
+
+
+// // // $c_notif_arr = array("Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice");
+
+
+// //         // console.log(idHook.innerText);
+// //         // console.log('btn-'+current_label+'-'+'accept'+'-'+x+'-'+id.toString());
+// //         //     console.log(button)
+//         for(let y = 0; y < button_id_mid.length; y++){            
+
+//             // let button = document.getElementById('btn-'+current_label+'-'+button_id_mid[y]+'-'+x+'-'+id.toString());
+//             // console.log('btn-'+current_label+'-'+button_id_mid[y]+'-'+x+'-'+id.toString());
+//             // if(!noButtons){
+//             //     if(button_id_mid[y]=="accept"){
+//             //         // console.log(button);
+//             //         button.addEventListener("click",()=>{
+//             //             console.log("Accept-Row-"+x);
+//             //             loadModal("sup-trans-accept",modalTypes,()=>{},getDocumentLevel(),{
+//             //                 // "current":current_name,
+//             //                 // "previous":previous_name,
+//             //                 // "date":date,
+//             //                 // "reason":reason
+//             //             });
+//             //         });
+//             //     }
+    
+//             //     if(button_id_mid[y]=="read"){
+//             //         // console.log(button);
+//             //         button.addEventListener("click",()=>{
+//             //             console.log("Read-Row-"+x);
+//             //             // DERECHO AJAX API
+//             //         });
+//             //     }
+    
+//             //     if(button_id_mid[y]=="decline"){
+//             //         // console.log(button);
+//             //         button.addEventListener("click",()=>{
+//             //             console.log("Decline-Row-"+x);
+//             //             loadModal("sup-trans-decline",modalTypes,()=>{},getDocumentLevel(),{
+//             //                 // "current":current_name,
+//             //                 // "previous":previous_name,
+//             //                 // "date":date,
+//             //                 // "reason":reason
+//             //               });
+//             //         });
+//             //     }
+    
+//             //     if(button_id_mid[y]=="delete"){
+//             //         // console.log(button);
+//             //         button.addEventListener("click",()=>{
+//             //             // console.log("Delete-Row-"+x);
+//             //             Swal.fire({  
+//             //                 title: 'Delete Request Permanently?',  
+//             //                 text: 'The request and its notes will be permanently deleted. This action cannot be reversed.',
+//             //                 // showDenyButton: true,  
+//             //                 showCancelButton: true,  
+//             //                 confirmButtonText: `YES`,  
+//             //                 // denyButtonText: `Don't save`,
+//             //               }).then((result) => {  
+//             //                   /* Read more about isConfirmed, isDenied below */  
+//             //                   if (result.isConfirmed) {    
+//             //                     //  ajax to process delete
+//             //                     console.log("DELETE NOTIFICATION"); 
+//             //                   } 
+//             //                 //   else if (result.isDenied) {    
+//             //                 //       Swal.fire('Changes are not saved', '', 'info')  
+//             //                 //    }
+//             //               });
+//             //         });
+//             //     }
+//             // } else {
+//             //     // Exceptions to notifications
+//             //     if(button_id_mid[y]=="read"){
+//             //         // console.log(button);
+//             //         button.addEventListener("click",()=>{
+//             //             console.log("Read-Row-"+x);
+//             //         });
+//             //     } else {
+//             //         button.setAttribute("disabled", "true");
+//             //         button.classList.remove("btn-primary");
+//             //         button.classList.remove("btn-danger");
+//             //         button.classList.remove("btn-success");
+//             //         button.classList.add("btn-secondary");
+//             //         button.style.opacity = "0.25";
+//             //     }
+//             // }
+            
+
+//             //     button.addEventListener("click",()=>{
+//             //         window.location = './ticket.php?id='+id;
+//             //     });
+//         }
+//     }
 
 });

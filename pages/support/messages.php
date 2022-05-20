@@ -6,18 +6,19 @@ if(!isset($_SESSION["token_support"])){
 }
 $level ="../../";
 
-// // CURL STARTS HERE
-// // NEWLINKDEV
-// // Curl request to get data to fill projects page
+// CURL STARTS HERE
+// NEWLINKDEV
+// Curl request to get data to fill projects page
 
-// $url = "http://localhost/slim3homeheroapi/public/ticket/all"; // DEV
-// // $url = ""; // NO PROD LINK
+$url = "http://localhost/slim3homeheroapi/public/ticket/get-notifications"; // DEV
+// $url = ""; // NO PROD LINK
 
-// $headers = array(
-//     "Authorization: Bearer ".$_SESSION["token_support"],
-//     'Content-Type: application/json',
-// );
+$headers = array(
+    "Authorization: Bearer ".$_SESSION["token_support"],
+    'Content-Type: application/json',
+);
 
+$role = isset($_SESSION['role']) && is_numeric($_SESSION['role']) ? $_SESSION['role'] : null;
 $send_limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? $_GET['limit']: 10 ;
 $send_page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 
@@ -25,74 +26,75 @@ $send_page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] :
 $get_tab = isset($_GET['tab']) && $_GET['tab'] ?  $_GET['tab'] : null;
 $current_tab = isset($_GET['tab']) && is_numeric($get_tab) ? ($get_tab > 0 && $get_tab <5 ? $get_tab : 0) : 0;
 
-// $post_data = array(
-//     'email' => $_SESSION["email"],
-//     'page' => $send_page,
-//     'limit' => $send_limit
-//     // 'email' => 'mdenyys@support.com'
-// );
+$viewArr = array("new","read","all");
+$post_data = array(
+    'email' => $_SESSION["email"],
+    'page' => $send_page,
+    'limit' => $send_limit,
+    // 'view' => $viewArr[$current_tab]
+);
 
-// // 1. Initialize
-// $ch = curl_init();
+// 1. Initialize
+$ch = curl_init();
 
-// // 2. set options
-//     // URL to submit to
-//     curl_setopt($ch, CURLOPT_URL, $url);
+// 2. set options
+    // URL to submit to
+    curl_setopt($ch, CURLOPT_URL, $url);
 
-//     // Return output instead of outputting it
-//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Return output instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-//     // Type of request = POST
-//     curl_setopt($ch, CURLOPT_POST, 1);
+    // Type of request = POST
+    curl_setopt($ch, CURLOPT_POST, 1);
 
-//     // Adding the post variables to the request
-//     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+    // Adding the post variables to the request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
 
-//     // Set headers for auth
-//     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    // Set headers for auth
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
-//     // Execute the request and fetch the response. Check for errors
-//     $output = curl_exec($ch);
+    // Execute the request and fetch the response. Check for errors
+    $output = curl_exec($ch);
 
-//     // Moved inside Modal Body for better display of error messages
-//     $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
-//     $curl_error_message = null;
+    // Moved inside Modal Body for better display of error messages
+    $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
+    $curl_error_message = null;
 
-//     // ERROR HANDLING 
-//     if($output === FALSE){
-//         $curl_error_message = curl_error($ch);
-//     }
+    // ERROR HANDLING 
+    if($output === FALSE){
+        $curl_error_message = curl_error($ch);
+    }
 
-//     curl_close($ch);
+    curl_close($ch);
 
-//     // $output =  json_decode(json_encode($output), true);
-//     $output =  json_decode($output);
+    // $output =  json_decode(json_encode($output), true);
+    $output =  json_decode($output);
     
-//     // Declare variables to be used in this page
-//     $new_total = 0;
-//     $ongoing_total = 0;
-//     $completed_total = 0;
-//     $escalated_total = 0;
-//     $transferred_total = 0;
-//     $new_tickets = [];
-//     $ongoing_tickets = [];
-//     $completed_tickets = [];
-//     $escalated_tickets = [];
-//     $transferred_tickets = [];
+    // Declare variables to be used in this page
+    $new_total = 0;
+    $ongoing_total = 0;
+    // $completed_total = 0;
+    // $escalated_total = 0;
+    // $transferred_total = 0;
+    $new_notifs = [];
+    $read_notifs = [];
+    $all_notifs = [];
+    // $escalated_tickets = [];
+    // $transferred_tickets = [];
 
 
-//     if(is_object($output) && $output->success == true){
-//         $new_tickets = $output->response->new;
-//         $ongoing_tickets = $output->response->ongoing;
-//         $completed_tickets = $output->response->completed;
-//         // $escalated_tickets = $output->response->escalated_tickets;
-//         // $transferred_tickets = $output->response->transferredTickets;
-//         $new_total = $output->response->new_total;
-//         $ongoing_total = $output->response->ongoing_total;
-//         $completed_total = $output->response->completed_total;
-//         // $escalated_total = $output->response->escalated_total;
-//         // $transferred_total = $output->response->transferred_total;
-//     }
+    if(is_object($output) && $output->success == true){
+        $new_notifs = $output->response->data->new;
+        $read_notifs = $output->response->data->read;
+        $all_notifs = $output->response->data->all;
+        // // $escalated_tickets = $output->response->escalated_tickets;
+        // // $transferred_tickets = $output->response->transferredTickets;
+        // $new_total = $output->response->new_total;
+        // $ongoing_total = $output->response->ongoing_total;
+        // $completed_total = $output->response->completed_total;
+        // // $escalated_total = $output->response->escalated_total;
+        // // $transferred_total = $output->response->transferred_total;
+    }
 
 // HTML starts here
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
@@ -126,38 +128,136 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- Tab Header -->
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-new-tab" data-toggle="tab" href="#nav-new" role="tab" aria-controls="nav-new" aria-selected="true">New</a>
+            <a onClick="addURLParameter(['tab','page'],['0','1'])" class="nav-item nav-link <?php echo $current_tab==0?"active":"";?>" id="nav-new-tab" data-toggle="tab" href="#nav-new" role="tab" aria-controls="nav-new" aria-selected="<?php echo $current_tab==0?"true":"false";?>">New</a>
 
-            <a class="nav-item nav-link" id="nav-read-tab" data-toggle="tab" href="#nav-read" role="tab" aria-controls="nav-read" aria-selected="false">Read</a>
+            <a onClick="addURLParameter(['tab','page'],['1','1'])" class="nav-item nav-link <?php echo $current_tab==1?"active":"";?>" id="nav-read-tab" data-toggle="tab" href="#nav-read" role="tab" aria-controls="nav-read" aria-selected="<?php echo $current_tab==1?"true":"false";?>">Read</a>
             
-            <a class="nav-item nav-link" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">All</a>
+            <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="<?php echo $current_tab==2?"true":"false";?>">All</a>
 
-            <!-- <a class="nav-item nav-link" id="nav-deleted-tab" data-toggle="tab" href="#nav-deleted" role="tab" aria-controls="nav-deleted" aria-selected="false">Deleted</a> -->
+            <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-done-tab" data-toggle="tab" href="#nav-done" role="tab" aria-controls="nav-done" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Done</a>
 
+            <input type="hidden" id="r" value="<?php echo $role;?>">
         </div>
     </nav>
 
+    <?php 
+        // var_dump($output);
+        // var_dump($new_notifs);
+    ?>
 
-    <!-- Tab Header -->
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
+<!-- ======================================== -->
+<!--            SUPERVISORS  VIEW             -->
+<!-- ======================================== -->
+    <?php 
+        if($role!= null &&($role==4||$role==7||$role==6||$role==6)){
+            /*
+                YO WE NEED A COLUMN HAS TAKEN ACTION AND IT IS INVISIBLE,
+                THIS DEACTIVATES THE BUTTON
+            */
+    ?>
+    
+        <!-- Tab Header -->
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade <?php echo $current_tab==0?"show active":"";?>" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
+                <?php
+                include "$level/components/UX/ticketTableConversion.php";
+                    $buttonClass = array("","","","btn-success","btn-primary","btn-danger","btn-secondary");
+                    $buttonName = array("","","","accept","read","decline","delete");
+                    $searchCaption = "Search Agent";
+                    $ID_row = 11;
+                    $statusButton = [4,5,6,7];
+                    $modalButtons  = [4,6];
+                    $tableHeaderLabels = ["EmpID", "From", "Type", "Accept","Read","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableName = "new";
+                    $basicSearchId = "allSearch";
+                    $hiddenRows = array(10,11);
+                    // $tableRows = [
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","1"],
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","2"],
+                    //     ["192","Sharma M.", "Override Notif","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #143 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #54. (NOTES: cX badasdsasdadsO)", "May 8, 2022","9:00 AM","3"],
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","4"]
+                    // ];
+                    $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $new_notifs);
+                    include "$level/components/UX/support-table.php";
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
+
+            <div class="tab-pane fade <?php echo $current_tab==1?"show active":"";?>" id="nav-read" role="tabpanel" aria-labelledby="nav-read-tab">
+                <?php
+                    $tableName = "read";
+                    $basicSearchId = "activeSearch";
+                    $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $read_notifs);
+                    include "$level/components/UX/support-table.php";
+
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
+
+            <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                <?php
+                    $tableName = "all";
+                    $hiddenRows = [9];
+                    $basicSearchId = "bookmarkedSearch";
+                    $buttonClass = array("","","","btn-success","btn-danger","btn-secondary");
+                    $buttonName = array("","","","accept","decline","delete");
+                    $statusButton = [4,5,6];
+                    $modalButtons  = [4,5];
+                    $ID_row = 9;
+                    $tableHeaderLabels = ["EmpID", "From", "Type", "Accept","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableRows = [
+                        ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","1"],
+                        ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","2"],
+                        ["192","Sharma M.", "Override Notif","<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #143 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #54. (NOTES: cX badasdsasdadsO)", "May 8, 2022","9:00 AM","3"],
+                        ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","4"]
+                    ];
+                    include "$level/components/UX/support-table.php";
+
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
+
+            <div class="tab-pane fade <?php echo $current_tab==3?"show active":"";?>" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab"> 
+                <?php
+                    $tableName = "done";
+                    $basicSearchId = "archivedSearch";
+                    $tableHeaderLabels = ["EmpID", "From", "Type", "Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    include "$level/components/UX/support-table.php";
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                ?>
+            </div> 
+
+        </div>
+    <?php 
+        }else{
+    ?>
+<!-- ======================================== -->
+<!--               AGENTS VIEW                -->
+<!-- ======================================== -->
+     <!-- Tab Header -->
+     <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade <?php echo $current_tab==0?"show active":"";?>" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
             <?php
-                $buttonClass = array("","","","btn-success","btn-primary","btn-danger","btn-secondary");
-                $buttonName = array("","","","accept","read","decline","delete");
-                $searchCaption = "Search Agent";
-                $ID_row = 10;
-                $statusButton = [4,5,6,7];
-                $modalButtons  = [4,6];
-                $tableHeaderLabels = ["Sp.ID", "From", "Type", "Accept","Read","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                // $buttonClass = array("","","","btn-success","btn-primary","btn-danger","btn-secondary");
+                // $buttonName = array("","","","accept","read","decline","delete");
+                // $searchCaption = "Search Agent";
+                // $ID_row = 10;
+                // $statusButton = [4,5,6,7];
+                // $modalButtons  = [4,6];
+                $tableHeaderLabels = ["Sp.ID", "From", "Sent To", "Type", "Read", "Notification Message", "Date Sent", "Time Sent"];
                 $tableName = "new";
                 $basicSearchId = "allSearch";
-                $tableRows = [
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","1"],
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","2"],
-                    ["192","Sharma M.", "Override Notif","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #143 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #54. (NOTES: cX badasdsasdadsO)", "May 8, 2022","9:00 AM","3"],
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","4"]
-                ];
-
                 include "$level/components/UX/support-table.php";
                 // Reset Values after to prepare for the next iteration
                 $tableName = null;
@@ -166,16 +266,10 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             ?>
         </div>
 
-        <div class="tab-pane fade" id="nav-read" role="tabpanel" aria-labelledby="nav-read-tab">
+        <div class="tab-pane fade <?php echo $current_tab==1?"show active":"";?>" id="nav-read" role="tabpanel" aria-labelledby="nav-read-tab">
             <?php
                 $tableName = "read";
                 $basicSearchId = "activeSearch";
-                $tableRows = [
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","1"],
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","2"],
-                    ["192","Sharma M.", "Override Notif","<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #143 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #54. (NOTES: cX badasdsasdadsO)", "May 8, 2022","9:00 AM","3"],
-                    ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","4"]
-                ];
                 include "$level/components/UX/support-table.php";
 
                 // Reset Values after to prepare for the next iteration
@@ -184,7 +278,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             ?>
         </div>
 
-        <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+        <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
             <?php
                 $tableName = "all";
                 $basicSearchId = "bookmarkedSearch";
@@ -196,19 +290,24 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             ?>
         </div>
 
-        <!-- <div class="tab-pane fade" id="nav-deleted" role="tabpanel" aria-labelledby="nav-deleted-tab">
+         <div class="tab-pane fade <?php echo $current_tab==3?"show active":"";?>" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab"> 
             <?php
-                // $tableName = "deleted";
-                // $basicSearchId = "archivedSearch";
-                // include "$level/components/UX/support-table.php";
-
-                // // Reset Values after to prepare for the next iteration
-                // $tableName = null;
-                // $basicSearchId = null;
+                $tableName = "deleted";
+                $basicSearchId = "archivedSearch";
+                $tableHeaderLabels = ["EmpID", "From", "Type", "Delete", "Notification Message", "Date Sent", "Time Sent"];
+                include "$level/components/UX/support-table.php";
+                // Reset Values after to prepare for the next iteration
+                $tableName = null;
+                $basicSearchId = null;
             ?>
-        </div> -->
+        </div> 
 
     </div>
+    <?php 
+        }
+    ?>
+
+   
 
 <!-- Footer (Pagination & Number of Entries) -->
 <div class="mt-auto d-flex flex-column flex-lg-row justify-content-between align-items-center">
