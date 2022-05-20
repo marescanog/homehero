@@ -868,6 +868,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <input type="hidden" id="trans_assigned_on" value="<?php echo isset($base_info->assigned_on) ? $base_info->assigned_on : ""; ?>">
                     <input type="hidden" id="trans_assigned_agent_name" value="<?php echo isset($base_info->agent_name) ? $base_info->agent_name : ""; ?>">
                     <input type="hidden" id="trans_assigned_agent_ID" value="<?php echo isset($base_info->assigned_agent) ? $base_info->assigned_agent : ""; ?>">
+                    <input type="hidden" id="trans_ticket_id" value="<?php echo $idRef;?>">
                 <?php 
                     if($_SESSION["email"] == $base_info->agent_email){
                 ?>

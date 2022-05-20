@@ -1109,14 +1109,18 @@ let btn_request_override = document.getElementById("btn-request-override");
 let trans_assigned_on = document.getElementById("trans_assigned_on");
 let trans_assigned_agent_name = document.getElementById("trans_assigned_agent_name");
 let trans_assigned_agent_ID = document.getElementById("trans_assigned_agent_ID");
+let trans_ticket_id = document.getElementById("trans_ticket_id");
+
 
 if(btn_transfer != null){
+  
   btn_transfer.addEventListener("click",()=>{
     loadModal("sup-transfer",modalTypes,()=>{},getDocumentLevel(),{
       transferType: 1, // 1-transfer, 2-request override, 3-escalte to supervisor
       assigned_agent_name: trans_assigned_agent_name.value,
       assigned_agent_id: trans_assigned_agent_ID.value,
-      assigned_on: trans_assigned_on.value
+      assigned_on: trans_assigned_on.value,
+      ticket_id: trans_ticket_id.value
     });
   });
 }
@@ -1127,7 +1131,8 @@ if(btn_request_override != null){
       transferType: 2, // 1-transfer, 2-request override, 3-escalte to supervisor
       assigned_agent_name: trans_assigned_agent_name.value,
       assigned_agent_id: trans_assigned_agent_ID.value,
-      assigned_on: trans_assigned_on.value
+      assigned_on: trans_assigned_on.value,
+      ticket_id: trans_ticket_id.value
     });
   });
 }

@@ -34,21 +34,20 @@ $("#modal-transfer").validate({
         const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("Request Transfer");
 
+        // console.log("Request Transfer Data: ");
         // console.log(formData);
-        // console.log(formData?.date);
-        // console.log(formData?.time);
 
         let isValid = true;
         let errMessage = "";
-        let data = [];
+        let data = {};
 
         let supervisor_type = formData?.supervisor_type ?? "";
         let my_sup = formData?.my_sup ?? "";
         let sup_ID = formData?.sup_ID ?? "";
         let trans_code_1 = formData?.trans_code_1 ?? "";
         let trans_code_2 = formData?.trans_code_2 ?? "";
+        let ticket_id = formData?.ticket_id ?? "";
 
         // Basic Validation to Check if trans code/sup id is blank based on the supervisor type selected
         if((supervisor_type =="" || supervisor_type == null) || (supervisor_type == 2) ){
@@ -65,7 +64,8 @@ $("#modal-transfer").validate({
 
             if(isValid == true){
                 data['sup_id'] = sup_ID;
-                data['transfer_code'] = trans_code_2;
+                data['transfer_code'] = trans_code_2; 
+                data['permission_code'] = 1; // Externa Agent Transfer Request
             }
         } else {
             // console.log("Same Sup");
@@ -82,15 +82,19 @@ $("#modal-transfer").validate({
             if(isValid == true){
                 data['sup_id'] = my_sup;
                 data['transfer_code'] = trans_code_1;
+                data['permission_code'] = 3; // Normal Transfer Request
             }
         }
 
         // Get Relevant Data & Filter
         data['transfer_reason'] = formData?.transfer_reason ?? null;
         data['comments'] = formData?.agent_notes ?? null;
+        data['ticket_id'] = ticket_id ?? null;
 
-        console.log("Your data to submit to the api.");
-        console.log(data);
+        // console.log("your ticket id is "+ticket_id);
+
+        // console.log("Your data to submit to the api.");
+        // console.log(data);
 
         if(isValid != true){
             // Swal Error
@@ -103,29 +107,92 @@ $("#modal-transfer").validate({
                     enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT REQUEST");
                 });
         } else{
+
             // Call Api
-            console.log("Call API");
-        }
-
-
-        // const monthArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        // let displayString = "";
-
-        // let inpt_jo_start_display = document.getElementById("input_jo_time_start");
-        // // let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
-        // let input_jo_time_start_value_submit = document.getElementById("input_jo_time_start_value_submit");
-
-        // // FORMAT FOR DISPLAY IS MM dd, yyyy - h:m am   ex: May 25, 2022 - 1:00 PM
-
-        // input_jo_time_start_value_submit.value = newDateTime;
-        // inpt_jo_start_display.value = displayString;
-
-        // // console.log(inpt_jo_start_display);
-        // // console.log(inpt_jo_start_value);
-        // // console.log(inpt_jo_start_value.value);
-        // // console.log(inpt_jo_start_display.placeholder);
-
-        // $('#modal').modal('hide');
-        // $('#modal-edit-jo-start-date')[0].reset();
+            // Proceed with ajax call to send a notification to the supervisor
+            $.ajax({
+                type : 'POST',
+                url : getDocumentLevel()+'/auth/ticket/send_transfer_request.php',
+                data : data,
+                success : function(response) {
+                    // console.log("Your response after submission is:");
+                    // console.log("Response JSON: "+response);
+                    if(isJson(response)){
+                        let res = JSON.parse(response);
+                        // // console.log("Your response after submission is:");
+                        // // console.log("Response JSON: "+res);
+                        let status = res["status"];
+                        let message = res["message"];
+                        // console.log("status: "+status);
+                        // console.log("message: "+message);
+                        if(status==200){      
+                            // Unfreeze & Reset
+                            Swal.fire({
+                                title: 'Your supervisor has been notified!',
+                                text: message ?? "The request has been sucessfully sent to the supervisor. Please wait for their response.",
+                                icon: "success",
+                                }).then(result => {
+                                    form.reset();
+                                    $('#modal').modal('hide');
+                                    $('#modal-transfer')[0].reset();
+                                    enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE NEW CODE");
+                                    window.location.reload(true);
+                            });
+                        } else if (status == 401){
+                            Swal.fire({
+                                title: 'Incorrect Transfer Code!',
+                                text: message ?? 'Please check your transfer code or login details and try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                            });
+                        } else if (status == 400){
+                            Swal.fire({
+                                title: 'Bad Request! Check your submission details',
+                                text: message ?? 'Something went wrong with your request. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                            });
+                        }else{
+                            Swal.fire({
+                                title: 'Oops! Error!',
+                                text: message ?? 'Something went wrong. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                window.location.reload(true);
+                            });
+                        }
+                    } else {
+                        // Error
+                        console.log("Your ERROR response after submission is:");
+                        console.log("Response JSON: "+response);
+                        let message = null;
+                        Swal.fire({
+                            title: 'Oops! Error!',
+                            text: message ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            window.location.reload(true);
+                        });
+                    }
+                }, 
+                error: function(response) {
+                    console.log("ERROR - Response JSON: "+response);
+                    Swal.fire({
+                    title: 'An error occured!',
+                    text: 'Something went wrong. Please try again!',
+                    icon: "error",
+                    confirmButtonText: 'ok'
+                    }).then(result => {
+                        // window.location.reload(true);
+                    });
+                    }
+                });
+            }
     }
 });

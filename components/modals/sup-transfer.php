@@ -10,8 +10,6 @@
     $supName = "";
     $supID = null;
 
-
-
     // curl to get the needed modal information
     // CHANGELINKDEVPROD
     // Make curl for the personal inforation pagge information vv
@@ -99,6 +97,8 @@
         $transReasonsArr[4]["id"] = 5;
         $transReasonsArr[4]["reason"] = "Other";
         $transReasonFinal = count($transReasons) == 0 ? $transReasonsArr : $transReasons;
+
+        $ticket_id = isset($_POST['data']) && isset($_POST['data']["ticket_id"]) ? $_POST['data']["ticket_id"] : null;
 ?>
 <div class="modal-content">
     <?php 
@@ -161,8 +161,9 @@
                             <p class="card-text"><?php echo $agent_name;?></p>
                         </div>
                         <div style="width:49%">
-                            <h6 class="card-subtitle mb-2 text-muted">Assigned On</h6>
-                            <p class="card-text"><?php echo $assigned_on;?></p>
+                            <h6 class="card-subtitle mb-2 text-muted">Assigned On</h6> 
+                            <p class="card-text"><?php $date = new DateTime($assigned_on);
+                                    echo $date->format('M j,Y g:i A');?></p>
                         </div>
                     </div>
                 </div>
@@ -210,7 +211,7 @@
                         // $hideSelectSup = true;
 
                         $hideSelectSup = ($supID==null||$supID=="");
-                        
+
                         if(!$hideSelectSup){
                     ?>
                         <div class="row mb-2">
@@ -273,6 +274,11 @@
                 </div>
             </div>
         </div>
+        <?php 
+            // var_dump($_POST);
+        ?>
+
+        <input type="hidden" value="<?php echo $ticket_id??'';?>" name="ticket_id">
 
         <p class="text-center mb-0" style="font-size:0.8rem;">** Ticket transfers are pending supervisor's approval.</p>
         </div>
