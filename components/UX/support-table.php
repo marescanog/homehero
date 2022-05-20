@@ -1,6 +1,8 @@
 <?php
+
 // Variables for the DOM Elements
     $basicSearchId = isset($basicSearchId) ? $basicSearchId : "";
+    $searchCaption = isset($searchCaption) ? $searchCaption : "Search Ticket";
 
 // Variables for the "Showing X out of x"
     $totalRecords = isset($totalRecords) ? $totalRecords : 0;
@@ -14,15 +16,29 @@
 
     $tableRows = isset($tableRows) ? $tableRows : [];
 
-    $statusButton = isset($statusButton) ? $statusButton : 3;
+    $statusButton = isset($statusButton) ? $statusButton :array(3);
 
-    $hiddenRows = isset($hiddenRows) ? $hiddenRows : 1;
+    $buttonClass = isset($buttonClass) ? $buttonClass : [];
+
+    $buttonName = isset($buttonName) ? $buttonName : [];
+
+    $hiddenRows = isset($hiddenRows) ? $hiddenRows : [count($tableHeaderLabels)];
 
     $ID_row = isset($ID_row) ? $ID_row  : 0;
 
-// Variables for the pagination
+    $modalButtons = isset($modalButtons) ? $modalButtons  : [];
 
-
+    // Variables for the pagination
+    // Function to check if it is a status button
+    
+    if (!function_exists('cass')) {
+        function cass($yeet, $arrgh) {
+            if(in_array($yeet+1, $arrgh)){
+                return true;
+            }
+            return false;
+        }
+    } 
 ?>
 
 <div class="main-container d-flex flex-column flex-1 min-height">
@@ -45,11 +61,11 @@
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
-                <input type="text" class="form-control override-input" placeholder="Search Ticket" aria-label="search" aria-describedby="basic-search">
+                <input type="text" class="form-control override-input" placeholder="<?php echo $searchCaption;?>" aria-label="search" aria-describedby="basic-search">
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-striped table-sm">
+            <table id="<?php echo 'table-hook-'.$tableName;?>" class="table table-striped table-sm">
                 <!-- TABLE HEADER DATA -->
                 <thead>
                 <tr>
@@ -73,23 +89,36 @@
                     ?>
                     <tr>
                         <?php 
+                        
                             // This row is for the row with a button
                             // Which row the button appears can be customized by declaring a status button. Currently the default is at the third row. 
-                            for($y=0; $y < count($tableRows[$x]) - $hiddenRows; $y++){
-                                if(isset($statusButton) && $y == $statusButton-1){
+                            for($y=0; $y < count($tableRows[$x]); $y++){
+              
+
+                                if(isset($statusButton) && cass($y, $statusButton) ){
+                                // if(isset($statusButton) && $y == $statusButton-1)){ //old code
                         ?>
                             <td class="pr-4">
                                 <button 
+                                    <?php echo isset($modalButtons) && count($modalButtons) != 0 &&  cass($y, $modalButtons) ? "data-toggle='modal' data-target='#modal' " : "c"; ?>
+
                                     <?php 
                                         echo  $tableName == null ? "" :
-                                        "id='btn-".$tableName."-".$tableRows[$x][count($tableRows[0])-1]."'";
+                                        "id='btn-".$tableName."-".
+                                        (count($statusButton)==1?"":$buttonName[$y]."-".$x."-")
+                                        .$tableRows[$x][count($tableRows[0])-1]."'";
                                     ?>
                                 class="btn btn-primary btn-table
-                                    <?php echo $tableRows[$x][$y];?>
+                                    <?php echo count($statusButton)==1?$tableRows[$x][$y]:$buttonClass[$y];?>
                                 ">
                                     <?php echo $tableRows[$x][$y];?>
                                 </button>
                             </td>
+                        <?php 
+                            }  else if (cass($y-1, $hiddenRows)) {
+                                // If it is a hidden row
+                        ?>
+                               <td style="opacity:0; width:1px" <?php echo $ID_row == $y ? "id='".$tableName."-".$x."'" : ""; ?>><?php echo $tableRows[$x][$y];?></td>
                         <?php
                                 } else {
                                     // Otherwise the row would just be a label
