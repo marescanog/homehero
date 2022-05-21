@@ -9,12 +9,15 @@ if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 &&
     exit();
 }
 
+$escalationsRole = isset($_SESSION["role"]) ? $_SESSION["role"] : null;
+
 // CURL STARTS HERE
 $level ="../../";
 
 // NEWLINKDEV
 // Declare variables to be used in this page
 $codesRes = [];
+$managerRes = [];
 
 $url = "http://localhost/slim3homeheroapi/public/support/get-my-codes"; // DEV
 // $url = ""; // NO PROD LINK
@@ -68,9 +71,10 @@ $ch = curl_init();
     // Set the declare variables (refer at the top)
     if(is_object($output) && $output != null && $output->success == true){
         $codesRes = $output->response->codesRes;
+        $managerRes = $output->response->managerRes;
     } else {
-        $err_stat = $output->response->status;
-        $message= $output->response->message;
+        // $err_stat = $output->response->status;
+        // $message= $output->response->message;
     }
 
 
@@ -101,14 +105,22 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2">Permissions</h1>
     </div>
-    <div style="width: 30rem;">
-        <p><i>Manage your request codes and reset permissions. You can generate a new permission code or request a code from your manager.</i></p>
-    </div>
 
     <?php 
         // var_dump($codesRes->DEFAULT_3);
         // var_dump($output);
     ?>
+
+<!-- ====================================== -->
+<!-- SUPERVISORS PERMISSION CODE GENERATORS -->
+<!-- ====================================== -->
+<?php 
+    if($escalationsRole == 4){
+?>
+
+    <div style="width: 30rem;">
+        <p><i>Manage your request codes and reset permissions. You can generate a new permission code or request a code from your manager.</i></p>
+    </div>
 
     <div class="card mb-4 ml-2 mt-3" style="width: 30rem;">
         <div class="card-header text-muted">
@@ -155,7 +167,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         </ul> -->
     </div>
 
-    <div class="card mb-4 ml-2" style="width: 30rem;">
+    <!-- <div class="card mb-4 ml-2" style="width: 30rem;">
         <div class="card-header text-muted">
             <b>Manager Permission Codes</b>
         </div>
@@ -171,7 +183,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     <i id="b-3-eye-0" class="far fa-eye d-none"></i>
                                 </span>
                             </div>
-                            <input readonly id="input-see-transfer-code-0" type="password" class="form-control" placeholder="No code saved" value="<?php echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                            <input readonly id="input-see-transfer-code-0" type="password" class="form-control" placeholder="No code saved" value="<?php //echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
                             <div class="input-group-append">
                                 <button id="btn_gen_transfer" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
                             </div>
@@ -180,7 +192,305 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 </div>
             </li>
         </ul>
+    </div> -->
+<?php 
+    }
+?>
+
+
+<!-- ====================================== -->
+<!-- MANAGERS PERMISSION CODE GENERATORS -->
+<!-- ====================================== -->
+<?php 
+    if($escalationsRole == 7){
+?>
+    <div style="width: 30rem;">
+        <p><i>Manage your request codes and reset permissions. You can generate a new permission code to approve the actions of supervisors.</i></p>
+    </div>  
+
+    <?php 
+        $list_of_sup = isset($managerRes->list_of_sup) ? $managerRes->list_of_sup : null;
+        $external_transfer_codes = isset($managerRes->extTransfer_1) ? $managerRes->extTransfer_1 : null;
+        $external_reassign_codes = isset($managerRes->extReassign_2) ? $managerRes->extReassign_2 : null;
+        $transfer_codes = isset($managerRes->transfer_3) ? $managerRes->transfer_3 : null;
+        // "list_of_sup" // "extTransfer_1" // "extReassign_2" //"transfer_3"
+        // var_dump($managerRes->transfer_3);
+    ?>
+
+    <!-- For Managers, it is an approval code based on the supervisor ID that they can only edit and the supervisor cannot edit. This is for tracking purposes -->
+    <div class="card mb-4 ml-2" style="width: 30rem;">
+        <div class="card-header text-muted">
+            <b>Approve External Transfer</b>
+        </div>
+        <ul class="list-group list-group-flush">
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                if(count($list_of_sup) == 0){ // no supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+                <li class="list-group-item">
+                    <div class="ticket-title">There are no active supervisors currently listed. Contact the admin to addd supervisor accounts.</div>
+                </li>
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                } else {  // list f supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+                <?php 
+                    for($eee = 0; $eee < count($list_of_sup); $eee++){
+                        $supObj = $list_of_sup[$eee];
+                ?>
+                    <li class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-4 col-lg-4 border-right ticket-title supList">
+                                <?php 
+                                    $sup_extT_ID = $supObj->sup_id;
+                                    echo "E.ID ".str_pad($sup_extT_ID, 3, "0", STR_PAD_LEFT)." - ".$supObj->full_name;
+                                ?>
+                            </div>
+                            <div class="col-8 col-lg-8 align-items-center"> 
+                                <?php 
+                                    // Extract the data
+                                    $ids = array_column($external_transfer_codes, 'sup_id');
+                                    $found_key = array_search($supObj->sup_id, $ids);
+                                    $appr_obj = $found_key === false ? null : $external_transfer_codes[$found_key];
+                                    $appr_code = $appr_obj == null ? "" : $appr_obj->override_code;
+                                    // $permission_id = $appr_obj == null ? null : $appr_obj->permissions_id;
+                                    // $permissions_owner_id = $appr_obj == null ? null : $appr_obj->permissions_owner_id;
+                                    $is_void = $appr_obj == null ? null : $appr_obj->is_void;
+                                    $owner_can_change = $appr_obj == null ? null : $appr_obj->owner_can_change;
+                                    // var_dump($external_transfer_codes);
+                                    // var_dump($ids);
+                                    // var_dump($found_key);
+                                    // var_dump($appr_code);
+                                    // var_dump($appr_obj);
+                                    // var_dump($owner_can_change);
+                                ?>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span id="<?php echo "btn_see-".$sup_extT_ID.'-1';?>" class="btn-secondary input-group-text">
+                                            <i id="<?php echo "b_key-".$sup_extT_ID.'-1';?>" class="fa fa-key"></i>
+                                            <i id="<?php echo "b_eye-".$sup_extT_ID.'-1';?>" class="far fa-eye d-none"></i>
+                                        </span>
+                                    </div>
+                                    <input readonly id="input-<?php echo $sup_extT_ID; ?>-1" type="password" class="form-control" placeholder="No code saved" 
+                                    value="<?php echo $appr_code;?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                                    <div class="input-group-append">
+                                        <button id="<?php echo "btn_gen-".$sup_extT_ID.'-1';?>" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
+                                    </div>
+                                    <!-- Voiding codes on hold for now -->
+                                    <!-- <div class="input-group-append ml-3">
+                                        <button id="<?php //echo "btn_del-".$sup_extT_ID.'-1';?>" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-danger" type="button"> X </button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <?php 
+                    }
+                ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                }
+            ?>
+        </ul>
     </div>
+
+    <!-- <div class="card mb-4 ml-2" style="width: 30rem;">
+        <div class="card-header text-muted">
+            <b>Approve Override</b>
+        </div>
+        <ul class="list-group list-group-flush"> -->
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                // if(count($list_of_sup) == 0){ // no supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+                <!-- <li class="list-group-item">
+                    <div class="ticket-title">There are no active supervisors currently listed. Contact the admin to addd supervisor accounts.</div>
+                </li> -->
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                // } else {  // list f supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+                <?php 
+                    // for($eee = 0; $eee < count($list_of_sup); $eee++){
+                ?>
+                    <!-- <li class="list-group-item">
+                        <div class="col-4 col-lg-4 border-right ticket-title">
+                            <?php 
+                                echo "E.ID ".str_pad($supObj->sup_id, 3, "0", STR_PAD_LEFT)." - ".$supObj->full_name;
+                            ?>
+                        </div>
+                        <div class="col-8 col-lg-8 align-items-center">
+
+                        </div>
+                    </li> -->
+                <?php 
+                    // }
+                ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                // }
+            ?>
+        <!-- </ul>
+    </div> -->
+
+
+
+
+
+
+        <!-- Template -->
+        <!-- <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-4 col-lg-4 border-right ticket-title">Supervisor A</div>
+                    <div class="col-8 col-lg-8 align-items-center"> 
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span id="btn-see-man-extrernal-transfer-generate" class="btn-secondary input-group-text">
+                                    <i id="b-3-key-man-extrernal" class="fa fa-key"></i>
+                                    <i id="b-3-eye-man-extrernal" class="far fa-eye d-none"></i>
+                                </span>
+                            </div>
+                            <input readonly id="input-see-man-extrernal-transfer-generate" type="password" class="form-control" placeholder="No code saved" value="<?php // echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                            <div class="input-group-append">
+                                <button id="btn_gen_man_extrernal_transfer_generate" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul> -->
+
+
+    <!-- <div class="card mb-4 ml-2" style="width: 30rem;">
+        <div class="card-header text-muted">
+            <b>Approve Override</b>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-4 col-lg-4 border-right ticket-title">Supervisor B</div>
+                    <div class="col-8 col-lg-8 align-items-center"> 
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span id="btn-see-man-approve-override" class="btn-secondary input-group-text">
+                                    <i id="b-3-key-man-approve-override" class="fa fa-key"></i>
+                                    <i id="b-3-eye-man-approve-override" class="far fa-eye d-none"></i>
+                                </span>
+                            </div>
+                            <input readonly id="input-see-man-approve-override" type="password" class="form-control" placeholder="No code saved" value="<?php //echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                            <div class="input-group-append">
+                                <button id="btn_gen_man_approve_override" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div> -->
+<?php 
+    }
+?>
+
+
+<!-- ====================================== -->
+<!-- ADMIN PERMISSION CODE GENERATORS -->
+<!-- ====================================== -->
+<?php 
+    if($escalationsRole == 6 || $escalationsRole == 5){
+?>
+    <!-- <div style="width: 30rem;">
+        <p><i>Manage your request codes and reset permissions. You can generate a new permission code or request a code from your manager.</i></p>
+    </div>
+    <div class="card mb-4 ml-2" style="width: 30rem;">
+        <div class="card-header text-muted">
+            <b>Admin Permission Codes</b>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-4 col-lg-4 border-right ticket-title">General Override Approval</div>
+                    <div class="col-8 col-lg-8 align-items-center"> 
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span id="btn-see-transfer-code-0" class="btn-secondary input-group-text">
+                                    <i id="b-3-key-0" class="fa fa-key"></i>
+                                    <i id="b-3-eye-0" class="far fa-eye d-none"></i>
+                                </span>
+                            </div>
+                            <input readonly id="input-see-transfer-code-0" type="password" class="form-control" placeholder="No code saved" value="<?php // echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                            <div class="input-group-append">
+                                <button id="btn_gen_transfer" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div> -->
+<?php 
+    }
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TEMPLATE FOR MANAGER IF ADDING A NEW PERMISSION -->
+<div class="card mb-4 ml-2 d-none" style="width: 30rem;">
+        <div class="card-header text-muted">
+            <b>Approve External Transfer</b>
+        </div>
+        <ul class="list-group list-group-flush">
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                //if(count($list_of_sup) == 0){ // no supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+                <li class="list-group-item">
+                    <div class="ticket-title">There are no active supervisors currently listed. Contact the admin to addd supervisor accounts.</div>
+                </li>
+            <!-- ----------------------------------------------------- -->
+            <?php 
+                //} else {  // list f supervisors available
+            ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+                <?php 
+                   // for($eee = 0; $eee < count($list_of_sup); $eee++){
+                ?>
+
+                <?php 
+                  //  }
+                ?>
+            <!-- ----------------------------------------------------- -->
+            <!-- ----------------------------------------------------- -->
+            <?php 
+              //  }
+            ?>
+        </ul>
+    </div>
+
 
 </main>
     <!-- === Your Custom Page Content Goes Here above here === -->
@@ -191,3 +501,23 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
