@@ -220,7 +220,9 @@ $ch = curl_init();
 
             <?php if(!$show){?>
             <h5 class="card-title m-0 p-0 mb-2" style="transform: translateX(-9px);">Select Agent</h5>
-            <p class="font-italic m-0 p-0 mb-1 pb-1" style="font-size:0.9rem !important;">You currently don't have any agents assigned to you. Select an agent within the same team who can accept the transfer. Transferring the ticket to another agent in a different team will require a manager's approval code.</p>
+            <p class="font-italic m-0 p-0 mb-1 pb-1" style="font-size:0.9rem !important;">
+                There are no other available agents within your team or this agents team. Please enter the ID of an agent who is available for transfer.</p>
+                <!-- Transferring the ticket to another agent in a different team will require a manager's approval code. -->
             <?php }?>
 
             <div class="row desc" id="trans_UI_2" <?php echo !$show ? "" : "style='display: none;'";?>>
@@ -253,7 +255,7 @@ $ch = curl_init();
         <input type="hidden" name="notif_no" value="<?php  echo $notifID;?>">
         <input type="hidden" name="trans_type" value="<?php  echo $trans_type;?>"> 
 
-        <p class="text-center mb-0 mt-3" style="font-size:0.8rem;">** Transferring a ticket to another agent in a different team will require a manager's approval code. Transfers are only permitted within teams or including the team of the supervisor the agent has sent the request to.</p>
+        <p class="text-center mb-0 mt-3" style="font-size:0.8rem;">** Transferring a ticket to another agent in a different team will require a manager's approval code. Transfers are only encouraged within teams or including the team of the supervisor the agent has sent the request to.</p>
         </div>
             <div class="modal-footer d-flex flex-row justify-content-center">
                 <button id="RU-submit-btn"  type="submit" value="Submit"  class="btn btn-warning text-white font-weight-bold mb-3 mt-3 btn-lg" style="width: 47%">
