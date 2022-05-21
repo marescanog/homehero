@@ -152,6 +152,8 @@ let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Ac
                     let support_ticket_id_col_num = supportTicket_col_num_arr[my_tab];
                     let support_ticket_id = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" :table?.rows[x+1]?.cells[support_ticket_id_col_num]?.innerText);
                     let transfer_type = 1+notif_type_arr_complete.findIndex(e=>{return e==row_type;});
+                    
+                    // console.log("notification is: "+id);
 
                     if(row_type != null){
                         button_id_mid.forEach((button_name)=>{
@@ -179,6 +181,7 @@ let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Ac
                                         switch(button_name){
                                             case "accept":
                                                 console.log("row-"+x+"-accept");
+                                                // console.log("notification is "+id);
                                                 runAccept(
                                                     support_ticket_id, // support ticket ID
                                                     id,                 // notification ID
@@ -224,7 +227,7 @@ const runAccept = (ticketID, notifID, trans_type) => {
 }
 
 const runRead = (notifID) => {
-    console.log("Running Red Api for ID "+notifID);
+    console.log("Running Read Api for ID "+notifID);
 }
 
 const runDecline = (notifID) => {
