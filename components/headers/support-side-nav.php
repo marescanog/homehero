@@ -1,7 +1,7 @@
 
 <?php
     $current_side_tab = isset($current_side_tab) ? $current_side_tab : 'Dashboard';
-    $tabs=['Dashboard', 'My Tickets', 'All Tickets', 'Messages', 'Account Settings','My Team', 'Permissions', 'Team Tickets', 'My Reports', 'Escalations'];
+    $tabs=['Dashboard', 'My Tickets', 'All Tickets', 'Messages', 'Account Settings','My Team', 'Permissions', 'Team Tickets', 'My Reports', 'Escalations & Issues', 'Modify User Priveledges'];
     $side_nav_role =  isset($_SESSION["role"]) ? $_SESSION["role"]  : null; 
 ?>
 <div class="row">
@@ -100,6 +100,32 @@
     <a class="nav-link <?php echo $current_side_tab == $tabs[8] ? 'active' : '';?>" href="./my-reports.php">
       <i class="fas fa-chart-area icons"></i>
       My Reports <?php echo $current_side_tab == $tabs[8] ? "<span class='sr-only'>(current)</span>" : '';?>
+    </a>
+  </li>
+<?php 
+  }
+?>
+
+<?php 
+  if($side_nav_role == 5 || $side_nav_role == 6){
+?>
+  <li class="nav-item">
+    <a class="nav-link <?php echo $current_side_tab == $tabs[9] ? 'active' : '';?>" href="./escalations.php">
+      <i class="fas fa-bug icons"></i>
+      Escalations & Issues <?php echo $current_side_tab == $tabs[9] ? "<span class='sr-only'>(current)</span>" : '';?>
+    </a>
+  </li>
+<?php 
+  }
+?>
+
+<?php 
+  if($side_nav_role == 5 || $side_nav_role == 6){
+?>
+  <li class="nav-item">
+    <a class="nav-link <?php echo $current_side_tab == $tabs[10] ? 'active' : '';?>" href="./priveledges.php">
+      <i class="fas fa-user-circle icons"></i>
+      Modify User Priveledges <?php echo $current_side_tab == $tabs[10] ? "<span class='sr-only'>(current)</span>" : '';?>
     </a>
   </li>
 <?php 
