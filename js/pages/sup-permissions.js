@@ -33,6 +33,50 @@ $(document).ready(()=>{
         });
     }
 
+    let btn_gen_transfer_b = document.getElementById("btn_gen_transfer_b");
+    let btn_see_transfer_code_b = document.getElementById("btn-see-transfer-code_b");
+    if(btn_gen_transfer_b != null){
+        btn_gen_transfer_b.addEventListener("click",()=>{
+        // loadModal("sup-perm-enter-pass",modalTypes,()=>{},getDocumentLevel(),{
+        //     permission_code: 3 // 1-External Agent Transfer Request, 2 -Reassign Ticket of External Agent, 3- Transfer Request
+        // });
+        console.log("Send Notification!")
+                            // Unfreeze & Reset
+                            Swal.fire({
+                                title: 'Notification Sent!',
+                                text: "The manager was notified to reset your access code.",
+                                icon: "success",
+                                }).then(result => {
+                                    // form.reset();
+                                    // $('#modal').modal('hide');
+                                    // $('#modal-perm-password')[0].reset();
+                                    // enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE NEW CODE");
+                                    // window.location.reload(true);
+                             });
+      });
+    }
+    // Accompanying show hide for the code
+    // console.log(btn_see_transfer_code);
+    if(btn_see_transfer_code_b != null){
+        var input_see_transfer_code_b = document.getElementById("input-see-transfer-code_b");
+        $('#btn-see-transfer-code_b').hover(function() {
+            if(input_see_transfer_code_b.value != "" && input_see_transfer_code_b.value != null){
+                // console.log("hover in");
+                $('#b-3-key_b').addClass( "d-none" );
+                $('#b-3-eye_b').removeClass( "d-none" );
+                input_see_transfer_code_b.type = "text";
+            }
+        }, function() {
+            if(input_see_transfer_code_b.value != "" && input_see_transfer_code_b.value != null){
+                // console.log("hover out");
+                // on mouseout, reset
+                $('#b-3-key_b').removeClass( "d-none" );
+                $('#b-3-eye_b').addClass( "d-none" );
+                input_see_transfer_code_b.type = "password";
+            }
+        });
+    }
+
 
 // ======================================
 //              MANAGER

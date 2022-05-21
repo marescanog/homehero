@@ -116,6 +116,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <!-- ====================================== -->
 <?php 
     if($escalationsRole == 4){
+        // var_dump($codesRes);
 ?>
 
     <div style="width: 30rem;">
@@ -167,32 +168,34 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         </ul> -->
     </div>
 
-    <!-- <div class="card mb-4 ml-2" style="width: 30rem;">
+    <div class="card mb-4 ml-2" style="width: 30rem;">
         <div class="card-header text-muted">
-            <b>Manager Permission Codes</b>
+            <b>Manager Authorization Codes</b>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row align-items-center">
-                    <div class="col-4 col-lg-4 border-right ticket-title">Test</div>
+                    <div class="col-4 col-lg-4 border-right ticket-title">
+                        External Transfer Request
+                    </div>
                     <div class="col-8 col-lg-8 align-items-center"> 
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span id="btn-see-transfer-code-0" class="btn-secondary input-group-text">
-                                    <i id="b-3-key-0" class="fa fa-key"></i>
-                                    <i id="b-3-eye-0" class="far fa-eye d-none"></i>
+                                <span id="btn-see-transfer-code_b" class="btn-secondary input-group-text">
+                                    <i id="b-3-key_b" class="fa fa-key"></i>
+                                    <i id="b-3-eye_b" class="far fa-eye d-none"></i>
                                 </span>
                             </div>
-                            <input readonly id="input-see-transfer-code-0" type="password" class="form-control" placeholder="No code saved" value="<?php //echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
+                            <input readonly id="input-see-transfer-code_b" type="password" class="form-control" placeholder="No code saved" value="<?php echo isset($codesRes->DEFAULT_1)?$codesRes->DEFAULT_1:"";?>" aria-label="Transfer_code" aria-describedby="Transfer_code">
                             <div class="input-group-append">
-                                <button id="btn_gen_transfer" data-toggle="modal" data-target="#modal" class="btn btn-sm btn-outline-secondary" type="button">Generate New</button>
+                                <button id="btn_gen_transfer_b" class="btn btn-sm btn-outline-secondary" type="button">Request New</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </li>
         </ul>
-    </div> -->
+    </div>
 <?php 
     }
 ?>
