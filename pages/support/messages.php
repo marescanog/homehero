@@ -161,7 +161,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 include "$level/components/UX/ticketTableConversion.php";
                     $tableName = "new";
                     $basicSearchId = "allSearch";
-                    $tableHeaderLabels = ["EmpID", "From", "Type", "Accept","Read","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Read","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
                     $buttonClass = array("","","","btn-success","btn-primary","btn-danger","btn-secondary");
                     $buttonName = array("","","","accept","read","decline","delete");
                     $searchCaption = "Search Agent";
@@ -205,7 +205,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 <?php
                     $tableName = "all";
                     $basicSearchId = "allSearch";
-                    $tableHeaderLabels = ["EmpID", "From", "Type", "Accept","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
                     $buttonClass =  array("","","","btn-success","btn-danger","btn-secondary");
                     $buttonName = array("","","","accept","decline","delete");
                     $searchCaption = "Search Agent";
@@ -229,7 +229,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 <?php
                     $tableName = "done";
                     $basicSearchId = "doneSearch";
-                    $tableHeaderLabels = ["EmpID", "From", "Type", "Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "Delete", "Notification Message", "Date Sent", "Time Sent"];
                     $buttonClass =  array("","","","btn-secondary");
                     $buttonName = array("","","","delete");
                     $searchCaption = "Search Agent";

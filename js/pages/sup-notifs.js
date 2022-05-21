@@ -101,7 +101,7 @@ let button_id_start_labels = ["new","read","all","done"]; // All pages have this
 let current_label = button_id_start_labels[my_tab]; // console.log(current_label);
 let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]);
 // For reference
-// let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice"];
+let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Access Req.","Override Req.","Override Notice"];
 
 // Separate by role
     // Grab Role ID
@@ -151,6 +151,7 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
 
                     let support_ticket_id_col_num = supportTicket_col_num_arr[my_tab];
                     let support_ticket_id = (table==null||table==undefined)?"":(table?.rows.length <= 1 ? "" :table?.rows[x+1]?.cells[support_ticket_id_col_num]?.innerText);
+                    let transfer_type = 1+notif_type_arr_complete.findIndex(e=>{return e==row_type;});
 
                     if(row_type != null){
                         button_id_mid.forEach((button_name)=>{
@@ -178,19 +179,23 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
                                         switch(button_name){
                                             case "accept":
                                                 console.log("row-"+x+"-accept");
-                                                runAccept();
+                                                runAccept(
+                                                    support_ticket_id, // support ticket ID
+                                                    id,                 // notification ID
+                                                    transfer_type            // transfer type 1-transfer, 2-escalation
+                                                );
                                                 break;
                                             case "read":
                                                 console.log("row-"+x+"-read");
-                                                runRead();
+                                                runRead(id);
                                                 break;
                                             case "decline":
-                                                runDecline();
+                                                runDecline(id);
                                                 console.log("row-"+x+"-decline");
                                                 break;
                                             case "delete":
                                                 console.log("row-"+x+"-delete");
-                                                runDelete();
+                                                runDelete(id);
                                                 break;
                                         }
                                     });
@@ -209,29 +214,29 @@ let table = document.getElementById('table-hook-'+button_id_start_labels[my_tab]
     }
 
 
-const runAccept = () => {
+const runAccept = (ticketID, notifID, trans_type) => {
     loadModal("sup-trans-accept",modalTypes,()=>{},getDocumentLevel(),{
-        // "current":current_name,
-        // "previous":previous_name,
-        // "date":date,
+        "ticketID":ticketID,
+        "notifID":notifID,
+        "trans_type":trans_type,
         // "reason":reason
     });
 }
 
-const runRead = () => {
-    console.log("Running Red Api");
+const runRead = (notifID) => {
+    console.log("Running Red Api for ID "+notifID);
 }
 
-const runDecline = () => {
+const runDecline = (notifID) => {
     loadModal("sup-trans-decline",modalTypes,()=>{},getDocumentLevel(),{
-        // "current":current_name,
+        "notifID":notifID,
         // "previous":previous_name,
         // "date":date,
         // "reason":reason
         });
 }
 
-const runDelete = () => {
+const runDelete = (notifID) => {
     Swal.fire({  
         title: 'Delete Request Permanently?',  
         text: 'The request and its notes will be permanently deleted. This action cannot be reversed.',

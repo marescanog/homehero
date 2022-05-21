@@ -1,4 +1,14 @@
-$("#modal-edit-jo-start-date").validate({
+$("#modal-trans-accept").ready(()=>{
+    $("input[name$='agent_type']").click(function() {
+        var test = $(this).val();
+
+        $("#trans_UI_1").hide();
+        $("#trans_UI_2").hide();
+        $("#trans_UI_" + test).show();
+    });
+});
+
+$("#modal-trans-accept").validate({
     rules: {
         // date:{
         //     required: true,
