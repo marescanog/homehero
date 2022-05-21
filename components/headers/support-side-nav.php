@@ -97,9 +97,9 @@
   if($side_nav_role == 7){
 ?>
   <li class="nav-item">
-    <a class="nav-link <?php echo $current_side_tab == $tabs[6] ? 'active' : '';?>" href="./permissions.php">
+    <a class="nav-link <?php echo $current_side_tab == $tabs[8] ? 'active' : '';?>" href="./my-reports.php">
       <i class="fas fa-chart-area icons"></i>
-      My Reports <?php echo $current_side_tab == $tabs[6] ? "<span class='sr-only'>(current)</span>" : '';?>
+      My Reports <?php echo $current_side_tab == $tabs[8] ? "<span class='sr-only'>(current)</span>" : '';?>
     </a>
   </li>
 <?php 
