@@ -1,7 +1,7 @@
 
 <?php
     $current_side_tab = isset($current_side_tab) ? $current_side_tab : 'Dashboard';
-    $tabs=['Dashboard', 'My Tickets', 'All Tickets', 'Messages', 'Account Settings','My Team', 'Permissions', 'Team Tickets'];
+    $tabs=['Dashboard', 'My Tickets', 'All Tickets', 'Messages', 'Account Settings','My Team', 'Permissions', 'Team Tickets', 'My Reports', 'Escalations'];
     $side_nav_role =  isset($_SESSION["role"]) ? $_SESSION["role"]  : null; 
 ?>
 <div class="row">
@@ -14,6 +14,7 @@
                   Dashboard  <?php echo $current_side_tab == $tabs[0] ? "<span class='sr-only'>(current)</span>" : '';?>
                 </a>
               </li>
+
               <?php 
                 if($side_nav_role!= null && ($side_nav_role == 4 || $side_nav_role == 7)){
               ?>
@@ -26,6 +27,13 @@
               <?php 
                 }
               ?>
+
+
+
+<!-- Managers & admin do not need this thus remove from their dash -->
+<?php 
+    if($side_nav_role < 5){
+?>
               <li class="nav-item">
                 <a class="nav-link <?php echo $current_side_tab == $tabs[1] ? 'active' : '';?>" href="./my-tickets.php">
                   <i class="fas fa-clipboard-check icons"></i>
@@ -38,7 +46,6 @@
                   All Tickets <?php echo $current_side_tab == $tabs[2] ? "<span class='sr-only'>(current)</span>" : '';?>
                 </a>
               </li>
-
               <?php 
                 if($side_nav_role!= null && ($side_nav_role == 4 || $side_nav_role == 7)){
               ?>
@@ -77,6 +84,28 @@
               <?php 
                 }
               ?>
+
+<?php 
+    }
+?>
+
+
+
+
+<!-- Add reporting tab for manager -->
+<?php 
+  if($side_nav_role == 7){
+?>
+  <li class="nav-item">
+    <a class="nav-link <?php echo $current_side_tab == $tabs[6] ? 'active' : '';?>" href="./permissions.php">
+      <i class="fas fa-chart-area icons"></i>
+      My Reports <?php echo $current_side_tab == $tabs[6] ? "<span class='sr-only'>(current)</span>" : '';?>
+    </a>
+  </li>
+<?php 
+  }
+?>
+
 
               <?php 
                 if($side_nav_role!= null && ($side_nav_role == 4 || $side_nav_role == 5 ||$side_nav_role == 6 || $side_nav_role == 7)){

@@ -6,9 +6,16 @@ if(!isset($_SESSION["token_support"])){
     exit();
 }
 
+$myrole = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+
 $level ="../..";
 
-// CURL STARTS HERE
+$showDashCards = ($myrole == null || $myrole < 5);
+
+// No need to get tickets for dash since 
+//  Managers & admin will not be handling tickets
+if($showDashCards == true){
+    // CURL STARTS HERE
 // NEWLINKDEV
 // Curl request to get data to fill projects page
 
@@ -72,7 +79,7 @@ $ch = curl_init();
         $closed_tickets = $output->response->resolved_total;
     }
 
-
+}
 
 
 
@@ -109,6 +116,11 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     //    var_dump($new_tickets);
     //    var_dump($ongoing_tickets);
     //    var_dump($closed_tickets);
+    ?>
+    
+    <!-- Only Show cards for supervisors and agents -->
+    <?php 
+        if($showDashCards == true){
     ?>
         <!-- Cards -->
         <div class="row mb-4">
@@ -175,10 +187,29 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                 </a>
             </div>
         </div>
+    <?php 
+        }
+    ?>
+
+    <?php 
+        if($showDashCards == false){
+    ?>
+        <div class="mb-3">
+            <!-- Add mofal -->
+            <button class="btn btn-primary" id="add-anouncement">
+                Add Anouncement
+            </button>
+        </div>
+    <?php 
+        }
+    ?>
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2">Anouncements</h1> 
     </div>
+    <?php 
+        // var_dump($myrole);
+    ?>
     <div>
         <?php 
             if(isset($_POST['anouncements'])) {
@@ -206,7 +237,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </div>
 <?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
 <?php 
-    if(is_object($output) && $output->success == false){
+    if($showDashCards == true && is_object($output) && $output->success == false){
         $output_status = $output->response->status;
         $output_message = $output->response->message; // "JWT - Ex 1:Expired token"
         ?>
