@@ -94,7 +94,8 @@ $(document).ready(()=>{
                         button.addEventListener("click",()=>{
                             // console.log(button_Hook);
                             loadModal("sup-perm-enter-pass",modalTypes,()=>{},getDocumentLevel(),{
-                                permission_code: 1 // 1-External Agent Transfer Request, 2 -Reassign Ticket of External Agent, 3- Transfer Request
+                                permission_code: 1, // 1-External Agent Transfer Request, 2 -Reassign Ticket of External Agent, 3- Transfer Request
+                                supervisor_id: id
                             });
                         });
                     }

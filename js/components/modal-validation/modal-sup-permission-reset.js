@@ -17,13 +17,19 @@ $("#modal-perm-password").validate({
         const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("GET NEW CODE");
-        console.log(formData);
+    //     // console.log("GET NEW CODE");
+        // console.log(formData);
 
         data = {};
 
         data["password"] = formData?.password;
         data["permission_id"] = formData?.permission_id;
+        supID = formData?.supervisor_id;
+        if(supID != null){
+            data["supervisor_id"] = supID;
+        }
+
+        // console.log(formData);
 
         // Proceed with ajax call to request a new code
         $.ajax({

@@ -11,6 +11,7 @@
 $supportToken = isset($_SESSION['token_support']) ? $_SESSION['token_support'] : null;
 $email = isset($_SESSION['email']) ? $_SESSION['email'] : null;
 $permission_id = isset($_POST['permission_id']) && is_numeric($_POST['permission_id']) ? $_POST['permission_id'] : null;
+$supervisor_id = isset($_POST['supervisor_id']) && is_numeric($_POST['supervisor_id']) ? $_POST['supervisor_id'] : null;
 $password= isset($_POST['password']) ? $_POST['password'] : null;
 
 // Check if the user has a support token set
@@ -50,6 +51,10 @@ if($isValid){
         'password' => $password,
         'permission_code' => $permission_id
     );
+
+    if($supervisor_id != null){
+        $post_data['supervisor_id'] = $supervisor_id;
+    }
 
     // 1. Initialize
     $ch = curl_init();

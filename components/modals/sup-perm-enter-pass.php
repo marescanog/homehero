@@ -1,9 +1,13 @@
 <?php
+    session_start();
     date_default_timezone_set('Asia/Manila');
     $data = isset($_POST['data']) ? $_POST['data'] : null;
     $permission_code = null; // 1-transfer, 2-request override, 3-escalte to supervisor
+    $supID = null;
+    $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
     if($data != null){
         $permission_code = isset($_POST['data']['permission_code']) ? $_POST['data']['permission_code'] : null;
+        $supID = isset($_POST['data']['supervisor_id']) ? $_POST['data']['supervisor_id'] : null;
     }
 ?>
 <div class="modal-content">
@@ -24,6 +28,7 @@
         </div> -->
     <?php 
         // }else {
+            // var_dump($role);
     ?>
     <div class="modal-header">
         <h5 class="modal-title" id="signUpModalLabel">
@@ -43,6 +48,17 @@
         <div class="form-group">
             <input type="password" name="password" class="form-control" id="sup-perm-pass" placeholder="">
         </div>
+
+
+        <?php 
+            if($role == 7){
+        ?>
+            <!-- <?php var_dump($supID); ?> -->
+            <input type="hidden" value="<?php echo $supID; ?>" name="supervisor_id">
+        <?php 
+            }
+        ?>  
+
 
         <p class="text-center mb-0" style="font-size:0.8rem;">** Confirm this permission reset by entering your password to generate a new code.</p>
         </div>
