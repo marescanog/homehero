@@ -28,55 +28,123 @@ $("#modal-trans-accept").validate({
     submitHandler: function(form, event) { 
         event.preventDefault();
 
-        // const button = document.getElementById("RU-submit-btn");
-        // const buttonTxt = document.getElementById("RU-submit-btn-txt");
-        // const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
+        const button = document.getElementById("RU-submit-btn");
+        const buttonTxt = document.getElementById("RU-submit-btn-txt");
+        const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
-        // disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("EDIT JOB START DATE");
-        console.log(formData);
-        // console.log(formData?.date);
-        // console.log(formData?.time);
-        // let newDate = formData?.date ?? "";
-        // let newTime = formData?.time+":00" ?? "";
-        // let newDateTime = newDate + " " + newTime;
-        // // console.log(newDateTime);
+        disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
+        // console.log("PROCESS TRANSFER BEFORE CURL CALL");
+        // console.log(formData);
 
-        // const monthArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        // let displayString = "";
+        // Notes:
+        // The following information is needed to call api
+        //      Notif ID
+        //      transfer_to_agent_id -> agent_ID_UI_1 or Agent_ID_UI_2 based on agent_type
+        //      approval code if external -> maybe check with trans_type ? <- double check this info later when you are writing this part
 
-        // // Reformat values for display
-        // if(newDate != ""){
-        //     // Format Date
-        //     let dateArr = newDate.split("-"); 
-        //     let dateIndex = dateArr[1] >= 1 && dateArr[1] <= 12 ?  dateArr[1] : 1;
-        //     let monthStr = monthArr[dateIndex-1];
-        //     let dayStr = parseInt(dateArr[2]).toString();
+        let data = {}; // data to be submitted to the curl
 
-        //     // Format Time
-        //     let timeArr = newTime.split(":"); 
-        //     let hours = timeArr[0];
-        //     let minStr = timeArr[1];
-        //     let hoursStr = (hours % 12).toString();
+        // Determine which to submit in data if agent_ID_UI_1 OR Agent_ID_UI_2  based on agent_type
+        // Default is Agent_ID_UI_2
+        let agent_UI_type = formData?.agent_type;
+        if(agent_UI_type != null && agent_UI_type == 1){
+            data["transfer_to_agent_id"] = formData?.agent_ID_UI_1; 
+        } else {
+            data["transfer_to_agent_id"] = formData?.Agent_ID_UI_2;
+        }
 
-        //     displayString = monthStr + " " + dayStr + ", "+ dateArr[0] + " - " + hoursStr + ":" + minStr + " " + (parseInt(hours) > 12 ? "PM" : "AM");
+        data["notif_ID"] = formData?.notif_no;
 
-        //     // console.log(JSON.stringify(monthArr[dateIndex-1]));
-        // }
+        console.log("Your data to be submitted to the auth ajax: ");
+        console.log(JSON.stringify(data));
 
-        // let inpt_jo_start_display = document.getElementById("input_jo_time_start");
-        // // let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
-        // let input_jo_time_start_value_submit = document.getElementById("input_jo_time_start_value_submit");
+        // Call the cURL request trhough ajax:
+        // Call Api
+        // Proceed with ajax call to send a notification to the supervisor
+        $.ajax({
+            type : 'POST',
+            url : getDocumentLevel()+'/auth/ticket/process-transfer-request.php',
+            data : data,
+            success : function(response) {
+                console.log("Your response after submission is:");
+                console.log("Response JSON: "+response);
+                if(isJson(response)){
+                    let res = JSON.parse(response);
+                //     // // console.log("Your response after submission is:");
+                //     // // console.log("Response JSON: "+res);
+                    let status = res["status"];
+                    let message = res["message"];
+                //     // console.log("status: "+status);
+                //     // console.log("message: "+message);
+                    if(status==200){      
+                        // Unfreeze & Reset
+                        Swal.fire({
+                            title: 'Transfer is successful!',
+                            text: message ?? "The ticket has sucessfully been transferred to the agent.",
+                            icon: "success",
+                            }).then(result => {
+                                form.reset();
+                                $('#modal').modal('hide');
+                                $('#modal-trans-accept')[0].reset();
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                                window.location.reload(true);
+                        });
+                    } else if (status == 401){
+                        Swal.fire({
+                            title: 'Bad Request! Check your submission details.',
+                            text: message ?? 'Please check your details and try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                        });
+                    } else if (status == 400){
+                        Swal.fire({
+                            title: 'Bad Request! Check your submission details',
+                            text: message ?? 'Something went wrong with your request. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Oops! Error!',
+                            text: message ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            window.location.reload(true);
+                        });
+                    }
+                } else {
+                    // Error
+                    console.log("Your ERROR response after submission is:");
+                    console.log("Response JSON: "+response);
+                    let message = null;
+                    Swal.fire({
+                        title: 'Oops! Error!',
+                        text: message ?? 'Something went wrong. Please try again!',
+                        icon: "error",
+                        confirmButtonText: 'ok'
+                        }).then(result => {
+                        window.location.reload(true);
+                    });
+                }
+            }, 
+            error: function(response) {
+                console.log("ERROR - Response JSON: "+response);
+                Swal.fire({
+                title: 'An error occured!',
+                text: 'Something went wrong. Please try again!',
+                icon: "error",
+                confirmButtonText: 'ok'
+                }).then(result => {
+                    // window.location.reload(true);
+                });
+                }
+            });
 
-        // // FORMAT FOR DISPLAY IS MM dd, yyyy - h:m am   ex: May 25, 2022 - 1:00 PM
-
-        // input_jo_time_start_value_submit.value = newDateTime;
-        // inpt_jo_start_display.value = displayString;
-
-        // // console.log(inpt_jo_start_display);
-        // // console.log(inpt_jo_start_value);
-        // // console.log(inpt_jo_start_value.value);
-        // // console.log(inpt_jo_start_display.placeholder);
 
         // $('#modal').modal('hide');
         // $('#modal-edit-jo-start-date')[0].reset();
