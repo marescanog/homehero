@@ -1270,6 +1270,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     <ul class="list-group list-group-flush">
 
                             <?php 
+                            // var_dump($assignment);
                                 if(count($assignment) > 0){
                                     for($casgn = 0; $casgn < count($assignment) ; $casgn++){
                             ?>
@@ -1280,7 +1281,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                         <div id="ta-new-<?php echo htmlentities($assignment[$casgn]->id);?>" class="col-6 border-right">
                                             <?php echo htmlentities($assignment[$casgn]->new_agent_name);?> 
                                         </div>
-                                        <input id="ta-prev-<?php echo htmlentities($assignment[$casgn]->id);?>" type="hidden" value="<?php echo htmlentities($assignment[$casgn]->previous_agent);?>">
+                                        <input id="ta-prev-<?php echo htmlentities($assignment[$casgn]->id);?>" type="hidden" value="<?php echo htmlentities($assignment[$casgn]->prev_agent_name);?>">
                                         <input id="ta-reason-<?php echo htmlentities($assignment[$casgn]->id);?>" type="hidden" value="<?php echo htmlentities($assignment[$casgn]->reason_text);?>">
                                         <div onClick="popThePopper(<?php echo htmlentities($assignment[$casgn]->id);?>)"  class="col-3 cclicky" style="font-size:0.8rem" data-toggle="modal" data-target="#modal"> see more details </div>
                                     </button>
