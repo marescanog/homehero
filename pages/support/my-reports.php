@@ -4,6 +4,7 @@ if(!isset($_SESSION["token_support"])){
     header("Location: ../../");
     exit();
 }
+// ONLY MANAGERS HAVE ACCESS TO THIS PAGE
 if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=7)){
     header("Location: ../support/home.php");
     exit();

@@ -54,16 +54,17 @@
                 </p>
             </div>
             <div class="input-group mb-3 col-12 col-lg-3 mr-2">
-                <div class="input-group-prepend  ">
+                <!-- <div class="input-group-prepend  ">
                     <span class="input-group-text override-input-group" 
                     <?php 
-                        echo $basicSearchId == "" ? "" : "id='$basicSearchId'";
+                        // This feature is temporarily removed
+                        //echo $basicSearchId == "" ? "" : "id='$basicSearchId'";
                     ?>
                     >
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
-                <input type="text" class="form-control override-input" placeholder="<?php echo $searchCaption;?>" aria-label="search" aria-describedby="basic-search">
+                <input type="text" class="form-control override-input" placeholder="<?php //echo $searchCaption;?>" aria-label="search" aria-describedby="basic-search"> -->
             </div>
         </div>
         <div class="table-responsive">

@@ -4,10 +4,28 @@ if(!isset($_SESSION["token_support"])){
     header("Location: ../../");
     exit();
 }
-if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 && $_SESSION["role"]!=6 && $_SESSION["role"]!=8)){
-    header("Location: ../support/home.php");
-    exit();
-}
+
+// OLD CODE 
+// if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 && $_SESSION["role"]!=6 && $_SESSION["role"]!=8)){
+//     header("Location: ../support/home.php");
+//     exit();
+// }
+
+// disable page since we will not have this feature so we can finish project on time
+header("Location: ../support/home.php");
+
+// // ONLY SUPERVISORS HAVE ACCESS TO THIS PAGE
+// if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4)){
+//     header("Location: ../support/home.php");
+//     exit();
+// }
+
+// // Disable Admin Account - To speed up completion of project (Module is Extra work & system is still functional without these additional features)
+// if(!isset($_SESSION["role"]) || ($_SESSION["role"]==6 && $_SESSION["role"]==5)){
+//     header("Location: ../../");
+//     exit();
+// }
+
 
 // // CURL STARTS HERE
 // // NEWLINKDEV

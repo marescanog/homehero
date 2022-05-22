@@ -5,10 +5,14 @@ if(!isset($_SESSION["token_support"])){
     exit();
 }
 
-if(!isset($_SESSION["role"]) || !(($_SESSION["role"]==5) || ($_SESSION["role"]==6))){
-    header("Location: ../support/home.php");
-    exit();
-}
+// DISABLE PAGE SINCE ADMIN MODULE NOT AVAIL
+header("Location: ../support/home.php");
+
+
+// if(!isset($_SESSION["role"]) || !(($_SESSION["role"]==5) || ($_SESSION["role"]==6))){
+//     header("Location: ../support/home.php");
+//     exit();
+// }
 
 $level ="../../";
 // // CURL STARTS HERE

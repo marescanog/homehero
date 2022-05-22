@@ -4,10 +4,19 @@ if(!isset($_SESSION["token_support"])){
     header("Location: ../../");
     exit();
 }
-if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7 && $_SESSION["role"]!=6 && $_SESSION["role"]!=8)){
+
+// ONLY SUPERVISORS & MANAGERS HAVE ACCESS TO THIS PAGE
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=4 && $_SESSION["role"]!=7)){
     header("Location: ../support/home.php");
     exit();
 }
+
+// Disable Admin Account - To speed up completion of project (Module is Extra work & system is still functional without these additional features)
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]==6 && $_SESSION["role"]==5)){
+    header("Location: ../../");
+    exit();
+}
+
 
 $escalationsRole = isset($_SESSION["role"]) ? $_SESSION["role"] : null;
 

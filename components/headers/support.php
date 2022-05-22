@@ -19,12 +19,12 @@
             <p class="p-0 m-0 nametag-text"><?php echo $role == null ? "HomeHero Support":$roleTypes[$role-1];?></p>
         </div>
     </div>
-
-  <form id="header-search-form" type="POST" name="header-search-form" class="form-inline ml-5">
+  <!-- Removed search to speed up project completion -->
+  <!-- <form id="header-search-form" type="POST" name="header-search-form" class="form-inline ml-5">
     <div>
       <input id="search_input" class="form-control mr-sm-2" name="header_search" type="search" placeholder="Enter Ticket No." aria-label="Search">
     </div>
     <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-  </form>
+  </form> -->
 </nav>
 <script src="<?php echo $level?>/js/components/modal-validation/header-search.js"></script>

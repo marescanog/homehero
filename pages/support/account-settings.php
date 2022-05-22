@@ -5,6 +5,13 @@ if(!isset($_SESSION["token_support"])){
     exit();
 }
 
+// Disable Admin Account - To speed up completion of project (Module is Extra work & system is still functional without these additional features)
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]==6 && $_SESSION["role"]==5)){
+    header("Location: ../../");
+    exit();
+}
+
+
 $level ="../../";
 
 require_once dirname(__FILE__)."/$level/components/head-meta.php"; 

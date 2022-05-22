@@ -47,29 +47,29 @@
                 </a>
               </li>
               <?php 
-                if($side_nav_role!= null && ($side_nav_role == 4 || $side_nav_role == 7)){
+                // if($side_nav_role!= null && ($side_nav_role == 4 || $side_nav_role == 7)){
               ?>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a class="nav-link <?php echo $current_side_tab == $tabs[7] ? 'active' : '';?>" href="./team-Tickets.php">
                     <i class="fas fa-sitemap icons" style="transform: translateX(-3px)"></i>
                     Team Tickets <?php echo $current_side_tab == $tabs[7] ? "<span class='sr-only'>(current)</span>" : '';?>
                   </a>
-                </li>
+                </li> -->
               <?php 
-                }
+                // }
               ?>
 
               <?php 
-                if($side_nav_role!= null && ($side_nav_role != 4 && $side_nav_role != 7)){
+                // if($side_nav_role!= null && ($side_nav_role != 4 && $side_nav_role != 7)){
               ?>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link <?php echo $current_side_tab == $tabs[3] ? 'active' : '';?>" href="./messages.php">
                     <i class="fas fa-envelope-open-text icons"></i>
                   Notifications <?php echo $current_side_tab == $tabs[3] ? "<span class='sr-only'>(current)</span>" : '';?>
                 </a>
-              </li>
+              </li> -->
               <?php 
-                }
+                // }
               ?>
 
               <?php 

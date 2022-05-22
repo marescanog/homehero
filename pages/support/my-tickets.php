@@ -6,6 +6,18 @@ if(!isset($_SESSION["token_support"])){
     exit();
 }
 
+// MANAGERS DO NOT HAVE ACCESS TO THIS PAGE
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]==7)){
+    header("Location: ../support/home.php");
+    exit();
+}
+
+// Disable Admin Account - To speed up completion of project (Module is Extra work & system is still functional without these additional features)
+if(!isset($_SESSION["role"]) || ($_SESSION["role"]==6 && $_SESSION["role"]==5)){
+    header("Location: ../../");
+    exit();
+}
+
 $level ="../../";
 
 // CURL STARTS HERE

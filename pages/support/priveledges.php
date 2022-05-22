@@ -4,10 +4,13 @@ if(!isset($_SESSION["token_support"])){
     header("Location: ../../");
     exit();
 }
-if(!isset($_SESSION["role"]) || !(($_SESSION["role"]==5) || ($_SESSION["role"]==6))){
-    header("Location: ../support/home.php");
-    exit();
-}
+// if(!isset($_SESSION["role"]) || !(($_SESSION["role"]==5) || ($_SESSION["role"]==6))){
+//     header("Location: ../support/home.php");
+//     exit();
+// }
+
+// disable page for now since admin module not created 
+header("Location: ../support/home.php");
 
 $level ="../../";
 // // CURL STARTS HERE
