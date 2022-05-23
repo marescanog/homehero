@@ -205,7 +205,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     $tableName = "read";
                     $basicSearchId = "readSearch";
                     if(count($read_notifs) != 0){
-                        $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $read_notifs, [true]);
+                        // $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $read_notifs, [true]);
+                        $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete______has_read', $read_notifs);
                     }
                     include "$level/components/UX/support-table.php";
                     // Reset Values after to prepare for the next iteration

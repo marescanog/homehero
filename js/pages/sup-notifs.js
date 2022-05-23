@@ -231,6 +231,7 @@ const runAccept = (ticketID, notifID, trans_type) => {
 
 const runRead = (notifID) => {
     console.log("Running Read Api for ID "+notifID);
+    ToggleReadAjax(notifID);
 }
 
 const runDecline = (notifID, trans_type) => {
@@ -254,6 +255,7 @@ const runDelete = (notifID) => {
             if (result.isConfirmed) {    
             //  ajax to process delete
             console.log("DELETE NOTIFICATION"); 
+            ToggleDeleteNotifAjax(notifID);
         } 
         //   else if (result.isDenied) {    
         //       Swal.fire('Changes are not saved', '', 'info')  
@@ -365,5 +367,149 @@ const runDelete = (notifID) => {
 //             //     });
 //         }
 //     }
+
+const ToggleDeleteNotifAjax = (id) => {
+    let data = {};
+    // $.ajax({
+    //     type : 'POST',
+    //     url : 'http://localhost/slim3homeheroapi/public/ticket/toggle-read-notif/'+id,
+    //     data : data,
+    //     success : function(response) {
+    //         console.log("Your response after submission is:");
+    //         console.log("Response JSON: "+response);
+    //         if(isJson(response)){
+    //             let res = JSON.parse(response);
+    //             let status = res["status"];
+    //             let message = res["message"];
+    //         //     // console.log("status: "+status);
+    //         //     // console.log("message: "+message);
+    //             if(status==200){     
+    //                 window.location.reload(true); 
+    //                 // Unfreeze & Reset
+    //                 // Swal.fire({
+    //                 //     title: 'Declined sucessfully!',
+    //                 //     text: message ?? "The agent's request has sucessfully been declined.",
+    //                 //     icon: "success",
+    //                 //     }).then(result => {
+    //                 //         // form.reset();
+    //                 //         // $('#modal').modal('hide');
+    //                 //         // $('#modal-trans-decline')[0].reset();
+    //                 //         // enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+    //                 //         window.location.reload(true);
+    //                 // });
+    //             } else {
+    //                 Swal.fire({
+    //                     title: 'Oops! Error!',
+    //                     text: 'Something went wrong. Please try again!',
+    //                     icon: "error",
+    //                     confirmButtonText: 'ok'
+    //                     }).then(result => {
+    //                     window.location.reload(true);
+    //                 });
+    //             }
+    //         } else {
+    //             // Error
+    //             console.log("Your ERROR response after submission is:");
+    //             console.log("Response JSON: "+response);
+    //             let message = null;
+    //             Swal.fire({
+    //                 title: 'Oopsie! Error!',
+    //                 text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+    //                 icon: "error",
+    //                 confirmButtonText: 'ok'
+    //                 }).then(result => {
+    //                 window.location.reload(true);
+    //             });
+    //         }
+    //     }, 
+    //     error: function(response) {
+    //         console.log("ERROR - Response JSON: "+response);
+    //         Swal.fire({
+    //         title: 'An error occured!',
+    //         text: 'Something went wrong. Please try again!',
+    //         icon: "error",
+    //         confirmButtonText: 'ok'
+    //         }).then(result => {
+    //             // window.location.reload(true);
+    //         });
+    //         }
+    //     });
+}
+
+const ToggleReadAjax = (id) => {
+
+    let data = {};
+    $.ajax({
+        type : 'POST',
+        url : 'http://localhost/slim3homeheroapi/public/ticket/toggle-read-notif/'+id,
+        data : data,
+        success : function(response) {
+            console.log("Your response after submission is:");
+            console.log("Response JSON: "+JSON.stringify(response?.response));
+            // if(isJson(response)){
+                // let res = JSON.parse(response);
+                // let status = res["status"];
+                // let message = res["message"];
+                let res = response?.response;
+                let status = res?.status;
+                let message = res?.response;
+
+                // console.log("status: "+status);
+                // console.log("message: "+message);
+                if(status==200){     
+                    window.location.reload(true); 
+                    // Unfreeze & Reset
+                    // Swal.fire({
+                    //     title: 'Declined sucessfully!',
+                    //     text: message ?? "The agent's request has sucessfully been declined.",
+                    //     icon: "success",
+                    //     }).then(result => {
+                    //         // form.reset();
+                    //         // $('#modal').modal('hide');
+                    //         // $('#modal-trans-decline')[0].reset();
+                    //         // enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                    //         window.location.reload(true);
+                    // });
+                } else {
+                    Swal.fire({
+                        title: 'Oops! Error!',
+                        text: 'Something went wrong. Please try again!',
+                        icon: "error",
+                        confirmButtonText: 'ok'
+                        }).then(result => {
+                        window.location.reload(true);
+                    });
+                }
+            // } else {
+            //     // Error
+            //     console.log("Your ERROR response after submission is:");
+            //     console.log("Response JSON: "+response);
+            //     let message = null;
+            //     Swal.fire({
+            //         title: 'Oopsie! Error!',
+            //         text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+            //         icon: "error",
+            //         confirmButtonText: 'ok'
+            //         }).then(result => {
+            //         window.location.reload(true);
+            //     });
+            // }
+        }, 
+        error: function(response) {
+            console.log("ERROR - Response JSON: "+response);
+            Swal.fire({
+            title: 'An error occured!',
+            text: 'Something went wrong. Please try again!',
+            icon: "error",
+            confirmButtonText: 'ok'
+            }).then(result => {
+                // window.location.reload(true);
+            });
+            }
+        });
+}
+
+
+
 
 });
