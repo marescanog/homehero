@@ -38,7 +38,7 @@ $("#modal-perm-password").validate({
         data : data,
         success : function(response) {
             // console.log("Your response after submission is:");
-            console.log("Response JSON: "+response);
+            // console.log("Response JSON: "+response);
             if(isJson(response)){
                 let res = JSON.parse(response);
                 // // console.log("Your response after submission is:");

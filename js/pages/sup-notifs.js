@@ -163,17 +163,23 @@ let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Ac
                             if(row_has_no_buttons){
                                 // Add Disable & Gray Out
                                 if(button_name=="read"){
-                                    button_hook.addEventListener("click",()=>{
-                                        console.log("row-"+x+"-read");
-                                    });
+                                    if(button_hook != null){
+                                        button_hook.addEventListener("click",()=>{
+                                            console.log("row-"+x+"-read");
+                                            runRead(id);
+                                        });
+                                    }
                                 } else {
-                                    button_hook.setAttribute("disabled", "true");
-                                    button_hook.classList.remove("btn-primary");
-                                    button_hook.classList.remove("btn-danger");
-                                    button_hook.classList.remove("btn-success");
-                                    button_hook.classList.add("btn-secondary");
-                                    button_hook.style.opacity = "0.25";
+                                    if(button_hook != null){
+                                        button_hook.setAttribute("disabled", "true");
+                                        button_hook.classList.remove("btn-primary");
+                                        button_hook.classList.remove("btn-danger");
+                                        button_hook.classList.remove("btn-success");
+                                        button_hook.classList.add("btn-secondary");
+                                        button_hook.style.opacity = "0.25";
+                                    }
                                 }
+                                // console.log(button_hook);
                             } else {
                                 // Add Event Listener
                                 if(button_hook != null){
