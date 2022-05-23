@@ -25,6 +25,7 @@ $authy = false;
 $owny = null;
 $err_stat = null;
 $message= null;
+$has_pending_tranfer = false;
 
 if($idRef != null){
     $url = "http://localhost/slim3homeheroapi/public/ticket/get-info/".$idRef; // DEV
@@ -86,6 +87,7 @@ if($idRef != null){
             $assignment =  $data->assignment_history;
             $authy =  $data->authorization;
             $owny =  $data->ownership;
+            $has_pending_tranfer =  $data->has_pending_tranfer;
         } else {
             $err_stat = $output->response->status;
             $message= $output->response->message;
@@ -137,6 +139,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         // var_dump($base_info);
         // var_dump($history);
         // var_dump($detailed_info);
+        // var_dump($has_pending_tranfer);
     ?>
     
     <?php 
@@ -855,6 +858,7 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
             }
         ?>
 
+
 <!-- ================================= -->
 <!--            ACTIONS UI             -->
 <!-- ================================= -->
@@ -863,6 +867,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
     if($base_info->status == 2){
 ?>
         <div class="card mt-4">
+<?php 
+if(!$has_pending_tranfer){
+?>
             <div class="card-header d-flex flex-row justify-content-between">
                 <h5 class="card-title mb-0">Actions</h5>
                     <input type="hidden" id="trans_assigned_on" value="<?php echo isset($base_info->assigned_on) ? $base_info->assigned_on : ""; ?>">
@@ -1166,9 +1173,28 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                     </li>
                 </form>
             </ul>
+<!-- TRANSFERS PENDING UI -->
+<!-- TRANSFERS PENDING UI -->
+<!-- TRANSFERS PENDING UI -->
+<?php } else if (true) {  // if else for $has_pending_tranfer?>
+    <?php ?>
+    <?php if($owny == true){ ?>
+        <div class="alert alert-info mt-4" role="alert">
+            <h4 class="alert-heading">Pending Transfer Request</h4>
+            <p>Your transfer request is currently pending the approval of the supervisor. Please check back to see the status.</p>
         </div>
-
-
+    <?php } else if (isset($_SESSION['role']) && $_SESSION['role'] == 4) {?>
+        <div class="alert alert-info mt-4" role="alert">
+            <h4 class="alert-heading">Pending Transfer Request</h4>
+            <p>Please process this request in your notifications tab.</p>
+        </div>
+    <?php }?>
+<?php } // if else for $has_pending_tranfer?>
+<!-- TRANSFERS PENDING UI -->
+<!-- TRANSFERS PENDING UI -->
+<!-- TRANSFERS PENDING UI -->
+        
+        </div>
 <?php 
     }
 ?>
