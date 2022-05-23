@@ -1,72 +1,117 @@
-$("#modal-edit-jo-start-date").validate({
+$("#modal-trans-decline").validate({
     rules: {
-        // date:{
-        //     required: true,
-        // },
-        // time:{
-        //     required: true,
-        // }
+        decline_notes:{
+            required: true,
+        }
     },
     messages: {
-        // date:{
-        //     required: "Please select the new start date."
-        // },
-        // time:{
-        //     required: "Please select the new start time."
-        // }
+        decline_notes:{
+            required: "Please enter the reason for declining the agents request."
+        }
     },
     submitHandler: function(form, event) { 
         event.preventDefault();
 
-        // const button = document.getElementById("RU-submit-btn");
-        // const buttonTxt = document.getElementById("RU-submit-btn-txt");
-        // const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
+        const button = document.getElementById("RU-submit-btn");
+        const buttonTxt = document.getElementById("RU-submit-btn-txt");
+        const buttonLoadSpinner = document.getElementById("RU-submit-btn-load");
         const formData = getFormDataAsObj(form);
-        // disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
-        // console.log("EDIT JOB START DATE");
-        console.log(formData);
-        // console.log(formData?.date);
-        // console.log(formData?.time);
-        // let newDate = formData?.date ?? "";
-        // let newTime = formData?.time+":00" ?? "";
-        // let newDateTime = newDate + " " + newTime;
-        // // console.log(newDateTime);
+        disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
 
-        // const monthArr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        // let displayString = "";
+        // console.log("PROCESS DECLINE BEFORE CURL CALL");
+        // console.log(formData);
 
-        // // Reformat values for display
-        // if(newDate != ""){
-        //     // Format Date
-        //     let dateArr = newDate.split("-"); 
-        //     let dateIndex = dateArr[1] >= 1 && dateArr[1] <= 12 ?  dateArr[1] : 1;
-        //     let monthStr = monthArr[dateIndex-1];
-        //     let dayStr = parseInt(dateArr[2]).toString();
+        data = {}
 
-        //     // Format Time
-        //     let timeArr = newTime.split(":"); 
-        //     let hours = timeArr[0];
-        //     let minStr = timeArr[1];
-        //     let hoursStr = (hours % 12).toString();
+        data["comment"] = formData?.decline_notes;
+        data["transfer_type"] = formData?.trans_type;
+        data["notif_no"] = formData?.notif_no;
 
-        //     displayString = monthStr + " " + dayStr + ", "+ dateArr[0] + " - " + hoursStr + ":" + minStr + " " + (parseInt(hours) > 12 ? "PM" : "AM");
+        // console.log("Your data to be submitted to the auth ajax: ");
+        // console.log(JSON.stringify(data));
 
-        //     // console.log(JSON.stringify(monthArr[dateIndex-1]));
-        // }
+        $.ajax({
+            type : 'POST',
+            url : getDocumentLevel()+'/auth/ticket/decline-transfer-request.php',
+            data : data,
+            success : function(response) {
+                console.log("Your response after submission is:");
+                console.log("Response JSON: "+response);
+                if(isJson(response)){
+                    let res = JSON.parse(response);
+                    let status = res["status"];
+                    let message = res["message"];
+                //     // console.log("status: "+status);
+                //     // console.log("message: "+message);
+                    if(status==200){      
+                        // Unfreeze & Reset
+                        Swal.fire({
+                            title: 'Declined sucessfully!',
+                            text: message ?? "The agent's request has sucessfully been declined.",
+                            icon: "success",
+                            }).then(result => {
+                                form.reset();
+                                $('#modal').modal('hide');
+                                $('#modal-trans-decline')[0].reset();
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                                window.location.reload(true);
+                        });
+                    } else if (status == 401 || status == 404){
+                        Swal.fire({
+                            title: 'Bad Request! Check your submission details.',
+                            text: message ?? 'Please check your details and try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                        });
+                    } else if (status == 400){
+                        Swal.fire({
+                            title: 'Bad Request! Check your submission details',
+                            text: message ?? 'Something went wrong with your request. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Oops! Error!',
+                            text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            window.location.reload(true);
+                        });
+                    }
+                } else {
+                    // Error
+                    console.log("Your ERROR response after submission is:");
+                    console.log("Response JSON: "+response);
+                    let message = null;
+                    Swal.fire({
+                        title: 'Oopsie! Error!',
+                        text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+                        icon: "error",
+                        confirmButtonText: 'ok'
+                        }).then(result => {
+                        window.location.reload(true);
+                    });
+                }
+            }, 
+            error: function(response) {
+                console.log("ERROR - Response JSON: "+response);
+                Swal.fire({
+                title: 'An error occured!',
+                text: 'Something went wrong. Please try again!',
+                icon: "error",
+                confirmButtonText: 'ok'
+                }).then(result => {
+                    // window.location.reload(true);
+                });
+                }
+            });
 
-        // let inpt_jo_start_display = document.getElementById("input_jo_time_start");
-        // // let inpt_jo_start_value = document.getElementById("input_jo_time_start_value");
-        // let input_jo_time_start_value_submit = document.getElementById("input_jo_time_start_value_submit");
-
-        // // FORMAT FOR DISPLAY IS MM dd, yyyy - h:m am   ex: May 25, 2022 - 1:00 PM
-
-        // input_jo_time_start_value_submit.value = newDateTime;
-        // inpt_jo_start_display.value = displayString;
-
-        // // console.log(inpt_jo_start_display);
-        // // console.log(inpt_jo_start_value);
-        // // console.log(inpt_jo_start_value.value);
-        // // console.log(inpt_jo_start_display.placeholder);
 
         // $('#modal').modal('hide');
         // $('#modal-edit-jo-start-date')[0].reset();

@@ -76,7 +76,6 @@ my_page_buttons.map((btn, index)=>{
 });
 
 
-
 // ==================
 // Show Notifications List based on Role & Tab
 //      Role -> Number of Cols are different
@@ -154,6 +153,7 @@ let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Ac
                     let transfer_type = 1+notif_type_arr_complete.findIndex(e=>{return e==row_type;});
                     
                     // console.log("notification is: "+id);
+                    //   console.log("transfer_type is: "+JSON.stringify(transfer_type));
 
                     if(row_type != null){
                         button_id_mid.forEach((button_name)=>{
@@ -193,7 +193,10 @@ let notif_type_arr_complete = ["Follow Up","Transfer Req.","Escalation Req.","Ac
                                                 runRead(id);
                                                 break;
                                             case "decline":
-                                                runDecline(id);
+                                                runDecline(
+                                                    id,             // notification ID
+                                                    transfer_type  // transfer type 1-transfer, 2-escalation
+                                                );
                                                 console.log("row-"+x+"-decline");
                                                 break;
                                             case "delete":
@@ -230,12 +233,11 @@ const runRead = (notifID) => {
     console.log("Running Read Api for ID "+notifID);
 }
 
-const runDecline = (notifID) => {
+const runDecline = (notifID, trans_type) => {
     loadModal("sup-trans-decline",modalTypes,()=>{},getDocumentLevel(),{
-        "notifID":notifID,
-        // "previous":previous_name,
-        // "date":date,
-        // "reason":reason
+            "notifID":notifID,
+            "trans_type":trans_type,
+            // "reason":reason
         });
 }
 

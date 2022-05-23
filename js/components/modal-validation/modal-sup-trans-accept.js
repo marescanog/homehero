@@ -103,8 +103,6 @@ else if(data["notif_ID"] == "" || data["transfer_to_agent_id"] == ""){
                 console.log("Response JSON: "+response);
                 if(isJson(response)){
                     let res = JSON.parse(response);
-                    console.log("Your response after submission is:");
-                    console.log("Response JSON: "+res);
                     let status = res["status"];
                     let message = res["message"];
                 //     // console.log("status: "+status);
