@@ -61,8 +61,11 @@ function convertNotification_PlainDataToTableRow_accept_read_decline_delete($n, 
     $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
     $c_notif_ID = property_exists($n, 'id') ? $n->id : "-";
 
+    // return [$c_empID,$c_sender, $c_notif_type,
+    // "<i class='fas fa-check'></i>",$c_read_btn,"<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  
+    // $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
     return [$c_empID,$c_sender, $c_notif_type,
-    "<i class='fas fa-check'></i>",$c_read_btn,"<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  
+    "<i class='fas fa-check'></i>",$c_read_btn,"<i class='fas fa-times'></i>","",  
     $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
 }
 
@@ -88,8 +91,13 @@ function convertNotification_PlainDataToTableRow_accept_read_decline_delete_____
     $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
     $c_notif_ID = property_exists($n, 'id') ? $n->id : "-";
 
+    // Old code with delete
+    // return [$c_empID,$c_sender, $c_notif_type,
+    // "<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  
+    // $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
+
     return [$c_empID,$c_sender, $c_notif_type,
-    "<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  
+    "<i class='fas fa-check'></i>","<i class='far fa-eye'></i>","<i class='fas fa-times'></i>","",  
     $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
 }
 
@@ -116,8 +124,12 @@ function convertNotification_PlainDataToTableRow_accept_decline_delete($n)
     $c_ticket_ID = property_exists($n, 'support_ticket_id') ? $n->support_ticket_id : "-";
     $c_notif_ID = property_exists($n, 'id') ? $n->id : "-";
 
+    // return[$c_empID, $c_sender,$c_notif_type,
+    // "<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",
+    // $c_notes ,$c_date ,$c_time,$c_ticket_ID,$c_notif_ID
+    // ];
     return[$c_empID, $c_sender,$c_notif_type,
-    "<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",
+    "<i class='fas fa-check'></i>","<i class='fas fa-times'></i>","",
     $c_notes ,$c_date ,$c_time,$c_ticket_ID,$c_notif_ID
     ];
 }
@@ -148,8 +160,15 @@ function convertNotification_PlainDataToTableRow_delete($n)
     // return [$c_empID,$c_sender, $c_notif_type,
     // "<i class='fas fa-trash-alt'></i>",  
     // $c_notes, $c_date ,$c_time,$c_ticket_ID,$c_notif_ID];
+
+
+
+    // return [$c_empID,$c_sender, $c_notif_type,
+    // "<i class='fas fa-trash-alt'></i>",
+    // $c_notes,$c_date,$c_time, $c_ticket_ID, $c_notif_ID
+    // ];
     return [$c_empID,$c_sender, $c_notif_type,
-    "<i class='fas fa-trash-alt'></i>",
+    "",
     $c_notes,$c_date,$c_time, $c_ticket_ID, $c_notif_ID
     ];
 }
