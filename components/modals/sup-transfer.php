@@ -180,18 +180,20 @@
                         if(count($transReasonFinal) == 0){
                             //$transReasonFinal
                             for($trans_indx=0; $trans_indx<count($transReasonFinal); $trans_indx++){
-                        ?>
+                                if($trans_indx!=3){
+                        ?> 
                             <option value="<?php echo $transReasonFinal[$trans_indx]["id"]?>">
                                 <?php echo $transReasonFinal[$trans_indx]["reason"]?>
                             </option>
                         <?php 
+                                }
                             }
                         } else {
                         ?>
                             <option value="1">Wrong Department</option>
                             <option value="2">Supervisor Escalation</option>
                             <option value="3">Leave of Absence</option>
-                            <option value="4">Admin Escalation</option>
+                            <!-- <option value="4">Admin Escalation</option> -->
                             <option value="5">Other</option>
                         <?php }?>
                     </select>
