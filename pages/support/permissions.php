@@ -480,7 +480,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             ?>
             <!-- ----------------------------------------------------- -->
                 <li class="list-group-item">
-                    <div class="ticket-title">There are no active supervisors currently listed. Contact the admin to addd supervisor accounts.</div>
+                    <div class="ticket-title">There are no active supervisors currently listed.</div>
                 </li>
             <!-- ----------------------------------------------------- -->
             <?php 

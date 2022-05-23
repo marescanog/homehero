@@ -37,10 +37,22 @@ $(document).ready(()=>{
     let btn_see_transfer_code_b = document.getElementById("btn-see-transfer-code_b");
     if(btn_gen_transfer_b != null){
         btn_gen_transfer_b.addEventListener("click",()=>{
-        // loadModal("sup-perm-enter-pass",modalTypes,()=>{},getDocumentLevel(),{
-        //     permission_code: 3 // 1-External Agent Transfer Request, 2 -Reassign Ticket of External Agent, 3- Transfer Request
-        // });
-        console.log("Send Notification!")
+            console.log("Send Notification!");
+            let data ={};
+            $.ajax({
+                type : 'POST',
+                url : getDocumentLevel()+'/auth/ticket/send-request-to-manager.php',
+                data : data,
+                success : function(response) {
+                    console.log("Your response after submission is:");
+                    console.log("Response JSON: "+response);
+                    if(isJson(response)){
+                        let res = JSON.parse(response);
+                        let status = res["status"];
+                        let message = res["message"];
+                    //     // console.log("status: "+status);
+                    //     // console.log("message: "+message);
+                        if(status==200){      
                             // Unfreeze & Reset
                             Swal.fire({
                                 title: 'Notification Sent!',
@@ -51,9 +63,65 @@ $(document).ready(()=>{
                                     // $('#modal').modal('hide');
                                     // $('#modal-perm-password')[0].reset();
                                     // enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE NEW CODE");
-                                    // window.location.reload(true);
+                                    window.location.reload(true);
                              });
-      });
+                        } else if (status == 401){
+                            Swal.fire({
+                                title: 'Session Expired!',
+                                text: message ?? 'Please log into your account!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                            });
+                        } else if (status == 400){
+                            Swal.fire({
+                                title: 'Oopsie! Error',
+                                text: message ?? 'Something went wrong with your request. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                            });
+                        }else{
+                            Swal.fire({
+                                title: 'Oops! Error!',
+                                text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                window.location.reload(true);
+                            });
+                        }
+                    } else {
+                        // Error
+                        console.log("Your ERROR response after submission is:");
+                        console.log("Response JSON: "+response);
+                        let message = null;
+                        Swal.fire({
+                            title: 'Oopsie! Error!',
+                            text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            window.location.reload(true);
+                        });
+                    }
+                }, 
+                error: function(response) {
+                    console.log("ERROR - Response JSON: "+response);
+                    Swal.fire({
+                    title: 'An error occured!',
+                    text: 'Something went wrong. Please try again!',
+                    icon: "error",
+                    confirmButtonText: 'ok'
+                    }).then(result => {
+                        // window.location.reload(true);
+                    });
+                    }
+                });
+      
+        });
     }
     // Accompanying show hide for the code
     // console.log(btn_see_transfer_code);
