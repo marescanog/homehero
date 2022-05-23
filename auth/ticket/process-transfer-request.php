@@ -10,13 +10,15 @@
 // Grab the token from the session & other variables from GET or POST
 $supportToken = isset($_SESSION['token_support']) ? $_SESSION['token_support'] : null;
 $email = isset($_SESSION['email']) ? $_SESSION['email'] : null;
-//     $transfer_code = isset($_POST['transfer_code']) ? $_POST['transfer_code'] : null;
         $transfer_to_agent_id = isset($_POST['transfer_to_agent_id']) ? $_POST['transfer_to_agent_id'] : null;
         $notif_ID = isset($_POST['notif_ID']) ? $_POST['notif_ID'] : null;
-
+        $agent_type = isset($_POST['agent_type']) ? $_POST['agent_type'] : null;
+        $transfer_code = isset($_POST['approval_code']) ? $_POST['approval_code'] : null;
+        $transfer_code = $transfer_code == "" ? null : $transfer_code;
 // // For Debugging purposes
 $params = [];
-// $params["transfer_code"] = $transfer_code;
+$params["agent_type"] = $agent_type;
+$params["approval_code"] = $transfer_code;
 $params["transfer_to_agent_id"] = $transfer_to_agent_id;
 $params["notif_ID"] = $notif_ID;
 
@@ -54,9 +56,12 @@ if($isValid){
 
     $post_data = array(
         'email' => $email,
-        // 'transfer_code' => $transfer_code,
         'transfer_to_agent_id' => $transfer_to_agent_id,
     );
+
+    if($agent_type != null && $agent_type == 2 && $transfer_code != null){
+        $post_data["manager_approval_code"] = $transfer_code;
+    }
 
     // 1. Initialize
     $ch = curl_init();

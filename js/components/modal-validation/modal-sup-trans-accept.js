@@ -8,6 +8,7 @@ $("#modal-trans-accept").ready(()=>{
     });
 });
 
+
 $("#modal-trans-accept").validate({
     rules: {
         // date:{
@@ -46,17 +47,49 @@ $("#modal-trans-accept").validate({
 
         // Determine which to submit in data if agent_ID_UI_1 OR Agent_ID_UI_2  based on agent_type
         // Default is Agent_ID_UI_2
-        let agent_UI_type = formData?.agent_type;
+        let agent_UI_type = formData?.agent_type ?? 2;
+
         if(agent_UI_type != null && agent_UI_type == 1){
             data["transfer_to_agent_id"] = formData?.agent_ID_UI_1; 
         } else {
-            data["transfer_to_agent_id"] = formData?.Agent_ID_UI_2;
+            data["transfer_to_agent_id"] = formData?.agent_ID_UI_2;
+            data["approval_code"] = formData?.approval_code; 
+            data["agent_type"] = formData?.agent_type ?? 2;
         }
 
         data["notif_ID"] = formData?.notif_no;
 
         console.log("Your data to be submitted to the auth ajax: ");
         console.log(JSON.stringify(data));
+
+// Check if the select is selected
+let selectInputHook = document.getElementById("agent_ID_UI_1");
+if(selectInputHook != null && agent_UI_type == 1 && selectInputHook.value == "From your team"){
+    // console.log("The value of the select option is: ");
+    // console.log(selectInputHook.value);
+    // console.log(selectInputHook.value == "From your team");
+    Swal.fire({
+        title: 'Incomplete Details!',
+        text: 'Please select an agent to transfer to!',
+        icon: "error",
+        confirmButtonText: 'ok'
+        }).then(result => {
+        enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+    });
+
+} 
+
+else if(data["notif_ID"] == "" || data["transfer_to_agent_id"] == ""){
+    Swal.fire({
+        title: 'Incomplete Details!',
+        text: 'Please select an agent to transfer to!',
+        icon: "error",
+        confirmButtonText: 'ok'
+        }).then(result => {
+        enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+    });
+    
+} else {
 
         // Call the cURL request trhough ajax:
         // Call Api
@@ -70,8 +103,8 @@ $("#modal-trans-accept").validate({
                 console.log("Response JSON: "+response);
                 if(isJson(response)){
                     let res = JSON.parse(response);
-                //     // // console.log("Your response after submission is:");
-                //     // // console.log("Response JSON: "+res);
+                    console.log("Your response after submission is:");
+                    console.log("Response JSON: "+res);
                     let status = res["status"];
                     let message = res["message"];
                 //     // console.log("status: "+status);
@@ -89,14 +122,14 @@ $("#modal-trans-accept").validate({
                                 enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
                                 window.location.reload(true);
                         });
-                    } else if (status == 401){
+                    } else if (status == 401 || status == 404){
                         Swal.fire({
                             title: 'Bad Request! Check your submission details.',
                             text: message ?? 'Please check your details and try again!',
                             icon: "error",
                             confirmButtonText: 'ok'
                             }).then(result => {
-                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
                         });
                     } else if (status == 400){
                         Swal.fire({
@@ -105,12 +138,12 @@ $("#modal-trans-accept").validate({
                             icon: "error",
                             confirmButtonText: 'ok'
                             }).then(result => {
-                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "SUBMIT");
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
                         });
                     }else{
                         Swal.fire({
                             title: 'Oops! Error!',
-                            text: message ?? 'Something went wrong. Please try again!',
+                            text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
                             icon: "error",
                             confirmButtonText: 'ok'
                             }).then(result => {
@@ -123,8 +156,8 @@ $("#modal-trans-accept").validate({
                     console.log("Response JSON: "+response);
                     let message = null;
                     Swal.fire({
-                        title: 'Oops! Error!',
-                        text: message ?? 'Something went wrong. Please try again!',
+                        title: 'Oopsie! Error!',
+                        text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
                         icon: "error",
                         confirmButtonText: 'ok'
                         }).then(result => {
@@ -145,7 +178,7 @@ $("#modal-trans-accept").validate({
                 }
             });
 
-
+        }
         // $('#modal').modal('hide');
         // $('#modal-edit-jo-start-date')[0].reset();
     }

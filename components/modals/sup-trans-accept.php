@@ -196,7 +196,7 @@ $ch = curl_init();
                     <h6 class="ml-2 pl-3 card-subtitle pt-2 mb-2 text-muted">Select Agent's Name</h6>
                     <div class="d-flex justify-content-center">
                         <div  class="mb-0" style="width:85%">
-                            <select class="custom-select" name="agent_ID_UI_1">
+                            <select class="custom-select" id="agent_ID_UI_1" name="agent_ID_UI_1">
                             <option selected disabled>From your team</option> 
                             <?php 
                                 for($hehe=0; $hehe<count($agent_list); $hehe++){
@@ -235,9 +235,9 @@ $ch = curl_init();
                     
                     <div class="input-group pt-2 pb-2 pl-3 pr-3">
                         <div class="input-group-prepend col-4 w-100 pl-0 pr-0">
-                            <span class="input-group-text" style="width:100% !important;" id="Agent_ID_UI_2" >Employee ID</span>
+                            <span class="input-group-text" style="width:100% !important;" >Employee ID</span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Agent ID" aria-describedby="Agent_ID_UI_2" name="Agent_ID_UI_2">
+                        <input type="text" class="form-control" aria-label="Agent ID" aria-describedby="agent_ID_UI_2" name="agent_ID_UI_2">
                     </div>
 
                     <div class="input-group pt-2 pb-2 pl-3 pr-3">
