@@ -144,8 +144,14 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             
             <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="<?php echo $current_tab==2?"true":"false";?>">All</a>
 
-            <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-done-tab" data-toggle="tab" href="#nav-done" role="tab" aria-controls="nav-done" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Done</a>
-
+            <?php 
+              if($role!= null && $role==4){
+            ?>
+                <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-done-tab" data-toggle="tab" href="#nav-done" role="tab" aria-controls="nav-done" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Done</a>
+            <?php 
+              }
+            ?>
+            
             <input type="hidden" id="r" value="<?php echo $role;?>">
         </div>
     </nav>
@@ -161,7 +167,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <!--            SUPERVISORS  VIEW             -->
 <!-- ======================================== -->
     <?php 
-        if($role!= null &&($role==4||$role==7||$role==6||$role==6)){
+        // if($role!= null &&($role==4||$role==7||$role==6||$role==6)){
+            if($role!= null && $role==4){
             /*
                 YO WE NEED A COLUMN HAS TAKEN ACTION AND IT IS INVISIBLE,
                 THIS DEACTIVATES THE BUTTON
@@ -223,7 +230,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     $tableName = "all";
                     $basicSearchId = "allSearch";
                     // $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
-                    $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Decline","", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "","","", "Notification Message", "Date Sent", "Time Sent"];
                     $buttonClass =  array("","","","btn-success","btn-danger","btn-secondary");
                     $buttonName = array("","","","accept","decline","delete");
                     $searchCaption = "Search Agent";
@@ -274,70 +281,91 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
         </div>
     <?php 
-        }else{
+        }else if ($role==7){
     ?>
     
 <!-- ======================================== -->
-<!--               AGENTS VIEW                -->
+<!--               MANAGERS VIEW                -->
 <!-- ======================================== -->
      <!-- Tab Header -->
      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade <?php echo $current_tab==0?"show active":"";?>" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
-            <?php
-                // $buttonClass = array("","","","btn-success","btn-primary","btn-danger","btn-secondary");
-                // $buttonName = array("","","","accept","read","decline","delete");
-                // $searchCaption = "Search Agent";
-                // $ID_row = 10;
-                // $statusButton = [4,5,6,7];
-                // $modalButtons  = [4,6];
-                $tableHeaderLabels = ["Sp.ID", "From", "Sent To", "Type", "Read", "Notification Message", "Date Sent", "Time Sent"];
-                $tableName = "new";
-                $basicSearchId = "allSearch";
-                include "$level/components/UX/support-table.php";
-                // Reset Values after to prepare for the next iteration
-                $tableName = null;
-                $basicSearchId = null;
-                $tableRows = [];
-            ?>
-        </div>
+     <div class="tab-pane fade <?php echo $current_tab==0?"show active":"";?>" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
+                <?php
+                include "$level/components/UX/ticketTableConversion.php";
+                    $tableName = "new";
+                    $basicSearchId = "allSearch";
+                    // $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Read","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "","Read","","", "Notification Message", "Date Sent", "Time Sent"];
+                    $buttonClass = array("","","","d-none","btn-primary","d-none","btn-secondary");
+                    $buttonName = array("","","","accept","read","decline","delete");
+                    $searchCaption = "Search Agent";
+                    $ID_row = 11;
+                    // $statusButton = [4,5,6,7];
+                    $statusButton = [4,5,6];
+                    $modalButtons  = [4,6];
+                    $hiddenRows = array(10,11);
+                    // $tableRows = [
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #53. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","1"],
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #55. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","2"],
+                    //     ["192","Sharma M.", "Override Notif","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #143 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #54. (NOTES: cX badasdsasdadsO)", "May 8, 2022","9:00 AM","3"],
+                    //     ["168","Ashley C.", "Transfer Req","<i class='fas fa-check'></i>","<i class='far fa-eye-slash'></i>","<i class='fas fa-times'></i>","<i class='fas fa-trash-alt'></i>",  "AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO). AGENT #163 TRANSFER REQUEST REASON-R5 OTHER ON TICKET #56. (NOTES: cX bUGO)", "May 8, 2022","9:00 AM","4"]
+                    // ];
+                    if( count($new_notifs) != 0 ){
+                        $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $new_notifs);
+                    }
+                    include "$level/components/UX/support-table.php";
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
 
-        <div class="tab-pane fade <?php echo $current_tab==1?"show active":"";?>" id="nav-read" role="tabpanel" aria-labelledby="nav-read-tab">
-            <?php
-                $tableName = "read";
-                $basicSearchId = "activeSearch";
-                include "$level/components/UX/support-table.php";
+            <div class="tab-pane fade <?php echo $current_tab==1?"show active":"";?>" id="nav-read" role="tabpanel" aria-labelledby="nav-read-tab">
+                <?php
+                    $tableName = "read";
+                    $basicSearchId = "readSearch";
+                    if(count($read_notifs) != 0){
+                        // $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete', $read_notifs, [true]);
+                        $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_read_decline_delete______has_read', $read_notifs);
+                    }
+                    include "$level/components/UX/support-table.php";
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
 
-                // Reset Values after to prepare for the next iteration
-                $tableName = null;
-                $basicSearchId = null;
-            ?>
-        </div>
+            <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                <?php
+                    $tableName = "all";
+                    $basicSearchId = "allSearch";
+                    // $tableHeaderLabels = ["E.ID", "From", "Type", "Accept","Decline","Delete", "Notification Message", "Date Sent", "Time Sent"];
+                    $tableHeaderLabels = ["E.ID", "From", "Type", "","","", "Notification Message", "Date Sent", "Time Sent"];
+                    $buttonClass =  array("","","","d-none","d-none","btn-secondary");
+                    $buttonName = array("","","","accept","decline","delete");
+                    $searchCaption = "Search Agent";
+                    $ID_row = 10;
+                    // $statusButton = [4,5,6];
+                    $statusButton = [4,5];
+                    $modalButtons  = [4,5];
+                    $hiddenRows = array(9,10);
+                    if(count($all_notifs) != 0){
+                        $tableRows = array_map('convertNotification_PlainDataToTableRow_accept_decline_delete', $all_notifs);
+                    }
+                    include "$level/components/UX/support-table.php";
 
-         <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-            <?php
-                // $tableName = "all";
-                // $basicSearchId = "bookmarkedSearch";
-                // include "$level/components/UX/support-table.php";
-
-                // // Reset Values after to prepare for the next iteration
-                // $tableName = null;
-                // $basicSearchId = null;
-            ?>
-        </div> 
-
-         <div class="tab-pane fade <?php echo $current_tab==3?"show active":"";?>" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab"> 
-            <?php
-                $tableName = "deleted";
-                $basicSearchId = "archivedSearch";
-                $tableHeaderLabels = ["EmpID", "From", "Type", "Delete", "Notification Message", "Date Sent", "Time Sent"];
-                include "$level/components/UX/support-table.php";
-                // Reset Values after to prepare for the next iteration
-                $tableName = null;
-                $basicSearchId = null;
-            ?>
-        </div> 
+                    // Reset Values after to prepare for the next iteration
+                    $tableName = null;
+                    $basicSearchId = null;
+                    $tableRows = [];
+                ?>
+            </div>
+                   
 
     </div>
+
     <?php 
         }
     ?>
