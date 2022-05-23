@@ -149,9 +149,9 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
             <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="<?php echo $current_tab==2?"true":"false";?>">Completed</a>
             
-            <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Escalations</a>
+            <!-- <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php // echo $current_tab==3?"true":"false";?>">Escalations</a> -->
 
-            <a onClick="addURLParameter(['tab','page'],['4','1'])" class="nav-item nav-link <?php echo $current_tab==4?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php echo $current_tab==4?"true":"false";?>">Transferred</a>
+            <!-- <a onClick="addURLParameter(['tab','page'],['4','1'])" class="nav-item nav-link <?php echo $current_tab==4?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php // echo $current_tab==4?"true":"false";?>">Transferred</a> -->
         </div>
     </nav>
 
@@ -230,7 +230,7 @@ include "$level/components/UX/ticketTableConversion.php";
         </div>
 
 
-        <div class="tab-pane fade <?php echo $current_tab==3?"show active":"";?>" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
+        <!-- <div class="tab-pane fade <?php // echo $current_tab==3?"show active":"";?>" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
             <?php
                 // $tableName = "escalations";
                 // $basicSearchId = "escalationsSearch";
@@ -240,11 +240,11 @@ include "$level/components/UX/ticketTableConversion.php";
                 // $tableName = null;
                 // $basicSearchId = null;
             ?>
-        </div>
+        </div> -->
 
 
 
-        <div class="tab-pane fade <?php echo $current_tab==4?"show active":"";?>" id="nav-transferred" role="tabpanel" aria-labelledby="nav-transferred-tab">
+        <!-- <div class="tab-pane fade <?php // echo $current_tab==4?"show active":"";?>" id="nav-transferred" role="tabpanel" aria-labelledby="nav-transferred-tab">
             <?php
                 // $tableName = "transferred";
                 // $basicSearchId = "transferredSearch";
@@ -254,7 +254,7 @@ include "$level/components/UX/ticketTableConversion.php";
                 // $tableName = null;
                 // $basicSearchId = null;
             ?>
-        </div>
+        </div> -->
 
     </div>
 

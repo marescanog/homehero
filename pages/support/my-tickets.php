@@ -151,7 +151,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
             <a onClick="addURLParameter(['tab','page'],['1','1'])" class="nav-item nav-link <?php echo $current_tab==1?"active":"";?>" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" aria-selected="<?php echo $current_tab==1?"true":"false";?>">Completed</a>
             
-            <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php echo $current_tab==2?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php echo $current_tab==2?"true":"false";?>">Escalations</a>
+            <!-- <a onClick="addURLParameter(['tab','page'],['2','1'])" class="nav-item nav-link <?php // echo $current_tab==2?"active":"";?>" id="nav-escalations-tab" data-toggle="tab" href="#nav-escalations" role="tab" aria-controls="nav-escalations" aria-selected="<?php // echo $current_tab==2?"true":"false";?>">Escalations</a> -->
 
             <a onClick="addURLParameter(['tab','page'],['3','1'])" class="nav-item nav-link <?php echo $current_tab==3?"active":"";?>" id="nav-transferred-tab" data-toggle="tab" href="#nav-transferred" role="tab" aria-controls="nav-transferred" aria-selected="<?php echo $current_tab==3?"true":"false";?>">Transferred</a>
 
@@ -228,24 +228,24 @@ include "$level/components/UX/ticketTableConversion.php";
 
 
 
-        <div class="tab-pane fade <?php echo $current_tab==2?"show active":"";?>" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
+        <!-- <div class="tab-pane fade <?php // echo $current_tab==2?"show active":"";?>" id="nav-escalations" role="tabpanel" aria-labelledby="nav-escalations-tab">
             <?php
-                $tableName = "escalations";
-                $basicSearchId = "escalationsSearch";
+                // $tableName = "escalations";
+                // $basicSearchId = "escalationsSearch";
 
-                $totalRecords = $escalated_total;
-                $tableRows = array_map('convertPlainDataToTableRow', $escalated_tickets);
-                $EntriesDisplayed = count($tableRows);
+                // $totalRecords = $escalated_total;
+                // $tableRows = array_map('convertPlainDataToTableRow', $escalated_tickets);
+                // $EntriesDisplayed = count($tableRows);
 
-                include "$level/components/UX/support-table.php";
-                // Reset Values after to prepare for the next iteration
-                $tableName = null;
-                $basicSearchId = null;
-                $totalRecords = 0;
-                $tableRows = [];
-                $EntriesDisplayed = 0;
+                // include "$level/components/UX/support-table.php";
+                // // Reset Values after to prepare for the next iteration
+                // $tableName = null;
+                // $basicSearchId = null;
+                // $totalRecords = 0;
+                // $tableRows = [];
+                // $EntriesDisplayed = 0;
             ?>
-        </div>
+        </div> -->
 
 
 
