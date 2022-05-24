@@ -33,69 +33,91 @@ $(document).ready(()=>{
             const formData = getFormDataAsObj(form);
             disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
 
-            // // Add token retrieval then link with change password route
-            // // Ajax to get the bearer token
-            // $.ajaxSetup({cache: false})
-            // $.get(getDocumentLevel()+'/auth/get-register-session.php', function (data) {
-            //     //console.log(data)
-            //     const parsedSession = JSON.parse(data);
-            //     const token = parsedSession['token'];
-            //     console.log(token);
-
-            //     // Create new form 
-            //     const samoka = new FormData();
-
-            //     // Append information
-            //     samoka.append('current_pass', formData["current_pass"]);
-            //     samoka.append('new_pass', formData["new_pass"]);
-            //     samoka.append('confirm_pass', formData["confirm_pass"]);
-
-            //     // Ajax to save new pasword
-            //     $.ajax({
-            //         type: 'POST',
-            //         // url : '', // prod (No current deployed prod route)
-            //         url: 'http://localhost/slim3homeheroapi/public/homeowner/change-password', // dev
-            //         contentType: false,
-            //         processData: false,
-            //         headers: {
-            //             "Authorization": `Bearer ${token}`
-            //         },
-            //         data : samoka,
-            //         success : function(response) {
-            //             console.log("your response after change password is:")
-            //             console.log(response);
-            //             Swal.fire({
-            //                 title: 'Password Change Success',
-            //                 text: 'Password has been changed',
-            //                 icon: 'success'
-            //             });
-            //             document.getElementById("profile-change-password").reset();
-            //             enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "CHANGE");
-            //         },
-            //         error: function (response) {
-            //             console.log(response);
-            //             let res = response.responseJSON.response;
-
-            //             console.log(res);
-            //             if(res?.status == 400){
-            //                 Swal.fire({
-            //                     title: 'Error: Bad Request',
-            //                     text: res?.message,
-            //                     icon: 'error'
-            //                 });
-            //             } else {
-            //                 Swal.fire({
-            //                     title: 'An error occurred',
-            //                     text: 'Please try again',
-            //                     icon: 'error'
-            //                 });
-            //             }
-            //             enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "CHANGE");
-
-            //         }
-            //     });
-
-            // }); //Ajax close for bearer token
+            let data ={};
+            data['current_pass'] =formData?.current_pass;
+            data['new_pass'] =formData?.new_pass;
+            data['confirm_pass'] =formData?.confirm_pass;
+            $.ajax({
+                type : 'POST',
+                url : getDocumentLevel()+'/auth/support/change-password.php',
+                data : data,
+                success : function(response) {
+                    console.log("Your response after submission is:");
+                    console.log("Response JSON: "+response);
+                    if(isJson(response)){
+                        let res = JSON.parse(response);
+                        let status = res["status"];
+                        let message = res["message"];
+                    //     // console.log("status: "+status);
+                    //     // console.log("message: "+message);
+                        if(status==200){      
+                            // Unfreeze & Reset
+                            Swal.fire({
+                                title: 'Password Changed!',
+                                text: "You can now use the new password you saved.",
+                                icon: "success",
+                                }).then(result => {
+                                    // form.reset();
+                                    // $('#modal').modal('hide');
+                                    // $('#modal-perm-password')[0].reset();
+                                    // enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE NEW CODE");
+                                    window.location.reload(true);
+                             });
+                        } else if (status == 401){
+                            Swal.fire({
+                                title: 'Session Expired!',
+                                text: message ?? 'Please log into your account!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                            });
+                        } else if (status == 400){
+                            Swal.fire({
+                                title: 'Oopsie! Error',
+                                text: message ?? 'Something went wrong with your request. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "NEXT");
+                            });
+                        }else{
+                            Swal.fire({
+                                title: 'Oops! Error!',
+                                text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
+                                icon: "error",
+                                confirmButtonText: 'ok'
+                                }).then(result => {
+                                window.location.reload(true);
+                            });
+                        }
+                    } else {
+                        // Error
+                        console.log("Your ERROR response after submission is:");
+                        console.log("Response JSON: "+response);
+                        let message = null;
+                        Swal.fire({
+                            title: 'Oopsie! Error!',
+                            text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            window.location.reload(true);
+                        });
+                    }
+                }, 
+                error: function(response) {
+                    console.log("ERROR - Response JSON: "+response);
+                    Swal.fire({
+                    title: 'An error occured!',
+                    text: 'Something went wrong. Please try again!',
+                    icon: "error",
+                    confirmButtonText: 'ok'
+                    }).then(result => {
+                        // window.location.reload(true);
+                    });
+                    }
+                });
 
         } // submit handler close in Jquery
         
