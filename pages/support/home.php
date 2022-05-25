@@ -21,7 +21,7 @@ $showDashCards = ($myrole == null || $myrole < 5);
 
 // No need to get tickets for dash since 
 //  Managers & admin will not be handling tickets
-if($showDashCards == true){
+// if($showDashCards == true){
     // CURL STARTS HERE
 // NEWLINKDEV
 // Curl request to get data to fill projects page
@@ -86,7 +86,7 @@ $ch = curl_init();
         $closed_tickets = $output->response->resolved_total;
     }
 
-}
+// }
 
 
 
@@ -97,6 +97,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <link rel="stylesheet" href="../../css/headers/support.css">
 <link rel="stylesheet" href="../../css/headers/support-side-nav.css">
 <link rel="stylesheet" href="../../css/pages/support/sup-home.css">
+<script src="<?php echo $level;?>/js/components/loadModal.js"></script>
 <script src="https://kit.fontawesome.com/d10ff4ba99.js" crossorigin="anonymous"></script>
 <!-- === Link your custom CSS  pages above here ===-->
 </head>
@@ -199,12 +200,12 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     ?>
 
     <?php 
-        if($showDashCards == false){
+        if($showDashCards == false || $myrole == 4){
     ?>
         <div class="mb-3">
             <!-- Add mofal -->
-            <button class="btn btn-primary" id="add-anouncement">
-                Add Anouncement
+            <button class="btn btn-primary" id="add-anouncement" data-toggle="modal" data-target="#modal">
+                Add <?php echo  $myrole == 4 ? "Team " : "";?>Anouncement
             </button>
         </div>
     <?php 
@@ -279,5 +280,6 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <script>
 
     </script>
+        <script src="../../js/pages/sup-home.js"></script>
 </body>
 </html>

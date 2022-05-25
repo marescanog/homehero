@@ -43,6 +43,7 @@ const modalTypes = {
     "sup-perm-enter-pass":  docLevelModal+"/components/modals/sup-perm-enter-pass.php",
     "sup-trans-accept":  docLevelModal+"/components/modals/sup-trans-accept.php",
     "sup-trans-decline":  docLevelModal+"/components/modals/sup-trans-decline.php",
+    "sup-add-anouncement":  docLevelModal+"/components/modals/sup-add-anouncement.php"
 }
 
 // This function loads the
