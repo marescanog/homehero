@@ -67,7 +67,7 @@ $("#modal-sup-anouncement").validate({
                             }).then(result => {
                                 form.reset();
                                 $('#modal').modal('hide');
-                                $('#modal-trans-decline')[0].reset();
+                                $('#modal-sup-anouncement')[0].reset();
                                 enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "POST ANOUNCEMENT");
                                 window.location.reload(true);
                         });

@@ -79,11 +79,14 @@ $ch = curl_init();
     $new_tickets = 0;
     $ongoing_tickets = 0;
     $closed_tickets = 0;
-
+    $anouncements = [];
+    $userID = null;
     if(is_object($output) && $output->success == true){
         $new_tickets = $output->response->new_total;
         $ongoing_tickets = $output->response->ongoing_total;
         $closed_tickets = $output->response->resolved_total;
+        $anouncements =  $output->response->anouncements;
+        $userID = $output->response->dede;
     }
 
 // }
@@ -124,6 +127,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     //    var_dump($new_tickets);
     //    var_dump($ongoing_tickets);
     //    var_dump($closed_tickets);
+        //  var_dump($anouncements);
     ?>
     
     <!-- Only Show cards for supervisors and agents -->
@@ -217,23 +221,59 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     </div>
     <?php 
         // var_dump($myrole);
+        // var_dump($_SESSION);
     ?>
     <div>
-        <?php 
-            if(isset($_POST['anouncements'])) {
-                for($x = 0; $x < count($_POST['anouncements']); $x++){
-        ?>
-        <ul>
+    <div class="container-fluid pt-4">
+        <div class="row">
             <?php 
-                echo "<li>".$_POST['anouncements'][$x]."</li>";
+                if(count($anouncements) != 0) {
+                    for($x = 0; $x < count($anouncements); $x++){
             ?>
-        </ul>
-        <?php
+            <ul>
+                <div class="col col-md-10 col-lg-7">
+                    <div class="alert alert-secondary" role="alert">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div style="max-width:90%">
+                                <h4 class="alert-heading m-0 p-0">
+                                    <?php echo htmlentities($anouncements[$x]->title);?>
+                                </h4>
+                                <p class="m-0 p-0 font-weight-light font-italic mt-1" style="font-size:'xs' !important">
+                                    By: <?php echo htmlentities($anouncements[$x]->author_full_name);?>
+                                </p>
+                            </div>
+                            <?php if($myrole==7||($myrole==4 && $anouncements[$x]->author_id==$userID)){ ?>
+                            <button id="btn-view-<?php echo htmlentities($anouncements[$x]->id);?>" type="button" class="btn btn-danger btn-view-post" style="max-width:2.5em;max-height:2.5em">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <?php } ?>
+                        </div>
+                        <hr class="m-0 p-0 mt-2 mb-2">
+                        <div>
+                            <p class="mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                <?php echo mb_strimwidth(htmlentities($anouncements[$x]->details), 0, 35, "..."); ?>
+                            </p>
+                            <button type="button" id="btn-delete-<?php echo htmlentities($anouncements[$x]->id);?>" class="mt-2 btn btn-sm btn-primary btn-delete-post">
+                                View
+                            </button>
+                        </div>
+
+                    </div>
+                    <p class="unselectable text-white p-0 m-0" style="max-height:1px; overflow: hidden; ">
+                        <?php 
+                            echo var_dump($anouncements[$x]);
+                        ?>
+                    </p>
+                </div>
+            </ul>
+            <?php
+                    }
+                } else {
+                    echo 'No Anouncements';
                 }
-            } else {
-                echo 'No Anouncements';
-            }
-        ?>
+            ?>
+        </div>
+    </div>
     </div>
     </main>
 
