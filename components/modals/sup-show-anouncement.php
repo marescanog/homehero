@@ -99,7 +99,7 @@ $ch = curl_init();
               ?>
                     <div id="modal-login-form" type="POST"  name="hoLoginForm">
                         <h4 style="font-weight: bold; font-size: 26px; color: #707070"><?php echo htmlentities($title)?></h4>
-                        <h5 class="mt-3" style="font-size: 16px; color: #707070"><?php echo htmlentities($title)?></h5>
+                        <h5 class="mt-3" style="font-size: 16px; color: #707070"><?php echo htmlentities($content)?></h5>
                         <?php 
                             // var_dump($output->response->data->anouncement->details);
                         ?>
