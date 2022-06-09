@@ -8,3 +8,35 @@ $(document).ready(()=>{
         });
     }
 }); 
+
+
+const editAnouncement = (id) => {
+    console.log("Edit anouncement for "+id);
+    loadModal("sup-anouncement-edit",modalTypes, ()=>{}, getDocumentLevel(), {
+        id:id
+    });
+}
+
+
+const viewAnouncement = (id) => {
+    console.log("View anouncement for "+id);
+    loadModal("sup-anouncement-show",modalTypes, ()=>{}, getDocumentLevel(), {
+        id:id
+    });
+}
+
+
+const deleteAnouncement = (id) => {
+    // console.log("Delete anouncement for "+id);
+    Swal.fire({  
+        title: 'Delete anouncement?',  
+        text: 'The anouncments and its notes will be deleted.',
+        showCancelButton: true,  
+        confirmButtonText: `YES`,  
+        }).then((result) => {  
+            if (result.isConfirmed) {    
+            //  ajax to process delete
+            console.log("DELETE ANOUNCEMENT"); 
+        } 
+    });
+}

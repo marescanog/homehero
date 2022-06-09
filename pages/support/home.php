@@ -243,7 +243,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                 </p>
                             </div>
                             <?php if($myrole==7||($myrole==4 && $anouncements[$x]->author_id==$userID)){ ?>
-                            <button id="btn-view-<?php echo htmlentities($anouncements[$x]->id);?>" type="button" class="btn btn-danger btn-view-post" style="max-width:2.5em;max-height:2.5em">
+                            <button onclick="deleteAnouncement(<?php echo htmlentities($anouncements[$x]->id);?>)" id="btn-delete-<?php echo htmlentities($anouncements[$x]->id);?>" type="button" class="btn btn-danger btn-view-post" style="max-width:2.5em;max-height:2.5em">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                             <?php } ?>
@@ -253,9 +253,19 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                             <p class="mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                                 <?php echo mb_strimwidth(htmlentities($anouncements[$x]->details), 0, 35, "..."); ?>
                             </p>
-                            <button type="button" id="btn-delete-<?php echo htmlentities($anouncements[$x]->id);?>" class="mt-2 btn btn-sm btn-primary btn-delete-post">
+                            <button  data-toggle="modal" data-target="#modal" onclick="viewAnouncement(<?php echo htmlentities($anouncements[$x]->id);?>)" type="button" id="btn-View-<?php echo htmlentities($anouncements[$x]->id);?>" class="mt-2 btn btn-sm btn-primary btn-view-post">
                                 View
                             </button>
+                            <!-- Edit anouncement below -->
+                            <?php 
+                                if($userID==$anouncements[$x]->author_id){
+                            ?>
+                            <button  data-toggle="modal" data-target="#modal" onclick="editAnouncement(<?php echo htmlentities($anouncements[$x]->id);?>)" type="button" id="btn-Edit-<?php echo htmlentities($anouncements[$x]->id);?>" class="ml-2 mt-2 btn btn-sm btn-warning btn-edit-post">
+                                Edit
+                            </button>
+                            <?php 
+                                }
+                            ?>
                         </div>
 
                     </div>
