@@ -24,8 +24,8 @@ $("#modal-sup-anouncement").validate({
         const formData = getFormDataAsObj(form);
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
 
-        console.log("ADD ANOUNCEMENT BEFORE CURL CALL");
-        console.log(formData);
+        // console.log("ADD ANOUNCEMENT BEFORE CURL CALL");
+        // console.log(formData);
 
         data = {}
 
@@ -42,8 +42,8 @@ $("#modal-sup-anouncement").validate({
         // }
 
 
-        console.log("Your data to be submitted to the auth ajax: ");
-        console.log(JSON.stringify(data));
+        // console.log("Your data to be submitted to the auth ajax: ");
+        // console.log(JSON.stringify(data));
 
 
         $.ajax({
@@ -51,14 +51,14 @@ $("#modal-sup-anouncement").validate({
             url : getDocumentLevel()+'/auth/support/edit-anouncement.php',
             data : data,
             success : function(response) {
-                console.log("Your response after submission is:");
-                console.log("Response JSON: "+response);
+                // console.log("Your response after submission is:");
+                // console.log("Response JSON: "+response);
                 if(isJson(response)){
                     let res = JSON.parse(response);
                     let status = res["status"];
                     let message = res["message"];
-                    console.log("status: "+status);
-                    console.log("message: "+message);
+                    // console.log("status: "+status);
+                    // console.log("message: "+message);
                     if(status==200){      
                         // Unfreeze & Reset
                         Swal.fire({
