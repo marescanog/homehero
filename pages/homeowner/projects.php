@@ -374,7 +374,9 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     $date_time_completion_paid = null;
                                     $computedRating = 0;
                                     // for cancellation
-                                    $job_post_status_id = $closedProjects[$p]->job_post_status_id;
+                                    $job_post_status_id = count($closedProjects) == 0 ?  null : (
+                                        isset($closedProjects[$p]) ? $closedProjects[$p]->job_post_status_id : null
+                                    );
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }

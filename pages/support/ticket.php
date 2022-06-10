@@ -214,6 +214,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                     echo $date->format('M j,Y g:i A');?> </div>
                         </div>
                     </li>
+                    <?php 
+                        if($base_info->last_updated_on != null){
+                    ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-4 col-lg-3 border-right ticket-title"> Updated on</div>
@@ -221,6 +224,9 @@ if((isset($idRef) && $idRef != null) && $err_stat == null){
                                     echo $date->format('M j,Y g:i A');?> </div>
                         </div>
                     </li>
+                    <?php 
+                        }
+                    ?>
                 </ul>
             </div>
 
