@@ -1,4 +1,17 @@
 <?php 
+    /*  DEFINITION FOR REFERENCE
+
+        has_AuthorTakenAction = 0 -> Agent is processing ticket
+
+        has_AuthorTakenAction = 1 -> New ticket/No action taken yet
+
+        has_AuthorTakenAction = 2 -> Agent requested Cx follow up
+
+        has_AuthorTakenAction = 3 -> Cx requested agent follow up
+
+        has_AuthorTakenAction = 4 -> Closed/Resolved ticket
+    */
+    
     session_start(); 
 
     $curlResult = "";
