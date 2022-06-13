@@ -373,6 +373,10 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     $total_price_billed  = null ;
                                     $date_time_completion_paid = null;
                                     $computedRating = 0;
+                                    // for cancellation
+                                    $job_post_status_id = count($closedProjects) == 0 ?  null : (
+                                        isset($closedProjects[$p]) ? $closedProjects[$p]->job_post_status_id : null
+                                    );
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
@@ -397,7 +401,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                 $home_id = null;
                                 $rate_type_id = null;
                                 $job_size_id = null;
-
+                                $job_post_status_id = null;
                                 if( count($ongoingProjects) > 3){
                                 ?><!-------------------------------------------------->
                                 <!-- HTML ZONE: SHOW MORE PROJECTS -->
@@ -508,6 +512,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                     $computedRating = 0;
 
                                     $phone_no = $ongoingProjects[$p]->phone_no;
+                                    // For cancellation
+                                    $job_post_status_id = $closedProjects[$p]->job_post_status_id;
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
@@ -534,6 +540,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                 $job_size_id = null;
                                 $is_rated = null;
                                 $job_order_id = null;
+                                $job_post_status_id = null;
 
                                 if( count($closedProjects) > 3){
                                 ?><!-------------------------------------------------->
@@ -662,7 +669,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                                         + $closedProjects[$p]->reliability
                                                         + $closedProjects[$p]->punctuality)/4.0;
                                     }
-                                   
+                                    // For cancellation
+                                    $job_post_status_id = $closedProjects[$p]->job_post_status_id;
 
                                     $phone_no = null;
 
@@ -692,7 +700,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                 $job_size_id = null;
                                 $is_rated = null;
                                 $job_order_id = null;
-
+                                $job_post_status_id = null;
                                 if( count($closedProjects) > 3){
                                 ?><!-------------------------------------------------->
                                 <!-- HTML ZONE: SHOW MORE PROJECTS -->

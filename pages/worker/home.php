@@ -62,7 +62,8 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                 AND jp.job_post_status_id=1
                 AND jp.is_deleted=0
                 AND c.id IN (SELECT city_id FROM city_preference WHERE worker_id=:id)
-                AND jp.required_expertise_id IN (SELECT skill FROM skillset WHERE worker_id=:id) 
+                AND jp.required_expertise_id IN (SELECT skill FROM skillset WHERE worker_id=:id)
+                AND jp.id NOT IN (SELECT post_id FROM worker_decline_post WHERE worker_id=:id)  
                 GROUP BY jp.id ";
 
                     // Prepare statement

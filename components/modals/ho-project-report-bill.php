@@ -151,8 +151,34 @@ $output = null;
 ?>
         <div class="card mb-4">
             <div class="card-body">
+                <?php
+                    $modal_support_ticket_ID = null;
+                    $modal_ticket_status = null;
+                    $modal_hasAuthor = 1;
+                    if($output != null && $output->response != null && $output->response->support_ticket_info != null
+                    ){
+                        $modal_support_ticket_ID = $output->response->support_ticket_info->support_ticket_id;
+                    }
+                    // pending addition of variable in server has_author_taken_action
+                    $modal_hasAuthor = 1;
+                    $modal_ticket_status = $output->response->support_ticket_info->status_id;
+                    $modal_ticket_status = $modal_ticket_status == null ? 4 : $modal_ticket_status-1;
+                    /*
+                        has author taken action = 0, No further actions needed
+                        has author taken action = 1, Ticket Just Submitted
+                        has author taken action = 2, Agent Notified Author
+                        has author taken action = 3, Author Notified Agent
+                    */
+                    $stat_mod_ongoing = array("Closed","Under Investigation","Agent Requests Additional Action","You Notified Agent");
+                    // New, Ongoing, Resolved, Closed
+                    $stat_mod_bill = array("Pending Agent Assignment", $stat_mod_ongoing[ $modal_hasAuthor ],"Resolved","Closed","Unavailble");
+                    // echo var_dump();
+                ?>
                 <p class="text-danger small-warn">*You have already filed for a support ticket for this billing issue.</p>
-                <h5 class="card-title mb-2">Support Ticket #<?php //echo $support_ticket_info->support_ticket_id == null ? "" : sprintf("%08d", $support_ticket_info->support_ticket_id);?></h5>
+
+                <h5 class="card-title mb-2">
+                    Support Ticket <?php echo $modal_support_ticket_ID==null?"":"ID: DIS-".str_pad($modal_support_ticket_ID, 5, "0", STR_PAD_LEFT);?>
+                </h5>
                 <h6 class="card-subtitle mt-3 mb-2 text-muted h5"><?php //echo $rep_job_post_name  ?? ( $rep_project_type_name ?? 'Your project'); ?></h6>
                 <h6 class="card-subtitle mt-2 mb-2 text-muted">for the address at</h6>
                 <p class="card-text"><?php echo $address;?></p>
@@ -163,12 +189,15 @@ $output = null;
                 <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
                 <p class="card-text"><?php echo $assigned_to;?></p>
                 <?php } ?>
+                <hr>
+                <h6 class="card-subtitle mb-2 text-muted">STATUS </h6>
+                <p class="card-text"><i><?php echo  $stat_mod_bill[$modal_ticket_status];?></i></p>
             </div>
         </div>
 <?php 
     } 
 ?>
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-muted">Bill Number</h6>
                 <p class="card-text ml-3">#<?php  echo $bill_data->id == null ? "" : sprintf("%08d", $bill_data->id); ?></p>
@@ -196,6 +225,9 @@ $output = null;
             </div>
         </div>
 
+        <div class="mb-4 ml-3">
+            <a href="./help-center.php">View more info or follow-up here</a>
+        </div>
 <?php 
     if($output->response->support_ticket_info !== false){
 ?>

@@ -27,6 +27,7 @@ $("#modal-report-problem").validate({
 
             // Append information
             samoka.append('author_description', formData["author_description"]);
+            samoka.append('user_id', formData["user_id"]);
 
             // Ajax to get report worker
             $.ajax({
@@ -35,9 +36,9 @@ $("#modal-report-problem").validate({
                 url: 'http://localhost/slim3homeheroapi/public/homeowner/report-job-issue2/2/'+formData["id"], // dev
                 contentType: false,
                 processData: false,
-                headers: {
+                /*headers: {
                     "Authorization": `Bearer ${token}`
-                },
+                },*/
                 data : samoka,
                 success : function(response) {
                     console.log("your response after reporting is:")

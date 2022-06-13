@@ -305,31 +305,31 @@
                         // Worker can accept job post when it is not filled
                         if($job_status == 1){
                     ?> 
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
                             <b>ACCEPT</b>
                         </button>
                     <?php
                          } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time == null) {
                     ?>
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="startJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="startJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
                             <b>START PROJECT</b>
                         </button>
                     <?php
                          } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time != null) {
                     ?>
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="stopJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="stopJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
                             <b>STOP PROJECT AND GENERATE BILL</b>
                         </button>
                     <?php
                          } else if ($job_order_status_id == 2 && $date_paid != null) {
                     ?>
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" onclick="paymentReceived(<?php echo addslashes(htmlentities($job_order_id)); ?>)">
+                        <button class="btn btn-primary ml-2" style="border: 2px solid #f0ad4e" onclick="paymentReceived(<?php echo addslashes(htmlentities($job_order_id)); ?>)">
                             <b>CONFIRM PAYMENT RECEIVED</b>
                         </button>
                     <?php
                          } else if ($job_order_status_id == 2 && $date_paid == null) {
                     ?>
-                        <button class="btn btn-outline-success ml-2" style="border: 2px solid #f0ad4e" data-toggle="modal" data-target="#modal" disabled>
+                        <button class="btn btn-outline-primary ml-2" style="border: 2px solid #f0ad4e" disabled>
                             <b>PENDING PAYMENT</b>
                         </button>
                     <?php
@@ -346,7 +346,7 @@
                     // Case when it is still a post
                     if($job_status == 1 && $job_order_status_id == null){
                 ?>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="declineJobPost(<?php echo $job_id.',\''.addslashes($job_title).'\',\''.$project_type.'\',\''.addslashes($address).'\'';?>)">
+                    <button class="btn btn-danger" onclick="declineJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
                         DECLINE
                     </button>
                 <?php 

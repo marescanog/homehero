@@ -26,6 +26,7 @@ $("#cancel-Project-form").validate({
 
             // Append information
             samoka.append('cancellation_reason', formData["cancellation_reason"]);
+            samoka.append('user_id', formData["user_id"]);
 
             // Ajax to get list of addresses
             $.ajax({
@@ -34,9 +35,9 @@ $("#cancel-Project-form").validate({
                 url: 'http://localhost/slim3homeheroapi/public/homeowner/cancel-order2/'+formData['id'], // dev
                 contentType: false,
                 processData: false,
-                headers: {
+                /*headers: {
                     "Authorization": `Bearer ${token}`
-                },
+                },*/
                 data : samoka,
                 success : function(response) {
                     console.log("Your response after cancellation is: ")
@@ -48,7 +49,7 @@ $("#cancel-Project-form").validate({
                         text: 'Job Order has been cancelled.',
                         icon: 'success'
                         }).then( result =>{
-                            window.location = getDocumentLevel()+'/pages/homeowner/projects.php?tab=orders';
+                            window.location = getDocumentLevel()+'/pages/worker/ongoingprojects.php';
                         });
                         // Enable buttons & close Modal
                         $('#modal').modal('hide');

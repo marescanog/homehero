@@ -27,6 +27,7 @@ $("#modal-report-bill").validate({
 
             // Append information
             samoka.append('author_description', formData["author_description"]);
+            samoka.append('user_id', formData["user_id"]);
             // samoka.append('id', formData["id"]);
 
             $.ajax({
@@ -35,9 +36,9 @@ $("#modal-report-bill").validate({
                 url: 'http://localhost/slim3homeheroapi/public/homeowner/report-billing-issue2/'+formData["id"], // dev
                 contentType: false,
                 processData: false,
-                headers: {
+                /*headers: {
                     "Authorization": `Bearer ${token}`
-                },
+                },*/
                 data : samoka,
                 success : function(response) {
                     console.log("your response after filing biling dispute is:");
@@ -49,7 +50,7 @@ $("#modal-report-bill").validate({
                     text: 'Billing dispute has been filed.',
                     icon: 'success'
                     }).then( result =>{
-                        window.location = getDocumentLevel()+'/pages/homeowner/projects.php?tab=closed';
+                        window.location = getDocumentLevel()+'/pages/worker/pastprojects.php';
                     });
                     // Enable buttons & close Modal
                     $('#modal').modal('hide');

@@ -187,6 +187,14 @@ const summon_forgotpass_homeowner = () => {
       })
 }
 
+const summon_forgotpass_support = () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'Forgot password',
+        text: 'Please contact your supervisor or admin@support.com for further assistance with password retrieval',
+      })
+}
+
 const summon_forgotpass_worker = () => {
     Swal.fire({
         icon: 'info',
@@ -194,3 +202,27 @@ const summon_forgotpass_worker = () => {
         text: 'Please contact homehero@support.com for further assistance with password retrieval',
       })
 }
+
+const addURLParameter = (name=null,value=null) => {
+    if(name != null && value != null){
+        const urlParams = new URLSearchParams(window.location.search);
+        if(Array.isArray(name) && Array.isArray(value)){
+            for(let x = 0; x < name.length; x++){
+                urlParams.set(name[x], value[x]);
+                console.log(name[x]+value[x]);
+            }
+        } else {
+            urlParams.set(name, value);
+        }
+        window.location.search = urlParams;
+    }
+}
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+ }

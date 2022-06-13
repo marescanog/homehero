@@ -167,7 +167,7 @@ $output = null;
                     <p class="card-text"><?php echo $rep_assigned_to;?></p>
                 <?php } else { ?>
                     <h6 class="card-subtitle mb-2 text-muted">posted by homeowner </h6>
-                    <p class="card-text"><?php echo $posted_by;?></p>
+                    <p class="card-text"><?php echo $rep_assigned_to;?></p>
                 <?php } ?>
             </div>
         </div>
