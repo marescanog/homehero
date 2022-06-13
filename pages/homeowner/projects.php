@@ -513,7 +513,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
                                     $phone_no = $ongoingProjects[$p]->phone_no;
                                     // For cancellation
-                                    $job_post_status_id = $closedProjects[$p]->job_post_status_id;
+
+                                    $job_post_status_id = isset($closedProjects[$p]) ? $closedProjects[$p]->job_post_status_id : null;
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
