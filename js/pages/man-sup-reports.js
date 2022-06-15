@@ -94,12 +94,46 @@ const show_report = (btn_data) => {
 // For Support Reporting generation
 // ===================================
 // ===================================
+const ticket_filter_select = document.getElementById("ticket_filter");
+const ticket_filter_team = document.getElementById("ticket_filter_team");
+const ticket_filter_agent = document.getElementById("ticket_filter_agent");
+ticket_filter_select.addEventListener('change', function () {
+    var value = this.value;
+    if(value == 1){
+        if(!(ticket_filter_agent.classList.contains("d-none"))){
+            ticket_filter_agent.classList.add("d-none");
+        }
+        if(!(ticket_filter_team.classList.contains("d-none"))){
+            ticket_filter_team.classList.add("d-none");
+        }
+    }
+    if(value == 2){ // team
+        if(ticket_filter_team.classList.contains("d-none")){
+            ticket_filter_team.classList.remove("d-none");
+        }
+        if(!(ticket_filter_agent.classList.contains("d-none"))){
+            ticket_filter_agent.classList.add("d-none");
+        }
+    }
+    if(value == 3){ // agent
+        if(!(ticket_filter_team.classList.contains("d-none"))){
+            ticket_filter_team.classList.add("d-none");
+        }
+        if(ticket_filter_agent.classList.contains("d-none")){
+            ticket_filter_agent.classList.remove("d-none")
+        }
+    }
+});
+
 $("#form-sup").validate({
     rules: {
         ticket_type:{
             required: true,
         },
         ticket_status:{
+            required: true,
+        },
+        agent_id:{
             required: true,
         },
         ticket_filter:{
@@ -123,6 +157,9 @@ $("#form-sup").validate({
             required: "Please select a status."
         },
         ticket_filter:{
+            required: "Please select a filter."
+        },
+        agent_id:{
             required: "Please select a filter."
         },
         ticket_time_period:{

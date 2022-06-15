@@ -167,26 +167,52 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                   <div class="mt-3">
 
                     <select class="custom-select" name="ticket_type">
-                      <option selected disable value="">Select Ticket Type</option>
+                      <option selected disabled value="">Select Ticket Type</option>
                       <option value="1">All</option>
                       <option value="2">Verification Tickets</option>
                       <option value="3">Customer Support Tickets</option>
                     </select>
 
                     <select class="custom-select mt-3" name="ticket_status">
-                      <option selected disable value="">Select Ticket Status</option>
+                      <option selected disabled value="">Select Ticket Status</option>
                       <option value="1">All</option>
                       <option value="2">New</option>
                       <option value="3">Ongoing</option>
                       <option value="4">Closed/Resolved</option>
                     </select>
 
-                    <select class="custom-select mt-3" name="ticket_filter">
-                      <option selected disable value="">Select Filter</option>
+                    <select class="custom-select mt-3" name="ticket_filter" id="ticket_filter">
+                      <option selected disabled value="">Select Filter</option>
                       <option value="1">All</option>
                       <option value="2">By Team</option>
                       <option value="3">By Agent</option>
                     </select>
+
+                    <div class="card d-none" id="ticket_filter_agent">
+                      <div class="card-body">
+                        <div class="form-group m-0 p-0">
+                            <select class="custom-select" name="agent_id">
+                              <option selected  value="" disabled>Select Agent</option>
+                              <option value="1">a</option>
+                              <option value="2">b</option>
+                              <option value="3">c</option>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card d-none"  id="ticket_filter_team">
+                      <div class="card-body">
+                        <div class="form-group m-0 p-0">
+                            <select class="custom-select" name="team_id">
+                              <option selected disable value="">Select Team</option>
+                              <option value="1">a</option>
+                              <option value="2">b</option>
+                              <option value="3">c</option>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
 
                     <select class="custom-select mt-3" name="ticket_time_period">
                       <option selected disable value="">Select Time Period</option>
