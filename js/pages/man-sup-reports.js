@@ -97,6 +97,54 @@ const show_report = (btn_data) => {
 const ticket_filter_select = document.getElementById("ticket_filter");
 const ticket_filter_team = document.getElementById("ticket_filter_team");
 const ticket_filter_agent = document.getElementById("ticket_filter_agent");
+
+const ticket_type_select = document.getElementById("ticket_type");
+const ticket_select_agent =  document.getElementById("ticket_select_agent");
+
+// UX for dropdown select of Ticket Type
+// If Cx agents and Cx ticket filter, then only Cx agents will show, etc.
+ticket_type_select.addEventListener('change', function () {
+    var value = this.value;
+    let options = ticket_select_agent.options;
+
+    // Enable Ticket Filter
+    if( ticket_filter_select.hasAttribute("disabled")){
+        ticket_filter_select.removeAttribute("disabled");
+    }
+
+    // Set the options for agent select
+    for (var option of options) {
+        // console.log(option);
+        // console.log(value==1);
+
+        if(value==1){
+            if(option.classList.contains("d-none")){
+                option.classList.remove("d-none");
+            }
+        }
+
+        if(value==2){
+            if(option.classList.contains("d-none") && option.classList.contains("ver") ){
+                option.classList.remove("d-none");
+            }
+            if(!(option.classList.contains("d-none")) && option.classList.contains("cx")){
+                option.classList.add("d-none");
+            }
+        }
+
+        if(value==3){
+            if(option.classList.contains("d-none") && option.classList.contains("cx")){
+                option.classList.remove("d-none");
+            }
+            if(!(option.classList.contains("d-none")) && option.classList.contains("ver")){
+                option.classList.add("d-none");
+            }
+        }
+    }
+});
+
+
+
 ticket_filter_select.addEventListener('change', function () {
     var value = this.value;
     if(value == 1){

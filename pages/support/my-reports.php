@@ -11,69 +11,71 @@ if(!isset($_SESSION["role"]) || ($_SESSION["role"]!=7)){
 }
 
 $level ="../../";
-// // CURL STARTS HERE
+// CURL STARTS HERE
 
 
-// // NEWLINKDEV
-// // Declare variables to be used in this page
+// NEWLINKDEV
+// Declare variables to be used in this page
 // $codesRes = [];
+$agentsList = [];
 
-// $url = "http://localhost/slim3homeheroapi/public/support/get-my-codes"; // DEV
-// // $url = ""; // NO PROD LINK
+$url = "http://localhost/slim3homeheroapi/public/ticket/get-teams-agents"; // DEV
+// $url = ""; // NO PROD LINK
 
-// $headers = array(
-//     "Authorization: Bearer ".$_SESSION["token_support"],
-//     'Content-Type: application/json',
-// );
+$headers = array(
+    "Authorization: Bearer ".$_SESSION["token_support"],
+    'Content-Type: application/json',
+);
 
-// $post_data = array(
-//     'email' => $_SESSION["email"]
-//     // 'email' => 'mdenyys@support.com'
-// );
+$post_data = array(
+    'email' => $_SESSION["email"]
+    // 'email' => 'mdenyys@support.com'
+);
 
-// // 1. Initialize
-// $ch = curl_init();
+// 1. Initialize
+$ch = curl_init();
 
-// // 2. set options
-//     // URL to submit to
-//     curl_setopt($ch, CURLOPT_URL, $url);
+// 2. set options
+    // URL to submit to
+    curl_setopt($ch, CURLOPT_URL, $url);
 
-//     // Return output instead of outputting it
-//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Return output instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-//     // Type of request = POST
-//     curl_setopt($ch, CURLOPT_POST, 1);
+    // Type of request = POST
+    curl_setopt($ch, CURLOPT_POST, 1);
 
-//     // Adding the post variables to the request
-//     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+    // Adding the post variables to the request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
 
-//     // Set headers for auth
-//     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    // Set headers for auth
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
-//     // Execute the request and fetch the response. Check for errors
-//     $output = curl_exec($ch);
+    // Execute the request and fetch the response. Check for errors
+    $output = curl_exec($ch);
 
-//     // Moved inside Modal Body for better display of error messages
-//     $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
-//     $curl_error_message = null;
+    // Moved inside Modal Body for better display of error messages
+    $mode = "PROD"; // DEV to see verbose error messsages, PROD for production build
+    $curl_error_message = null;
 
-//     // ERROR HANDLING 
-//     if($output === FALSE || $output === NULL){
-//         $curl_error_message = curl_error($ch);
-//     }
+    // ERROR HANDLING 
+    if($output === FALSE || $output === NULL){
+        $curl_error_message = curl_error($ch);
+    }
 
-//     curl_close($ch);
+    curl_close($ch);
 
-//     // $output =  json_decode(json_encode($output), true);
-//     $output =  json_decode($output);
+    // $output =  json_decode(json_encode($output), true);
+    $output =  json_decode($output);
 
-//     // Set the declare variables (refer at the top)
-//     if(is_object($output) && $output != null && $output->success == true){
-//         $codesRes = $output->response->codesRes;
-//     } else {
-//         $err_stat = $output->response->status;
-//         $message= $output->response->message;
-//     }
+    // Set the declare variables (refer at the top)
+    if(is_object($output) && $output != null && $output->success == true){
+        // $codesRes = $output->response->codesRes;
+            $agentsList = $output->response->agentsList;
+    } else {
+        $err_stat = $output->response->status;
+        $message= $output->response->message;
+    }
 
 
 // // HTML STARTS HERE
@@ -166,7 +168,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                   <!-- Settings -->
                   <div class="mt-3">
 
-                    <select class="custom-select" name="ticket_type">
+                    <select class="custom-select" name="ticket_type" id="ticket_type">
                       <option selected disabled value="">Select Ticket Type</option>
                       <option value="1">All</option>
                       <option value="2">Verification Tickets</option>
@@ -181,7 +183,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                       <option value="4">Closed/Resolved</option>
                     </select>
 
-                    <select class="custom-select mt-3" name="ticket_filter" id="ticket_filter">
+                    <select class="custom-select mt-3" name="ticket_filter" id="ticket_filter" disabled>
                       <option selected disabled value="">Select Filter</option>
                       <option value="1">All</option>
                       <option value="2">By Team</option>
@@ -191,11 +193,22 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="card d-none" id="ticket_filter_agent">
                       <div class="card-body">
                         <div class="form-group m-0 p-0">
-                            <select class="custom-select" name="agent_id">
+                            <select class="custom-select" name="agent_id" id="ticket_select_agent">
                               <option selected  value="" disabled>Select Agent</option>
-                              <option value="1">a</option>
-                              <option value="2">b</option>
-                              <option value="3">c</option>
+                              <?php 
+                                for($wq = 0; $wq  < count($agentsList);  $wq++){
+                                  $agent  = $agentsList[$wq];
+                                  if($agent->role_type != 4){
+                              ?>
+                                  <option value="<?php echo $agent->id; ?>" class="<?php echo $agent->role_type == 1 ? 'ver' : 'cx';?>">
+                                    ID#<?php echo $agent->id; ?> - <?php echo $agent->full_name; ?>
+                                  </option>
+                              <?php 
+                                  }
+                                }
+                              ?>
+                              <!-- <option value="1" class="cx">a</option> -->
+                              <!-- <option value="3" class="ver">f</option> -->
                             </select>
                         </div>
                       </div>
@@ -204,11 +217,21 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="card d-none"  id="ticket_filter_team">
                       <div class="card-body">
                         <div class="form-group m-0 p-0">
-                            <select class="custom-select" name="team_id">
+                            <select class="custom-select" name="agent_id">
                               <option selected disable value="">Select Team</option>
-                              <option value="1">a</option>
-                              <option value="2">b</option>
-                              <option value="3">c</option>
+                              <?php 
+                                for($wq = 0; $wq  < count($agentsList);  $wq++){
+                                  $agent  = $agentsList[$wq];
+                                  if($agent->role_type == 4){
+                              ?>
+                                  <option value="<?php echo $agent->id; ?>">
+                                    ID#<?php echo $agent->id; ?> - <?php echo $agent->full_name; ?>'s Team
+                                  </option>
+                              <?php 
+                                  }
+                                }
+                              ?>
+                              <!-- <option value="1">'s team</option> -->
                             </select>
                         </div>
                       </div>
