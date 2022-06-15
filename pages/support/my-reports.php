@@ -282,15 +282,15 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                   <div>
                   <select class="custom-select" name="app_type">
                     <option selected disable value="">Select Type</option>
-                      <option value="1">All</option>
+                      <!-- <option value="1">All</option> -->
                       <option value="2">Job Posts</option>
                       <option value="3">Job Orders</option>
                     </select>
 
                     <select class="custom-select mt-3" name="app_filter">
-                      <option selected disable value="">Select Filter</option>
+                      <option selected disable value="">Select Status</option>
                       <option value="1">All</option>
-                      <option value="2">Completed</option>
+                      <option value="2">Completed/Filled</option>
                       <option value="3">Cancelled</option>
                       <option value="4">Ongoing</option>
                       <option value="5">Expired</option>
@@ -299,7 +299,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <select class="custom-select mt-3" name="app_time_period">
                       <option selected disable value="">Select Time Period</option>
                       <option value="1">Daily</option>
-                      <option value="2">Weekly</option>
+                      <!-- <option value="2">Weekly</option> -->
                       <option value="3">Monthly</option>
                     </select>
 
