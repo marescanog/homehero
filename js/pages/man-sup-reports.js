@@ -38,8 +38,10 @@ $(document).ready(
 // GENERATE REPORT FUNCTIONALITY
 // ===================================
 // ===================================
-const show_report = (btn_data) => {
-// id="chart-title"
+const show_report = (report_data, btn_data) => {
+
+    // console.log(JSON.stringify(report_data))
+    const chartTitle = document.getElementById("chart-title");
 
     // Reset form and show the Charts
     $('#form-sup')[0].reset();
@@ -47,25 +49,73 @@ const show_report = (btn_data) => {
     card_generate_report.classList.add("d-none");
     card_graph_UI.classList.remove("d-none");
 
+    let ticketsData = report_data?.ticketsData ?? [];
+    let ticket_time_period = report_data?.ticket_time_period ?? 1; // 1-Daily (default), 2-Weekly, 3-Monthly
+    let ticket_type = report_data?.ticket_type ?? 1; // 1-All (default), 2-Verification, 3-Support
+    let ticket_filter = report_data?.ticket_filter ?? 1; // 1-All (default), 2-By Team, 3-By Agent
+    let agent_name = report_data?.agent_name ?? "";
+    let table_data_per_team = report_data?.table_data_per_team ?? [];
+    let my_team = report_data?.my_team ?? [];
+    let table_data_per_team_totals = report_data?.table_data_per_team_totals ?? [];
 
+    let chartTitleText = ticket_type == 1 ? "All Tickets" : (ticket_type == 2 ? "Verification Tickets" : (ticket_type == 3 ? "Customer Support Tickets" : "Support Tickets"));
+    
+    chartTitleText = chartTitleText + (ticket_filter == 1 ? " by all agents" : (ticket_filter == 2 ? " by Team" : (ticket_filter == 3 ? " by Agent" : "")));
+    
+    chartTitle.innerText = chartTitleText; 
 
+    // console.log(JSON.stringify(report_data));
+    console.log(ticketsData);
 
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let chartLabels = [];
+    let chartData = [];
 
-    data={};
-    data['title'] = "Report Tool"
+    ticketsData.forEach(el=>{
+        if(ticket_time_period == 2){
+
+        } else if (ticket_time_period == 3){
+            let labl = months[el?.month-1]+'-'+el?.year;
+            chartLabels.unshift(labl);
+        } else {
+            let labl = months[el?.month-1]+'-'+el?.day;
+            chartLabels.unshift(labl);
+        }
+        chartData.unshift(el?.totalCount);
+    });
+
+    // ======================
     // For table generation
+    data={};
+    let subTitleText = ticket_time_period == 1 ? "Daily Tickets Filed" : (ticket_time_period == 2 ? "Tickets Filed Per Week": (ticket_time_period == 3 ? "Tickets Filed Per Month": "For the Time Period"));
+    subTitleText = subTitleText + (ticket_filter == 1 ? " by all agents" : (ticket_filter == 2 ? " by "+agent_name : (ticket_filter == 3 ? " by "+agent_name : "")));
+    data['title'] = subTitleText;
+    
+    // data['data'] = ticketsData;
+    data['chartLabels'] = chartLabels;
+    data['chartData'] = chartData;
+    data['filterType'] = ticket_filter;
+    if(ticket_filter == 2 ){
+        data['table_data_per_team'] = table_data_per_team;
+        data['my_team'] = my_team;
+        data['table_data_per_team_totals'] = table_data_per_team_totals;
+    }
+
     console.log("Loading table");
     $("#table-load").load("../../components/cards/load-table.php", data ,()=>{});
 
+
+    // =======================
     // For chart Generation
     console.log("Loading chart");
     var ctx = document.getElementById("myChart");
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          labels: chartLabels,
           datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+            data: chartData,
             lineTension: 0,
             backgroundColor: 'transparent',
             borderColor: '#007bff',
@@ -87,6 +137,33 @@ const show_report = (btn_data) => {
           }
         }
       });
+    // var myChart = new Chart(ctx, {
+    //     type: 'line',
+    //     data: {
+    //       labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    //       datasets: [{
+    //         data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+    //         lineTension: 0,
+    //         backgroundColor: 'transparent',
+    //         borderColor: '#007bff',
+    //         borderWidth: 4,
+    //         pointBackgroundColor: '#007bff'
+    //       }
+    //     ]
+    //     },
+    //     options: {
+    //       scales: {
+    //         yAxes: [{
+    //           ticks: {
+    //             beginAtZero: false
+    //           }
+    //         }]
+    //       },
+    //       legend: {
+    //         display: false,
+    //       }
+    //     }
+    //   });
 }
 
 // ===================================
@@ -229,42 +306,58 @@ $("#form-sup").validate({
         const formData = getFormDataAsObj(form);
         disableForm_displayLoadingButton(button, buttonTxt, buttonLoadSpinner, form);
 
-        console.log("SUP REPORTING TOOL BEFORE CURL CALL");
-        console.log(formData);
+        // console.log("SUP REPORTING TOOL BEFORE CURL CALL");
+        // console.log(formData);
 
-    //     data = {}
+        data = {}
 
-    //     data["title"] = formData?.title;
-    //     data["content"] = formData?.content;
-    //     data["aid"] = formData?.aid;
-
-    //     // if(formData?.role_restrict != null){
-    //     //     data["role_restrict"] = formData?.role_restrict;
-    //     // }
-
-    //     // if(formData?.team_restrict != null){
-    //     //     data["team_restrict"] = formData?.team_restrict;
-    //     // }
+        data["ticket_type"] = formData?.ticket_type;
+        data["agent_id"] = formData?.agent_id;
+        data["ticket_status"] = formData?.ticket_status;
+        data["ticket_filter"] = formData?.ticket_filter;
+        data["ticket_time_period"] = formData?.ticket_time_period;
+        data["date_start"] = formData?.date_start;
+        data["date_end"] = formData?.date_end;
 
 
-    //     // console.log("Your data to be submitted to the auth ajax: ");
-    //     // console.log(JSON.stringify(data));
+        if(formData?.ticket_filter == 1){
+            data["agent_name"] = "";
+            data["agent_id"] = -1;
+        } else if (formData?.ticket_filter == 2) {
+            let team_dom = document.getElementById("ticket_select_team");
+            let strUser = team_dom.options[team_dom.selectedIndex].text;
+            data["agent_name"] = strUser;
+            data["agent_id"] = team_dom.value;
+        } else if (formData?.ticket_filter == 3) {
+            let agent_dom = document.getElementById("ticket_select_agent");
+            let strUser = agent_dom.options[agent_dom.selectedIndex].text;
+            data["agent_name"] = strUser;
+            data["agent_id"] = agent_dom.value;
+        }
+
+      
+        // console.log("Your data to be submitted to the ajax call: ");
+        // console.log(JSON.stringify(data));
 
 
-    //     $.ajax({
-    //         type : 'POST',
-    //         url : getDocumentLevel()+'/auth/support/edit-anouncement.php',
-    //         data : data,
-    //         success : function(response) {
-    //             // console.log("Your response after submission is:");
-    //             // console.log("Response JSON: "+response);
-    //             if(isJson(response)){
-    //                 let res = JSON.parse(response);
-    //                 let status = res["status"];
-    //                 let message = res["message"];
-    //                 // console.log("status: "+status);
-    //                 // console.log("message: "+message);
-    //                 if(status==200){      
+        $.ajax({
+            type : 'POST',
+             url : "http://localhost/slim3homeheroapi/public/ticket/get-report", // DEV
+            data : data,
+            success : function(response) {
+                // console.log("Your response after submission is:");
+                // console.log("Response JSON: "+response);
+                // console.log(JSON.stringify(response));
+                // if(isJson(response)){
+                    // let res = JSON.parse(response);
+                    // let status = res["status"];
+                    // let message = res["message"];
+                    let success = response?.success;
+                    let message = response?.response;
+                    // console.log("success: "+success);
+                    // console.log("message: "+message);
+                    // console.log(response['response']);
+                    if(success==true){      
     //                     // Unfreeze & Reset
     //                     Swal.fire({
     //                         title: 'Sucessfully Edited Anouncement!',
@@ -273,66 +366,73 @@ $("#form-sup").validate({
     //                         }).then(result => {
     //                             form.reset();
                                     show_report(
+                                        response['response'],
                                         {button:button, buttonTxt:buttonTxt, buttonLoadSpinner:buttonLoadSpinner, form:form}
                                     );
 
     //                             window.location.reload(true);
-    //                     });
-    //                 } else if (status == 401 || status == 400){
-    //                     Swal.fire({
-    //                         title: 'Bad Request! Check your submission details.',
-    //                         text: message ?? 'Please check your details and try again!',
-    //                         icon: "error",
-    //                         confirmButtonText: 'ok'
-    //                         }).then(result => {
-    //                         enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "EDIT ANOUNCEMENT");
-    //                     });
-    //                 } else if (status == 404){
-    //                     Swal.fire({
-    //                         title: '404: Anouncement not found!',
-    //                         text: message ?? 'Something went wrong with your request. Please try again!',
-    //                         icon: "error",
-    //                         confirmButtonText: 'ok'
-    //                         }).then(result => {
-    //                         enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "EDIT ANOUNCEMENT");
-    //                     });
-    //                 }else{
-    //                     Swal.fire({
-    //                         title: 'Oops! Error!',
-    //                         text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
-    //                         icon: "error",
-    //                         confirmButtonText: 'ok'
-    //                         }).then(result => {
-    //                         window.location.reload(true);
-    //                     });
-    //                 }
-    //             } else {
-    //                 // Error
-    //                 console.log("Your ERROR response after submission is:");
-    //                 console.log("Response JSON: "+response);
-    //                 let message = null;
-    //                 Swal.fire({
-    //                     title: 'Oopsie! Error!',
-    //                     text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
-    //                     icon: "error",
-    //                     confirmButtonText: 'ok'
-    //                     }).then(result => {
-    //                     window.location.reload(true);
-    //                 });
-    //             }
-    //         }, 
-    //         error: function(response) {
-    //             console.log("ERROR - Response JSON: "+response);
-    //             Swal.fire({
-    //             title: 'An error occured!',
-    //             text: 'Something went wrong. Please try again!',
-    //             icon: "error",
-    //             confirmButtonText: 'ok'
-    //             }).then(result => {
-    //                 // window.location.reload(true);
-    //             });
-    //             }
-    //         });
+                        // });
+                    // } else if (status == 401 || status == 400){
+                    //     Swal.fire({
+                    //         title: 'Bad Request! Check your submission details.',
+                    //         text: message ?? 'Please check your details and try again!',
+                    //         icon: "error",
+                    //         confirmButtonText: 'ok'
+                    //         }).then(result => {
+                    //         enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "EDIT ANOUNCEMENT");
+                    //     });
+                    // } else if (status == 404){
+                    //     Swal.fire({
+                    //         title: '404: Anouncement not found!',
+                    //         text: message ?? 'Something went wrong with your request. Please try again!',
+                    //         icon: "error",
+                    //         confirmButtonText: 'ok'
+                    //         }).then(result => {
+                    //         enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "EDIT ANOUNCEMENT");
+                    //     });
+                    }else{
+                        Swal.fire({
+                            title: 'Oops! Error!',
+                            text: JSON.stringify(message)  ?? 'Something went wrong. Please try again!',
+                            icon: "error",
+                            confirmButtonText: 'ok'
+                            }).then(result => {
+                            // window.location.reload(true);
+                            enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE REPORT");
+                        });
+                    }
+                // } else {
+                //     // Error
+                //     console.log("Your ERROR response after submission is:");
+                //     console.log("Response JSON: "+response);
+                //     let message = null;
+                //     Swal.fire({
+                //         title: 'Oopsie! Error!',
+                //         text: JSON.stringify(message) ?? 'Something went wrong. Please try again!',
+                //         icon: "error",
+                //         confirmButtonText: 'ok'
+                //         }).then(result => {
+                //         window.location.reload(true);
+                //     });
+                // }
+            }, 
+            error: function(response) {
+                console.log("ERROR - Response JSON: ");
+                console.log(JSON.stringify(response))
+                console.log(JSON.stringify(response.responseText))
+                let he = response.responseText;
+                console.log(JSON.stringify(he == null ? "" : he?.response))
+                Swal.fire({
+                title: 'An error occured!',
+                text: he == null ? 'Something went wrong. Please try again!' : he,
+                icon: "error",
+                confirmButtonText: 'ok'
+                }).then(result => {
+                    enableForm_hideLoadingButton(button, buttonTxt, buttonLoadSpinner, form, "GENERATE REPORT");
+                    // window.location.reload(true);
+                });
+                }
+            });
 
 
     // //     // $('#modal').modal('hide');

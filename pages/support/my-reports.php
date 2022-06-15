@@ -217,7 +217,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                     <div class="card d-none"  id="ticket_filter_team">
                       <div class="card-body">
                         <div class="form-group m-0 p-0">
-                            <select class="custom-select" name="agent_id">
+                            <select class="custom-select" name="agent_id" id="ticket_select_team">
                               <option selected disable value="">Select Team</option>
                               <?php 
                                 for($wq = 0; $wq  < count($agentsList);  $wq++){
@@ -239,9 +239,9 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
                     <select class="custom-select mt-3" name="ticket_time_period">
                       <option selected disable value="">Select Time Period</option>
-                      <option value="1">Monthly</option>
-                      <option value="2">Weekly</option>
-                      <option value="3">Daily</option>
+                      <option value="1">Daily</option>
+                      <!-- <option value="2">Weekly</option> -->
+                      <option value="3">Monthly</option>
                     </select>
 
                     <div class="card mt-3">
@@ -298,9 +298,9 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
                     <select class="custom-select mt-3" name="app_time_period">
                       <option selected disable value="">Select Time Period</option>
-                      <option value="1">Monthly</option>
+                      <option value="1">Daily</option>
                       <option value="2">Weekly</option>
-                      <option value="3">Daily</option>
+                      <option value="3">Monthly</option>
                     </select>
 
                     <div class="card mt-3">
@@ -344,7 +344,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
               <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                   <button id="new-report" class="btn btn-sm btn-outline-secondary">New</button>
-                  <button  id="print-report" class="btn btn-sm btn-outline-secondary">Print</button>
+                  <!-- <button  id="print-report" class="btn btn-sm btn-outline-secondary">Print</button> -->
                 </div>
                 <!-- <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
                   <span data-feather="calendar"></span>
