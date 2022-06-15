@@ -113,7 +113,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <!-- =========================== -->
 <!-- TAB TABBIES -->
 <!-- =========================== -->
-<ul class="nav nav-tabs" id="myTab" role="tablist">
+<!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="support-tab" data-toggle="tab" href="#support" role="tab" aria-controls="support" aria-selected="true">Support Metrics</a>
   </li>
@@ -121,171 +121,200 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <a class="nav-link" id="app-tab" data-toggle="tab" href="#app" role="tab" aria-controls="app" aria-selected="false">App Metrics</a>
   </li>
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content" id="myTabContent"> -->
 
 <!-- =========================== -->
 <!-- TAB CONTENTS -->
 <!-- =========================== -->
     <!-- SUPPORT -->
-  <div class="tab-pane fade show active" id="support" role="tabpanel" aria-labelledby="support-tab">
+  <!-- <div class="tab-pane fade show active" id="support" role="tabpanel" aria-labelledby="support-tab"> -->
 
-    <div role="main" class="container col-md-9 ml-sm-auto col-lg-10 pt-3 px-4 d-none">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">New</button>
-                <button class="btn btn-sm btn-outline-secondary">Print</button>
+    <div class="mt-4 ml-2" id="report-settings">
+            <h4>Generate Report</h4>
+            <div class="card mt-3" style="width: 30rem;">
+              <div class="card-body">
+                <div class="contaienr">
+                    <div class="row mb-2">
+                      <div class="col p-0">
+                          <h6 class="font-italic m-0 p-0 mb-1 pb-1 ml-2">Select a report type</h6>
+                          <div class="d-flex flex-column">
+                              <div class="ml-3 form-check">
+                                  <input class="form-check-input" type="radio" name="report_type" id="report_type_1" value="1" checked>
+                                  <label class="form-check-label" for="report_type_1">
+                                      Support Report
+                                  </label>
+                              </div>
+                              <div class="ml-3 form-check">
+                                  <input class="form-check-input" type="radio" name="report_type" id="report_type_2" value="2">
+                                  <label class="form-check-label" for="report_type_2">
+                                      App Report
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
               </div>
-              <!-- <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button> -->
             </div>
-          </div>
 
-          <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
+            <!-- Support Reporting Settings -->
+            <div class="card mt-3" style="width: 30rem;" id="trans_UI_1" >
+              <form id="form-sup" class="card-body" method="POST">
+                  <h6>
+                    <i>Support Report Settings</i>
+                  </h6>
+                  <!-- Settings -->
+                  <div class="mt-3">
 
-          <h2>Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-  </div>
+                    <select class="custom-select" name="ticket_type">
+                      <option selected disable value="">Select Ticket Type</option>
+                      <option value="1">All</option>
+                      <option value="2">Verification Tickets</option>
+                      <option value="3">Customer Support Tickets</option>
+                    </select>
+
+                    <select class="custom-select mt-3" name="ticket_status">
+                      <option selected disable value="">Select Ticket Status</option>
+                      <option value="1">All</option>
+                      <option value="2">New</option>
+                      <option value="3">Ongoing</option>
+                      <option value="4">Closed/Resolved</option>
+                    </select>
+
+                    <select class="custom-select mt-3" name="ticket_filter">
+                      <option selected disable value="">Select Filter</option>
+                      <option value="1">All</option>
+                      <option value="2">By Team</option>
+                      <option value="3">By Agent</option>
+                    </select>
+
+                    <select class="custom-select mt-3" name="ticket_time_period">
+                      <option selected disable value="">Select Time Period</option>
+                      <option value="1">Monthly</option>
+                      <option value="2">Weekly</option>
+                      <option value="3">Daily</option>
+                    </select>
+
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="date_start">Start Date</label>
+                          <input type="date" class="form-control mb-2"  id="date_start" name="date_start">
+                        </div>
+                        <div class="form-group">
+                          <label for="date_end">End Date</label>
+                          <input type="date" class="form-control mb-2"  id="date_end" name="date_end">
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- Submission -->
+                  <div class="flex-row justify-content-center">
+                      <button id="RU-submit-btn"  type="submit" value="Submit"  class="btn btn-primary text-white font-weight-bold mb-3 mt-3">
+                              <span id="RU-submit-btn-txt">GENERATE REPORT</span>
+                              <div id="RU-submit-btn-load" class="d-none">
+                                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                  <span class="sr-only">Loading...</span>
+                              </div>
+                      </button>
+                  </div>
+              </form>
+            </div>
 
 
-  <!-- APP -->
-  <div class="tab-pane fade" id="app" role="tabpanel" aria-labelledby="app-tab">
+            <!-- App Reporting Settings -->
+            <div class="card mt-3 d-none" style="width: 30rem;" id="trans_UI_2">
+              <form id="form-app" class="card-body" method="POST">
+                  <h6>
+                    <i>App Report Settings</i>
+                  </h6>
+                  <!-- Settings -->
+                  <div>
+                  <select class="custom-select" name="app_type">
+                    <option selected disable value="">Select Type</option>
+                      <option value="1">All</option>
+                      <option value="2">Job Posts</option>
+                      <option value="3">Job Orders</option>
+                    </select>
 
-  </div>
+                    <select class="custom-select mt-3" name="app_filter">
+                      <option selected disable value="">Select Filter</option>
+                      <option value="1">All</option>
+                      <option value="2">Completed</option>
+                      <option value="3">Cancelled</option>
+                      <option value="4">Ongoing</option>
+                      <option value="5">Expired</option>
+                    </select>
+
+                    <select class="custom-select mt-3" name="app_time_period">
+                      <option selected disable value="">Select Time Period</option>
+                      <option value="1">Monthly</option>
+                      <option value="2">Weekly</option>
+                      <option value="3">Daily</option>
+                    </select>
+
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="date_start">Start Date</label>
+                          <input type="date" class="form-control mb-2"  id="date_start" name="date_start">
+                        </div>
+                        <div class="form-group">
+                          <label for="date_end">End Date</label>
+                          <input type="date" class="form-control mb-2"  id="date_end" name="date_end">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 
+                        type: All, job Orders, Job posts
+                        filter: all, completed, cancelled, ongoing, expired
+                        By month, by day, by year
+                        For Period Start - End
+                    -->
+                  </div>
+                  <!-- Submission -->
+                  <div class="flex-row justify-content-center">
+                      <button id="AR-submit-btn"  type="submit" value="Submit"  class="btn btn-primary text-white font-weight-bold mb-3 mt-3">
+                              <span id="AR-submit-btn-txt">GENERATE REPORT</span>
+                              <div id="AR-submit-btn-load" class="d-none">
+                                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                  <span class="sr-only">Loading...</span>
+                              </div>
+                      </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+    </div>
+
+<div class="container">
+  <div id="graph-UI" role="main" class="container col-md-9 ml-sm-auto col-lg-10 pt-3 px-4 d-none">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+              <h1 id="chart-title" class="h2">Dashboard</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                  <button id="new-report" class="btn btn-sm btn-outline-secondary">New</button>
+                  <button  id="print-report" class="btn btn-sm btn-outline-secondary">Print</button>
+                </div>
+                <!-- <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                  <span data-feather="calendar"></span>
+                  This week
+                </button> -->
+              </div>
+            </div>
+
+            <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
+
+            <div class="div" id="table-load">
+            </div>
+
+    </div>
 </div>
 
-
-
+  <!-- APP -->
+  <!-- <div class="tab-pane fade" id="app" role="tabpanel" aria-labelledby="app-tab">
+  </div> -->
     
 </main>
     <!-- === Your Custom Page Content Goes Here above here === -->
@@ -294,41 +323,15 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <!-- Custom JS Scripts Below -->
 <!-- <script src="../../js/pages/my-reports.js"></script> -->
 <!-- Icons -->
-<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
       feather.replace()
     </script>
 
     <!-- Graphs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script>
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: false
-              }
-            }]
-          },
-          legend: {
-            display: false,
-          }
-        }
-      });
-    </script>
+
+    <script src="../../js/pages/man-sup-reports.js"></script>
+
 </body>
 </html>
