@@ -43,6 +43,9 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     <h1 class="text-center">Current Job Postings</h1>
 
                     <?php
+
+                    // var_dump($_SESSION);
+
                     /* Database search: List of active job postings that matches the worker's skillset */
                     require_once("$level/db/conn.php");
                     // CREATE query

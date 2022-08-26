@@ -21,7 +21,7 @@ if($project_id == null){
 // Curl request to get data to fill projects page
  // CHANGELINKDEVPROD
 
- $url = "http://localhost/slim3homeheroapi/public/homeowner/get-single-project-complete-info/".$project_id; // DEV
+ $url = "http://localhost/slim3homeheroapi/public/worker/get-single-project-complete-info/".$project_id; // DEV
  // $url = "https://slim3api.herokuapp.com/homeowner/get-single-project-complete-info/".$project_id; // PROD
 
 $headers = array(
@@ -283,49 +283,49 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <div class="h-100">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mx-2 mx-lg">
-                    <li class="breadcrumb-item">
+                    <!-- <li class="breadcrumb-item">
                         <a href="<?php echo $level;?>/pages/homeowner/projects.php">
                             Projects
                         </a>
                     </li>
                     <li class="breadcrumb-item">
                         <a href="<?php
-                            if($tab_link == null){
-                                echo $level."/pages/homeowner/projects.php";
-                            } else {
-                                if($tab_link == "orders"){
-                                    echo $level."/pages/homeowner/projects.php?tab=orders";
-                                } else if ($tab_link == "closed"){
-                                    echo $level."/pages/homeowner/projects.php?tab=closed";
-                                } else {
-                                    echo $level."/pages/homeowner/projects.php";
-                                }
-                            }
+                            // if($tab_link == null){
+                            //     echo $level."/pages/homeowner/projects.php";
+                            // } else {
+                            //     if($tab_link == "orders"){
+                            //         echo $level."/pages/homeowner/projects.php?tab=orders";
+                            //     } else if ($tab_link == "closed"){
+                            //         echo $level."/pages/homeowner/projects.php?tab=closed";
+                            //     } else {
+                            //         echo $level."/pages/homeowner/projects.php";
+                            //     }
+                            // }
                         ?>">
                             <?php
-                                if($tab_link == null){
-                                    echo "Job Posts";
-                                } else {
-                                    if($tab_link == "orders"){
-                                        echo "Ongoing Projects";
-                                    } else if ($tab_link == "closed"){
-                                        echo "Closed Projects";
-                                    } else {
-                                        echo "Job Posts";
-                                    }
-                                }
+                                // if($tab_link == null){
+                                //     echo "Job Posts";
+                                // } else {
+                                //     if($tab_link == "orders"){
+                                //         echo "Ongoing Projects";
+                                //     } else if ($tab_link == "closed"){
+                                //         echo "Closed Projects";
+                                //     } else {
+                                //         echo "Job Posts";
+                                //     }
+                                // }
                             ?>
                         </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        <?php echo $project_name == null ? "Project Name" : htmlentities($project_name);?>
-                    </li>
+                    </li> -->
+                    <!-- <li class="breadcrumb-item active" aria-current="page"> -->
+                        <!-- <?php //echo $project_name == null ? "" : htmlentities($project_name);?> -->
+                    <!-- </li>  -->
                 </ol>
             </nav>
             <div class="mt-0 mb-2 d-flex align-items-center justify-content-between">
                 <div>
                     <h1 class="h3 mx-2 mx-lg-0 mt-0 mb-0">
-                        Your Project: <?php echo $project_name == null ? "Project Name" : htmlentities($project_name);?>
+                        <?php echo $project_name == null ? "" : "The Project Details: ".htmlentities($project_name);?>
                     </h1>
                 </div>
                 <div class="sidelink">
