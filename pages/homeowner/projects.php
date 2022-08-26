@@ -336,7 +336,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                         $end =  $hours >= 12 ? 'PM' : 'AM';
                                         $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
                                         $t_formatted =  $hours_formatted.':'.$minutes.' '.$end;
-                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].' at '.$t_formatted;
+                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].', '.$d_array[3].' at '.$t_formatted;
 
                                     // Grab job order size
                                     $job_order_size = $ongoingJobPosts[$p]->job_order_size;
@@ -462,7 +462,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                         $end =  $hours >= 12 ? 'PM' : 'AM';
                                         $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
                                         $t_formatted =  $hours_formatted.':'.$minutes.' '.$end;
-                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].' at '.$t_formatted;
+                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].', '.$d_array[3].' at '.$t_formatted;
 
                                     // Grab job order size
                                     $job_order_size =  $ongoingProjects[$p]->job_order_size;
@@ -513,7 +513,8 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 
                                     $phone_no = $ongoingProjects[$p]->phone_no;
                                     // For cancellation
-                                    $job_post_status_id = $closedProjects[$p]->job_post_status_id;
+
+                                    $job_post_status_id = isset($closedProjects[$p]) ? $closedProjects[$p]->job_post_status_id : null;
 
                                     include dirname(__FILE__)."/".$level.'/components/cards/project-homeowner.php';
                                 }
@@ -603,7 +604,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
                                         $end =  $hours >= 12 ? 'PM' : 'AM';
                                         $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
                                         $t_formatted =  $hours_formatted.':'.$minutes.' '.$end;
-                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].' at '.$t_formatted;
+                                        $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].', '.$d_array[3].' at '.$t_formatted;
 
                                     // Grab job order size
                                     $job_order_size = $closedProjects[$p]->job_order_size;
