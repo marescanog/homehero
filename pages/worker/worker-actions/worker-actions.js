@@ -50,9 +50,9 @@ function stopJobOrder(postID, hoID) {
 
 }
 
-function cancelJobOrder(postID, hoID) {
+// function cancelJobOrder(postID, hoID) {
 
-}
+// }
 
 function paymentReceived(jobOrderID) {
 

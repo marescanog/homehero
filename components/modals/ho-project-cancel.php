@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     $data = isset($_POST['data']) ? $_POST['data'] : null;
     $can_projectID = null;
     $can_job_post_name = null;
