@@ -31,13 +31,13 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
     <!-- === Your Custom Page Content Goes Here below here === -->
 
 <?php
-    $current_nav_side_tab = "Your Profile";
+    $current_nav_side_tab = "Settings";
     require_once dirname(__FILE__)."/$level/components/headers/worker-side-nav.php"; 
 ?>
 <div class="container container-full  w-100 m-lg-0 p-0 min-height">
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4 ">
 
-<h1>Profile</h1>
+<h1>Settings</h1>
 
 <!-- obtaining worker personal info -->
 

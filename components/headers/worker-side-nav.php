@@ -6,7 +6,7 @@
       ['Messages', 'Unread', 'Archived', 'Sent Quotes', 'Support'],
       ['Services Offered', 'Service Area', 'Weekly Activity', 'Insights','Invoices Sent'],
       ['Overview', 'Edit Day'],
-      ['Your Profile', 'Reviews', 'Settings']
+      ['Your Profile', 'Metrics', 'Settings']
     ];
     $hasExtraFilters = isset($hasExtraFilters) ? $hasExtraFilters : false;
     $extraFilters = isset($extraFilters) ? $extraFilters : [];

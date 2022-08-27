@@ -10,6 +10,8 @@ $level = "../..";
 $fistName = isset($_SESSION["first_name"]) ? $_SESSION["first_name"] : "Guest";
 $initials = isset($_SESSION["initials"]) ? $_SESSION["initials"] : "GU";
 
+$query = isset($_GET["query"]) ? "%".trim(htmlentities($_GET["query"]))."%" : null;
+$query2 = isset($_GET["query"]) ? trim(htmlentities($_GET["query"])) : null;
 
 require_once dirname(__FILE__) . "/$level/components/head-meta.php";
 
@@ -42,6 +44,15 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
 
                     <h1 class="text-center">Current Job Postings</h1>
 
+                    <form id="search-bar" method="get" action="<?php echo "$_SERVER[REQUEST_URI]"; ?>">
+                    <div class="input-group rounded">
+                        <input id="query" name="query" type="search" class="form-control rounded" placeholder="Search job title, type, description, name, street, barangay, and city..." aria-label="Search" aria-describedby="search-addon" />
+                        <span class="input-group-text border-0" id="search-addon">
+                            <i id="submit" class="fas fa-search" style="cursor:pointer"></i>
+                        </span>
+                    </div>
+                    </form>
+
                     <?php
 
                     // var_dump($_SESSION);
@@ -67,7 +78,24 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                 AND c.id IN (SELECT city_id FROM city_preference WHERE worker_id=:id)
                 AND jp.required_expertise_id IN (SELECT skill FROM skillset WHERE worker_id=:id)
                 AND jp.id NOT IN (SELECT post_id FROM worker_decline_post WHERE worker_id=:id)  
-                GROUP BY jp.id ";
+                AND jp.preferred_date_time > CURRENT_TIMESTAMP ";
+
+                //check search query
+                if($query != null){
+                    $sql.= "AND (jp.job_description LIKE :query
+                                 OR hh.first_name LIKE :query
+                                 OR hh.last_name LIKE :query
+                                 OR h.street_name LIKE :query
+                                 OR b.barangay_name LIKE :query
+                                 OR c.city_name LIKE :query
+                                 OR pt.type LIKE :query
+                                 OR jp.job_post_name LIKE :query
+                                 )";
+                }
+                
+
+                $sql.="GROUP BY jp.id
+                       ORDER BY jp.preferred_date_time ASC";
 
                     // Prepare statement
                     $stmt =  $conn->prepare($sql);
@@ -76,25 +104,40 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     // Only fetch if prepare succeeded
                     if ($stmt !== false) {
                         $stmt->bindparam(':id', $_SESSION['id']);
+                        if($query != null){
+                            $stmt->bindparam(':query', $query);
+                        }
                         $stmt->execute();
                         $ongoingJobPosts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                     }
 
-                    $stmt = null;
+                    
+                    ?>
+
+                    
+                        <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
+                            Showing <?php echo count($ongoingJobPosts) ?> Job Posts
+                            <?php 
+                                if($query != null){
+                                    echo "matching the search query \"$query2\"";
+                                }
+                            ?>
+                        </h5>
+                    <?php
                     if (count($ongoingJobPosts) == 0 || $ongoingJobPosts == null) {
                     ?>
 
                         <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
                             No available job posts matching your registered services.
                         </h5>
-                        <?php
+                    <?php
                     } else {
                         for ($p = 0; $p < count($ongoingJobPosts); $p++) {
-                        // Grab address value
-                        $address = $ongoingJobPosts[$p]['street_no']." ".$ongoingJobPosts[$p]['street_name'].", ".$ongoingJobPosts[$p]['barangay_name'].", ".$ongoingJobPosts[$p]['city_name'];
-                                    
-                        // Grab Schedule value
-                        $pref_sched = $ongoingJobPosts[$p]['preferred_date_time'];
+                            // Grab address value
+                            $address = $ongoingJobPosts[$p]['street_no'] . " " . $ongoingJobPosts[$p]['street_name'] . ", " . $ongoingJobPosts[$p]['barangay_name'] . ", " . $ongoingJobPosts[$p]['city_name'];
+
+                            // Grab Schedule value
+                            $pref_sched = $ongoingJobPosts[$p]['preferred_date_time'];
                             // Instantiate a DateTime with microseconds.
                             $d = new DateTime($pref_sched);
                             // Custom date time formatting
@@ -105,33 +148,33 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             $minutes = substr($t, 3, 2);
                             $end =  $hours >= 12 ? 'PM' : 'AM';
                             $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
-                            $t_formatted =  $hours_formatted.':'.$minutes.' '.$end;
-                            $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].' at '.$t_formatted;
+                            $t_formatted =  $hours_formatted . ':' . $minutes . ' ' . $end;
+                            $d_formatted = $d_array[0] . ' ' . $d_array[2] . ' ' . $d_array[1] . ", " . $d_array[3] . ' at ' . $t_formatted;
 
-                        // Grab job order size
-                        $job_order_size = $ongoingJobPosts[$p]['job_order_size'];
-                        // Grab job description
-                        $job_desc = $ongoingJobPosts[$p]['job_description'];
-                        // Grab job title
-                        $job_title = $ongoingJobPosts[$p]['job_post_name'];
-                        // Grab job status
-                        $job_status = $ongoingJobPosts[$p]['job_post_status_id'];
-                        // Grab rate_offer 
-                        $rate_offer = $ongoingJobPosts[$p]['rate_offer'];
-                        // Grab project type 
-                        $project_type = $ongoingJobPosts[$p]['project_type'];
-                        // Grab homeowner name
-                        $posted_by = $ongoingJobPosts[$p]['first_name']." ".$ongoingJobPosts[$p]['last_name'];
-                        // Grab phone number 
-                        $phone_no = $ongoingJobPosts[$p]['phone_no'];
-                            
-                        $is_rated = null;
-                        $job_order_id = null;
-                        $cancellation_reason = null;
+                            // Grab job order size
+                            $job_order_size = $ongoingJobPosts[$p]['job_order_size'];
+                            // Grab job description
+                            $job_desc = $ongoingJobPosts[$p]['job_description'];
+                            // Grab job title
+                            $job_title = $ongoingJobPosts[$p]['job_post_name'];
+                            // Grab job status
+                            $job_status = $ongoingJobPosts[$p]['job_post_status_id'];
+                            // Grab rate_offer 
+                            $rate_offer = $ongoingJobPosts[$p]['rate_offer'];
+                            // Grab project type 
+                            $project_type = $ongoingJobPosts[$p]['project_type'];
+                            // Grab homeowner name
+                            $posted_by = $ongoingJobPosts[$p]['first_name'] . " " . $ongoingJobPosts[$p]['last_name'];
+                            // Grab phone number 
+                            $phone_no = $ongoingJobPosts[$p]['phone_no'];
 
-                        $tab_link = "";
+                            $is_rated = null;
+                            $job_order_id = null;
+                            $cancellation_reason = null;
 
-                        // For edit modal
+                            $tab_link = "";
+
+                            // For edit modal
                             // Grab rate_type_id
                             $rate_type_id = $ongoingJobPosts[$p]['rate_type_id'];
                             // Grab job_size_id
@@ -141,13 +184,13 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             // Grab job id
                             $job_id = $ongoingJobPosts[$p]['id'];
 
-                        // For billing undefined variable (This data array has none of these attibutes)
-                        $isRated = null;
-                        $total_price_billed  = null ;
-                        $date_time_completion_paid = null;
-                        $computedRating = 0;
+                            // For billing undefined variable (This data array has none of these attibutes)
+                            $isRated = null;
+                            $total_price_billed  = null;
+                            $date_time_completion_paid = null;
+                            $computedRating = 0;
 
-                        include dirname(__FILE__)."/".$level.'/components/cards/project-worker.php';
+                            include dirname(__FILE__) . "/" . $level . '/components/cards/project-worker.php';
                         }
                     }
                     ?>
@@ -176,8 +219,15 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
     <!-- <script src="../../js/pages/user-home.js"></script> -->
     <script src="./worker-actions/worker-actions.js"></script>
     <script>
+        $("#submit").click(function(){
+            if ($("#query").val() != null && $("#query").val() != ""){
+               $("#search-bar").submit(); 
+            } else {
+                let path = window.location.href.split('?')[0];
+                window.location.replace(path);
+            }
+        })
 
-        
 
     </script>
 </body>

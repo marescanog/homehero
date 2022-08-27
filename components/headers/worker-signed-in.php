@@ -55,7 +55,7 @@
                             </div>
                         </li>-->
 
-                        <li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
+                        <!--<li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
                             <a class="nav-link p-0 custom-a
                                 <?php echo $headerLink_Selected == 2 ? " selected" : "";
                                 ?>
@@ -63,7 +63,7 @@
                             <div class="custom-underline                                 
                                 <?php echo $headerLink_Selected == 2 ? " show" : "";?>">
                             </div>
-                        </li>
+                        </li>-->
 
                         <!--<li class="nav-item mr-lg-3 cust-width mt-3 mt-lg-0">
                             <a class="nav-link p-0 custom-a 

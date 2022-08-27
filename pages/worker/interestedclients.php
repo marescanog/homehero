@@ -66,6 +66,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                 AND c.id IN (SELECT city_id FROM city_preference WHERE worker_id=:id)
                 AND jp.required_expertise_id IN (SELECT skill FROM skillset WHERE worker_id=:id) 
                 AND jp.id NOT IN (SELECT post_id FROM worker_decline_post WHERE worker_id=:id)  
+                AND jp.preferred_date_time > CURRENT_TIMESTAMP
 
                 AND hn.worker_id=:id
                 AND hn.is_deleted=0
