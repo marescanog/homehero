@@ -1,6 +1,8 @@
 <?php
     $address = isset($address) ? $address : null;
     $d_formatted = isset($d_formatted) ? $d_formatted : null;
+    $d_formatted_closed = isset($d_formatted_closed) ? $d_formatted_closed : null;
+    $d_formatted_accepted = isset($d_formatted_accepted) ? $d_formatted_accepted : null;
     $job_order_size = isset( $job_order_size) ?  $job_order_size : null;
     $pref_sched = isset($pref_sched) ? $pref_sched : null;
     $job_desc = isset($job_desc) ? $job_desc : null;
@@ -13,6 +15,8 @@
     $isRated = isset( $isRated) ?  $isRated: null;
     $job_order_id = isset($job_order_id) ? $job_order_id: null;
     $cancellation_reason = isset(  $cancellation_reason) ?   $cancellation_reason: null;
+    $date_time_closed = isset(  $date_time_closed) ?   $date_time_closed: null;
+    $date_time_accepted = isset(  $date_time_closed) ?   $date_time_closed: null;
     $job_order_status_id = isset($job_order_status_id) ? $job_order_status_id: null;
     $assigned_to = isset($assigned_to) ?   $assigned_to: null;
     $bill_status_id = isset($bill_status_id) ?   $bill_status_id: null;
@@ -40,6 +44,7 @@
     // For billing 
     $total_price_billed  = $total_price_billed != null ? htmlentities($total_price_billed) : null ;
     $date_time_completion_paid = $date_time_completion_paid != null ? htmlentities($date_time_completion_paid) : null ;
+    $is_received_by_worker = $is_received_by_worker != null ? htmlentities($is_received_by_worker) : null;
     $computedRating = $computedRating != null ? $computedRating : 0;
 
     // For homeowner details
@@ -76,20 +81,22 @@
                 } else if  ($job_status == 2){
                     if($job_order_status_id == 1){
                         if($today!= null && $d != null && $today>$d && $jo_start_time == null){
-                            echo 'Assigned to you';
+                            echo 'Assigned to you (Accepted on '.$d_formatted_accepted ?? 'Day, Month X at 0:00 PM';
+                            echo ")";
                             echo '</br>';
                             echo "<span class='small-warn'>** Please start your project or inform the homeowner for any delays or concerns. Click cancel to forego the job order.</span>";
                         } else {
-                            echo 'Assigned to you';
+                            echo 'Assigned to you (Accepted on '.$d_formatted_accepted ?? 'Day, Month X at 0:00 PM';
+                            echo ")";
                         }
                     } else if ($job_order_status_id == 3){
                         $nameWhoCancelled = "";
                         if ($cancelled_by != null && $homeowner_id != null){
                             $nameWhoCancelled = $cancelled_by  == $homeowner_id ? $posted_by : " You";
                         }
-                        echo "<span class='text-danger mt-1'>Cancelled by ".$nameWhoCancelled."</span>";
+                        echo "<span class='text-danger mt-1'>Cancelled by ".$nameWhoCancelled." on ".$d_formatted_closed ?? 'Day, Month X at 0:00 PM'."</span>";
                     } else {
-                        echo 'Completed!';
+                        echo 'Completed on '.$d_formatted_closed ?? 'Day, Month X at 0:00 PM';
                     }
                 } else if  ($job_status == 3){
                     if($job_order_status_id == null || $job_order_status_id  != 1){ // not assigned
@@ -305,25 +312,25 @@
                         // Worker can accept job post when it is not filled
                         if($job_status == 1){
                     ?> 
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="acceptJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)).',\''.addslashes(htmlentities($job_title)).'\''; ?>)">
                             <b>ACCEPT</b>
                         </button>
                     <?php
                          } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time == null) {
                     ?>
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="startJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="startJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)).',\''.addslashes(htmlentities($job_title)).'\''; ?>)">
                             <b>START PROJECT</b>
                         </button>
                     <?php
                          } else if ($job_status == 2 && $job_order_status_id == 1 && $jo_start_time != null) {
                     ?>
-                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="stopJobOrder(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                        <button class="btn btn-success ml-2" style="border: 2px solid #f0ad4e" onclick="stopJobOrder(<?php echo addslashes(htmlentities($job_order_id)).','.addslashes(htmlentities($homeowner_id)).',\''.addslashes(htmlentities($job_title)).'\',\''.addslashes(htmlentities($rate_offer.$rt_array[$rate_type_id-1])).'\''; ?>)">
                             <b>STOP PROJECT AND GENERATE BILL</b>
                         </button>
                     <?php
-                         } else if ($job_order_status_id == 2 && $date_paid != null) {
+                         } else if ($job_order_status_id == 2 && $date_paid != null && $is_received_by_worker != null && $is_received_by_worker == 0) {
                     ?>
-                        <button class="btn btn-primary ml-2" style="border: 2px solid #f0ad4e" onclick="paymentReceived(<?php echo addslashes(htmlentities($job_order_id)); ?>)">
+                        <button class="btn btn-primary ml-2" style="border: 2px solid #f0ad4e" onclick="paymentReceived(<?php echo addslashes(htmlentities($job_order_id)).','.addslashes(htmlentities($homeowner_id)).','.addslashes(htmlentities($total_price_billed)).',\''.addslashes(htmlentities($job_title)).'\''; ?>)">
                             <b>CONFIRM PAYMENT RECEIVED</b>
                         </button>
                     <?php
@@ -333,7 +340,13 @@
                             <b>PENDING PAYMENT</b>
                         </button>
                     <?php
-                         }
+                         } else if ($job_order_status_id == 2 && $is_received_by_worker != null && $is_received_by_worker == 1) {
+                    ?>
+                        <button class="btn btn-secondary ml-2" style="border: 2px solid #f0ad4e" disabled>
+                            <b>PAYMENT CONFIRMED</b>
+                        </button>
+                    <?php
+                        }
                     ?>
            </div>
 
@@ -346,7 +359,7 @@
                     // Case when it is still a post
                     if($job_status == 1 && $job_order_status_id == null){
                 ?>
-                    <button class="btn btn-danger" onclick="declineJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)); ?>)">
+                    <button class="btn btn-danger" onclick="declineJobPost(<?php echo addslashes(htmlentities($job_id)).','.addslashes(htmlentities($homeowner_id)).',\''.addslashes(htmlentities($job_title)).'\''; ?>)">
                         DECLINE
                     </button>
                 <?php 
@@ -376,7 +389,7 @@
                 ?>
                     <!-- For now just billing issues instead of all other cases -->
                     <?php
-                        if($job_order_status_id == 2 && $date_paid != null){
+                        if($job_order_status_id == 2 && $is_received_by_worker != 1){
                     ?>
                          <button class="btn btn-danger" data-toggle="modal" data-target="#modal" onclick="reportBill(<?php echo $job_order_id.',\''.addslashes(htmlentities($address)).'\',\''.addslashes($posted_by).'\'';?>)">
                             DISPUTE PAYMENT

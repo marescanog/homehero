@@ -46,7 +46,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     /* Database search: List of active job postings that matches the worker's skillset */
                     require_once("$level/db/conn.php");
                     // CREATE query
-                    $sql = "SELECT jp.id, jp.homeowner_id, jp.home_id, CONCAT(h.street_no,' ', h.street_name, ', ', b.barangay_name, ', ', c.city_name,' city') as `complete_address`, jp.job_size_id, jos.job_order_size, jp.required_expertise_id, pt.type as `project_type`, e.id as `expertise_id`, e.expertise, jp.job_post_status_id, jp.job_description, jp.rate_offer, jp.rate_type_id, rt.type as `rate_type`, jp.preferred_date_time, jp.job_post_name, jo.id as `job_order_id`, jo.job_order_status_id, jo.date_time_start, u.phone_no, CONCAT(u.first_name,' ',u.last_name) as `posted_by`
+                    $sql = "SELECT jp.id, jp.homeowner_id, jp.home_id, CONCAT(h.street_no,' ', h.street_name, ', ', b.barangay_name, ', ', c.city_name,' city') as `complete_address`, jp.job_size_id, jos.job_order_size, jp.required_expertise_id, pt.type as `project_type`, e.id as `expertise_id`, e.expertise, jp.job_post_status_id, jp.job_description, jp.rate_offer, jp.rate_type_id, rt.type as `rate_type`, jp.preferred_date_time, jp.job_post_name, jo.id as `job_order_id`, jo.job_order_status_id, jo.date_time_start, jo.created_on, u.phone_no, CONCAT(u.first_name,' ',u.last_name) as `posted_by`
                     FROM home h, barangay b, city c, job_order_size jos, project_type pt, expertise e, rate_type rt, job_post jp
                     LEFT JOIN job_order jo on jp.id = jo.job_post_id 
                     LEFT JOIN hh_user u on jo.homeowner_id = u.user_id
@@ -60,7 +60,8 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     AND jp.is_deleted = 0
                     AND jp.job_post_status_id != 1
                     AND jo.job_order_status_id = 1
-                    AND jo.worker_id = :id";
+                    AND jo.worker_id = :id
+                    ORDER BY jo.created_on ASC";
 
                     // Prepare statement
                     $stmt =  $conn->prepare($sql);
@@ -74,6 +75,13 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     }
 
                     $stmt = null;
+                    if ($ongoingProjects != null && count( $ongoingProjects) != 0) {
+                    ?>
+                        <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
+                            You have <?php echo count($ongoingProjects) ?> ongoing projects.
+                        </h5>
+                    <?php 
+                    }
                     if (count( $ongoingProjects) == 0 ||  $ongoingProjects == null) {
                     ?>
 
@@ -103,6 +111,22 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                                         $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
                                         $t_formatted =  $hours_formatted.':'.$minutes.' '.$end;
                                         $d_formatted = $d_array[0].' '.$d_array[2].' '.$d_array[1].' at '.$t_formatted;
+                                    
+                                    $date_time_accepted = $ongoingProjects[$p]['created_on'];
+                                    if ($date_time_accepted != null) {
+                                        // For date and time accepted
+                                        $d = new DateTime($date_time_accepted);
+                                        // Custom date time formatting
+                                        $d_parsed = $d->format(DateTimeInterface::RFC7231);
+                                        $d_array = explode(" ", $d_parsed);
+                                        $t = $d_array[4];
+                                        $hours = substr($t, 0, 2);
+                                        $minutes = substr($t, 3, 2);
+                                        $end =  $hours >= 12 ? 'PM' : 'AM';
+                                        $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
+                                        $t_formatted_accepted =  $hours_formatted . ':' . $minutes . ' ' . $end;
+                                        $d_formatted_accepted = $d_array[0] . ' ' . $d_array[2] . ' ' . $d_array[1] . ' at ' . $t_formatted_accepted;
+                                    }
 
                                     // Grab job order size
                                     $job_order_size =  $ongoingProjects[$p]['job_order_size'];
@@ -147,6 +171,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                                     $isRated = null;
                                     $total_price_billed  = null ;
                                     $date_time_completion_paid = null;
+                                    $is_received_by_worker = null;
                                     $computedRating = 0;
 
                                     // Grab home_id
@@ -168,6 +193,9 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                                 $hours_formatted = null;
                                 $t_formatted = null;
                                 $d_formatted = null;
+                                $t_formatted_accepted = null;
+                                $d_formatted_accepted = null;
+                                $date_time_accepted = null;
                                 $pref_sched = null;
                                 $job_order_size = null;
                                 $job_desc = null;

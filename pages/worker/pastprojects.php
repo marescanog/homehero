@@ -57,7 +57,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     /* Database search: List of active job postings that matches the worker's skillset */
                     require_once("$level/db/conn.php");
                     // CREATE query
-                    $sql = "SELECT jp.id, jp.home_id, CONCAT(h.street_no,' ', h.street_name, ', ', b.barangay_name, ', ', c.city_name,' city') as `complete_address`, jp.job_size_id, jos.job_order_size, jp.required_expertise_id, pt.type as `project_type`, e.id as `expertise_id`, e.expertise, jp.job_post_status_id, jp.cancellation_reason,jp.job_description, jp.rate_offer, jp.rate_type_id, rt.type as `rate_type`, jp.preferred_date_time, jp.job_post_name, jo.id as `job_order_id`, jo.isRated, r.overall_quality, r.professionalism, r.reliability, r.punctuality, r.comment, CONCAT(u.first_name, ' ' ,u.last_name) as `posted_by`, jo.job_order_status_id, bill.bill_status_id, bill.total_price_billed, bill.date_time_completion_paid, jo.order_cancellation_reason, jo.cancelled_by, jo.homeowner_id as `homeowner_id`, u.phone_no
+                    $sql = "SELECT jp.id, jp.home_id, CONCAT(h.street_no,' ', h.street_name, ', ', b.barangay_name, ', ', c.city_name,' city') as `complete_address`, jp.job_size_id, jos.job_order_size, jp.required_expertise_id, pt.type as `project_type`, e.id as `expertise_id`, e.expertise, jp.job_post_status_id, jp.cancellation_reason,jp.job_description, jp.rate_offer, jp.rate_type_id, rt.type as `rate_type`, jp.preferred_date_time, jp.job_post_name, jo.id as `job_order_id`, jo.isRated, r.overall_quality, r.professionalism, r.reliability, r.punctuality, r.comment, CONCAT(u.first_name, ' ' ,u.last_name) as `posted_by`, jo.job_order_status_id, bill.bill_status_id, bill.total_price_billed, bill.date_time_completion_paid, bill.is_received_by_worker, jo.order_cancellation_reason, jo.cancelled_by, jo.date_time_closed, jo.homeowner_id as `homeowner_id`, u.phone_no
             FROM home h, barangay b, city c, job_order_size jos, project_type pt, expertise e, rate_type rt, job_post jp
             LEFT JOIN job_order jo on jp.id = jo.job_post_id 
             LEFT JOIN rating r on jo.id = r.job_order_id 
@@ -90,10 +90,10 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             $query2 == "cancel"    || $query2 == "Cancel"    || $query2 == "CANCEL"
                         ) {
                             $statusCheck = 1;
-                            $sql .= " AND (jo.job_order_status_id = 3 OR jp.job_post_status_id = 4 OR (jp.job_post_status_id = 1 AND jp.preferred_date_time < CURRENT_TIMESTAMP)) ";
+                            $sql .= " AND (jo.job_order_status_id = 3 OR jp.job_post_status_id = 4) ";
                         } else {
                             $statusCheck = 0;
-                            $sql .= " AND (jo.job_order_status_id = 2 OR jo.job_order_status_id = 3 OR jp.job_post_status_id = 4 OR (jp.job_post_status_id = 1 AND jp.preferred_date_time < CURRENT_TIMESTAMP)) ";
+                            $sql .= " AND (jo.job_order_status_id = 2 OR jo.job_order_status_id = 3 OR jp.job_post_status_id = 4) ";
                             $sql .= " AND (jp.job_description LIKE :query
                              OR CONCAT(u.first_name, ' ' ,u.last_name) LIKE :query
                              OR h.street_name LIKE :query
@@ -103,8 +103,10 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                              OR jp.job_post_name LIKE :query
                              ) ";
                         }
+                    } else {
+                        $sql .= " AND (jo.job_order_status_id = 2 OR jo.job_order_status_id = 3) ";
                     };
-
+                    $sql .= " ORDER BY jo.date_time_closed DESC";
 
                     // Prepare statement
                     $stmt =  $conn->prepare($sql);
@@ -113,7 +115,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                     // Only fetch if prepare succeeded
                     if ($stmt !== false) {
                         $stmt->bindparam(':id', $_SESSION['id']);
-                        if ($query != null && $statusCheck==0) {
+                        if ($query != null && $statusCheck == 0) {
                             $stmt->bindparam(':query', $query);
                         }
 
@@ -174,6 +176,23 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             $t_formatted =  $hours_formatted . ':' . $minutes . ' ' . $end;
                             $d_formatted = $d_array[0] . ' ' . $d_array[2] . ' ' . $d_array[1] . ' at ' . $t_formatted;
 
+
+                            // Grab project closed date (cancelled or completed)
+                            $date_time_closed = $closedProjects[$p]['date_time_closed'];
+                            if ($date_time_closed != null) {
+                                $d = new DateTime($date_time_closed);
+                                // Custom date time formatting
+                                $d_parsed = $d->format(DateTimeInterface::RFC7231);
+                                $d_array = explode(" ", $d_parsed);
+                                $t = $d_array[4];
+                                $hours = substr($t, 0, 2);
+                                $minutes = substr($t, 3, 2);
+                                $end =  $hours >= 12 ? 'PM' : 'AM';
+                                $hours_formatted =  $hours > 12 ? $hours - 12 : (int) $hours;
+                                $t_formatted_closed =  $hours_formatted . ':' . $minutes . ' ' . $end;
+                                $d_formatted_closed = $d_array[0] . ' ' . $d_array[2] . ' ' . $d_array[1] . ' at ' . $t_formatted_closed;
+                            }
+
                             // Grab job order size
                             $job_order_size = $closedProjects[$p]['job_order_size'];
                             // Grab job description
@@ -231,6 +250,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             // For billing
                             $total_price_billed  = $closedProjects[$p]['total_price_billed'] ?? null;
                             $date_time_completion_paid = $closedProjects[$p]['date_time_completion_paid'] ?? null;
+                            $is_received_by_worker = $closedProjects[$p]['is_received_by_worker'] ?? null;
                             $computedRating = 0;
                             if ($isRated != null) {
                                 $computedRating = ($closedProjects[$p]['overall_quality']
@@ -257,6 +277,9 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                         $hours_formatted = null;
                         $t_formatted = null;
                         $d_formatted = null;
+                        $t_formatted_closed = null;
+                        $d_formatted_closed = null;
+                        $date_time_closed = null;
                         $pref_sched = null;
                         $job_order_size = null;
                         $job_desc = null;
@@ -268,6 +291,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                         $job_size_id = null;
                         $is_rated = null;
                         $job_order_id = null;
+                        $is_received_by_worker = null;
                     }
 
                     ?>

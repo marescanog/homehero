@@ -188,6 +188,7 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
                             $isRated = null;
                             $total_price_billed  = null;
                             $date_time_completion_paid = null;
+                            $is_received_by_worker = null;
                             $computedRating = 0;
 
                             include dirname(__FILE__) . "/" . $level . '/components/cards/project-worker.php';
