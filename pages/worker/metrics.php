@@ -38,7 +38,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             <div class="container container-full  w-100 m-lg-0 p-0 min-height ml-3">
                 <main role="main" class="col-md-9 col-lg-10 pt-3 px-4 " style="margin-left:30%; margin-right:40%">
 
-                    <h1 class="text-center">Edit Profile</h1>
+                    <h1 class="text-center">Metrics</h1>
 
                     <div class="accordion" id="accordionExample">
                         <div class="card">

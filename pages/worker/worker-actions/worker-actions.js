@@ -31,7 +31,7 @@ function acceptJobPost(postID, hoID, jobname) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         }
@@ -72,7 +72,7 @@ function declineJobPost(postID, hoID, jobname) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         }
@@ -112,7 +112,7 @@ function startJobOrder(postID, hoID, jobname) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         }
@@ -165,7 +165,7 @@ function stopJobOrder(postID, hoID, jobname, rate) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         } else if (result.isDenied) {
@@ -200,7 +200,7 @@ function stopJobOrder(postID, hoID, jobname, rate) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         }
@@ -242,27 +242,223 @@ function paymentReceived(orderID, hoID, amount, jobname) {
                     }
                 },
                 error: function (response) {
-                    Swal.fire('Error!', 'Somwthing went wrong. Please try again.', 'error');
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
             });
         }
     })
 }
 
-function updateCityPreferences(postID, hoID) {
-
+function updatePersonalInfo() {
+    //check info
+    var fname = document.querySelector('#inputFName').value;
+    var lname = document.querySelector('#inputLName').value;
+    var mobile = document.querySelector('#inputMobile').value;
+    if(fname === ""){
+        Swal.fire('Error!', 'Please enter a valid first name.', 'error');
+    } else if (lname === ""){
+        Swal.fire('Error!', 'Please enter a valid last name.', 'error');
+    } else if (/\d/.test(fname) || /\d/.test(lname)) {
+        Swal.fire('Error!', 'Your names cannot contain characters other than letters.', 'error');
+    } else if (mobile === "") {
+        Swal.fire('Error!', 'Please enter a mobile number.', 'error');
+    } else if (mobile.length!=11 || mobile.charAt(0)!='0' || mobile.charAt(1)!='9'){
+        Swal.fire('Error!', 'Please enter a valid 11-digit PH mobile number.', 'error');
+    } else {
+        Swal.fire({
+            title: 'Confirm to change your information?',
+            text: "This will update your existing name and contact info to the new ones you provide.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm and update'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: './worker-actions/update-personal-info.php',
+                    data: { lname:lname,fname:fname,mobile:mobile },
+                    success: function (response) {
+                        var res = JSON.parse(response);
+                        if (res["status"] == 200) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Your personal info has been changed!',
+                                icon: 'success',
+                                confirmButtonText: 'Continue'
+                            }).then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        } else {
+                            Swal.fire('Error!', res['message'], 'error').then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                    }
+                });
+            }
+        })
+    }
 }
 
-function updateSkillset(postID, hoID) {
-
+function updateSkillset() {
+    //check info
+    var skillArray = [];
+    for (var x = 1; x <= 6; x++){
+        if(document.getElementById('skillcheck'+x).checked){
+            skillArray.push(x);
+        }
+    }
+    if(skillArray.length === 0){
+        Swal.fire('Error!', 'Please choose at least one skill.', 'error');
+    } else {
+        Swal.fire({
+            title: 'Confirm to change your skillset?',
+            text: "This will change the job posts that you can see within this app.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm and update'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: './worker-actions/update-skillset.php',
+                    data: { skillArray:skillArray },
+                    success: function (response) {
+                        var res = JSON.parse(response);
+                        if (res["status"] == 200) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Your skillset has been changed!',
+                                icon: 'success',
+                                confirmButtonText: 'Continue'
+                            }).then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        } else {
+                            Swal.fire('Error!', res['message'], 'error').then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                    }
+                });
+            }
+        })
+    }
 }
 
-function updateContactInfo(postID, hoID) {
-
+function updateCityPreferences() {
+    //check info
+    var cityArray = [];
+    for (var x = 1; x <= 12; x++){
+        if(document.getElementById('cityCheck'+x).checked){
+            cityArray.push(x);
+        }
+    }
+    if(cityArray.length === 0){
+        Swal.fire('Error!', 'Please choose at least one city.', 'error');
+    } else {
+        Swal.fire({
+            title: 'Confirm to change your list of preferred cities?',
+            text: "This will change the job posts that you can see within this app.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm and update'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: './worker-actions/update-city-preferences.php',
+                    data: { cityArray:cityArray },
+                    success: function (response) {
+                        var res = JSON.parse(response);
+                        if (res["status"] == 200) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Your city preferences have been changed!',
+                                icon: 'success',
+                                confirmButtonText: 'Continue'
+                            }).then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        } else {
+                            Swal.fire('Error!', res['message'], 'error').then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                    }
+                });
+            }
+        })
+    }
 }
 
-function updatePassword(postID, hoID) {
-
+function updatePassword() {
+    //check info
+    var oldPass = document.querySelector('#oldPass').value;
+    var newPass = document.querySelector('#newPass').value;
+    var confirmPass = document.querySelector('#confirmPass').value;
+    if(oldPass === ""){
+        Swal.fire('Error!', 'Please enter your current password.', 'error');
+    } else if (newPass === ""){
+        Swal.fire('Error!', 'Please enter your new password.', 'error');
+    } else if (newPass.length < 8) {
+        Swal.fire('Error!', 'Your new password must contain at least 8 characters.', 'error');
+    } else if (newPass !== confirmPass) {
+        Swal.fire('Error!', 'New password and confirm password does not match!', 'error');
+    } else {
+        Swal.fire({
+            title: 'Confirm to change your password?',
+            text: "This action cannot be undone!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm and update'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: './worker-actions/update-password.php',
+                    data: { oldPass:oldPass, newPass:newPass, confirmPass:confirmPass },
+                    success: function (response) {
+                        var res = JSON.parse(response);
+                        if (res["status"] == 200) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Your password has been changed!',
+                                icon: 'success',
+                                confirmButtonText: 'Continue'
+                            }).then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        } else {
+                            Swal.fire('Error!', res['message'], 'error').then(result => {
+                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                    }
+                });
+            }
+        })
+    }
 }
 
 
