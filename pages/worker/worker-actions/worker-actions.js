@@ -123,8 +123,8 @@ function stopJobOrder(postID, hoID, jobname, rate) {
     Swal.fire({
         icon: 'info',
         title: 'Generate bill for the project<br>\"' + jobname + '\"',
-        text: "Client offer: P"+rate,
-        html: `<p>Client offer: P`+rate+`<input type="number" id="val" name="amount" class="swal2-input" placeholder="Enter amount">`,
+        text: "Client offer: P" + rate,
+        html: `<p>Client offer: P` + rate + `<input type="number" id="val" name="amount" class="swal2-input" placeholder="Enter amount">`,
         confirmButtonText: 'Generate bill',
         showDenyButton: true,
         showCancelButton: true,
@@ -170,11 +170,11 @@ function stopJobOrder(postID, hoID, jobname, rate) {
             });
         } else if (result.isDenied) {
             var amount = Swal.getPopup().querySelector('#val').value
-            if (!amount) {                
-                Swal.fire('Error!',`Please enter your desired amount.`,'error');
+            if (!amount) {
+                Swal.fire('Error!', `Please enter your desired amount.`, 'error');
                 return;
             } else if (amount <= 0) {
-                Swal.fire('Error!',`Please enter a number greater than zero.`,'error');
+                Swal.fire('Error!', `Please enter a number greater than zero.`, 'error');
                 return;
             }
             var mode = 2;
@@ -204,7 +204,7 @@ function stopJobOrder(postID, hoID, jobname, rate) {
                 }
             });
         }
-        
+
     }
 
     );
@@ -254,15 +254,15 @@ function updatePersonalInfo() {
     var fname = document.querySelector('#inputFName').value;
     var lname = document.querySelector('#inputLName').value;
     var mobile = document.querySelector('#inputMobile').value;
-    if(fname === ""){
+    if (fname === "") {
         Swal.fire('Error!', 'Please enter a valid first name.', 'error');
-    } else if (lname === ""){
+    } else if (lname === "") {
         Swal.fire('Error!', 'Please enter a valid last name.', 'error');
     } else if (/\d/.test(fname) || /\d/.test(lname)) {
         Swal.fire('Error!', 'Your names cannot contain characters other than letters.', 'error');
     } else if (mobile === "") {
         Swal.fire('Error!', 'Please enter a mobile number.', 'error');
-    } else if (mobile.length!=11 || mobile.charAt(0)!='0' || mobile.charAt(1)!='9'){
+    } else if (mobile.length != 11 || mobile.charAt(0) != '0' || mobile.charAt(1) != '9') {
         Swal.fire('Error!', 'Please enter a valid 11-digit PH mobile number.', 'error');
     } else {
         Swal.fire({
@@ -275,45 +275,66 @@ function updatePersonalInfo() {
             confirmButtonText: 'Confirm and update'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    type: 'POST',
-                    url: './worker-actions/update-personal-info.php',
-                    data: { lname:lname,fname:fname,mobile:mobile },
-                    success: function (response) {
-                        var res = JSON.parse(response);
-                        if (res["status"] == 200) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Your personal info has been changed!',
-                                icon: 'success',
-                                confirmButtonText: 'Continue'
-                            }).then(result => {
-                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
-                            });
-                        } else {
-                            Swal.fire('Error!', res['message'], 'error').then(result => {
-                                window.location = getDocumentLevel() + '/pages/worker/settings.php';
-                            });
+                Swal.fire({
+                    icon: 'info',
+                    title: 'SMS Verification',
+                    html: `<p>Enter the 6-digit verification code sent to your new mobile number<input type="number" id="val" name="amount" class="swal2-input" placeholder="Enter code">`,
+                    confirmButtonText: 'Verify',
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        const amount = Swal.getPopup().querySelector('#val').value
+                        if (!amount) {
+                            Swal.showValidationMessage(`Please enter the code.`);
+                        } else if (amount != 123456) {
+                            Swal.showValidationMessage(`Error: Invalid verification code.`);
                         }
-                    },
-                    error: function (response) {
-                        Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                        return { amount: amount }
                     }
-                });
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: './worker-actions/update-personal-info.php',
+                            data: { lname: lname, fname: fname, mobile: mobile },
+                            success: function (response) {
+                                var res = JSON.parse(response);
+                                if (res["status"] == 200) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Your personal info has been changed!',
+                                        icon: 'success',
+                                        confirmButtonText: 'Continue'
+                                    }).then(result => {
+                                        window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                                    });
+                                } else {
+                                    Swal.fire('Error!', res['message'], 'error').then(result => {
+                                        window.location = getDocumentLevel() + '/pages/worker/settings.php';
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                            }
+                        });
+                    }
+                })
             }
-        })
+        });
     }
 }
 
 function updateSkillset() {
     //check info
     var skillArray = [];
-    for (var x = 1; x <= 6; x++){
-        if(document.getElementById('skillcheck'+x).checked){
+    for (var x = 1; x <= 6; x++) {
+        if (document.getElementById('skillcheck' + x).checked) {
             skillArray.push(x);
         }
     }
-    if(skillArray.length === 0){
+    if (skillArray.length === 0) {
         Swal.fire('Error!', 'Please choose at least one skill.', 'error');
     } else {
         Swal.fire({
@@ -329,7 +350,7 @@ function updateSkillset() {
                 $.ajax({
                     type: 'POST',
                     url: './worker-actions/update-skillset.php',
-                    data: { skillArray:skillArray },
+                    data: { skillArray: skillArray },
                     success: function (response) {
                         var res = JSON.parse(response);
                         if (res["status"] == 200) {
@@ -359,12 +380,12 @@ function updateSkillset() {
 function updateCityPreferences() {
     //check info
     var cityArray = [];
-    for (var x = 1; x <= 12; x++){
-        if(document.getElementById('cityCheck'+x).checked){
+    for (var x = 1; x <= 12; x++) {
+        if (document.getElementById('cityCheck' + x).checked) {
             cityArray.push(x);
         }
     }
-    if(cityArray.length === 0){
+    if (cityArray.length === 0) {
         Swal.fire('Error!', 'Please choose at least one city.', 'error');
     } else {
         Swal.fire({
@@ -380,7 +401,7 @@ function updateCityPreferences() {
                 $.ajax({
                     type: 'POST',
                     url: './worker-actions/update-city-preferences.php',
-                    data: { cityArray:cityArray },
+                    data: { cityArray: cityArray },
                     success: function (response) {
                         var res = JSON.parse(response);
                         if (res["status"] == 200) {
@@ -412,9 +433,9 @@ function updatePassword() {
     var oldPass = document.querySelector('#oldPass').value;
     var newPass = document.querySelector('#newPass').value;
     var confirmPass = document.querySelector('#confirmPass').value;
-    if(oldPass === ""){
+    if (oldPass === "") {
         Swal.fire('Error!', 'Please enter your current password.', 'error');
-    } else if (newPass === ""){
+    } else if (newPass === "") {
         Swal.fire('Error!', 'Please enter your new password.', 'error');
     } else if (newPass.length < 8) {
         Swal.fire('Error!', 'Your new password must contain at least 8 characters.', 'error');
@@ -434,7 +455,7 @@ function updatePassword() {
                 $.ajax({
                     type: 'POST',
                     url: './worker-actions/update-password.php',
-                    data: { oldPass:oldPass, newPass:newPass, confirmPass:confirmPass },
+                    data: { oldPass: oldPass, newPass: newPass, confirmPass: confirmPass },
                     success: function (response) {
                         var res = JSON.parse(response);
                         if (res["status"] == 200) {

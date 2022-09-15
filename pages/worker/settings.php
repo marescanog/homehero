@@ -87,6 +87,11 @@ require_once dirname(__FILE__) . "/$level/components/head-meta.php";
 <link rel="stylesheet" href="../../css/headers/worker-side-nav.css">
 <script src="https://kit.fontawesome.com/d10ff4ba99.js" crossorigin="anonymous"></script>
 <script src="./worker-actions/worker-actions.js"></script>
+<style>
+    body {
+      overflow: scroll; /* Show scrollbars */
+    }
+</style>
 <!-- <link rel="stylesheet" href="../../css/pages/homeowner/homeowner-create-project.css"> -->
 <!-- === Link your custom CSS  pages above here ===-->
 </head>
