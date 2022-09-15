@@ -90,13 +90,13 @@ $bill4 = $result[3]['count'];
 
 //5-8. Ratings 
 // CREATE query
-$sql = "SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d` 
+$sql = "SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d`, '1' as 'e' 
         FROM rating WHERE rated_worker=:id AND created_on BETWEEN NOW() - INTERVAL 1 DAY AND NOW()
         UNION
-        SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d` 
+        SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d`, '2' as 'e'
         FROM rating WHERE rated_worker=:id AND created_on BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
         UNION
-        SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d` 
+        SELECT IFNULL(AVG(overall_quality), 0) as `a`, IFNULL(AVG(professionalism), 0) as `b`, IFNULL(AVG(reliability), 0) as `c`, IFNULL(AVG(punctuality), 0) as `d`, '3' as 'e'
         FROM rating WHERE rated_worker=:id AND created_on BETWEEN NOW() - INTERVAL 60 DAY AND (NOW() - INTERVAL 31 DAY)
         ";
 
@@ -111,22 +111,22 @@ if ($stmt !== false) {
     $result2 = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 }
 
-$a1 = round($result2[0]['a'],2);
-$b1 = round($result2[0]['b'],2);
-$c1 = round($result2[0]['c'],2);
-$d1 = round($result2[0]['d'],2);
+$a1 = $result2[0]['a'] != null ? round($result2[0]['a'],2):0;
+$b1 = $result2[0]['a'] != null ? round($result2[0]['b'],2):0;
+$c1 = $result2[0]['a'] != null ? round($result2[0]['c'],2):0;
+$d1 = $result2[0]['a'] != null ? round($result2[0]['d'],2):0;
 $e1 = round((($a1+$b1+$c1+$d1)/4),2);
 
-$a2 = round($result2[1]['a'],2);
-$b2 = round($result2[1]['b'],2);
-$c2 = round($result2[1]['c'],2);
-$d2 = round($result2[1]['d'],2);
+$a2 = $result2[0]['a'] != null ? round($result2[1]['a'],2):0;
+$b2 = $result2[0]['a'] != null ? round($result2[1]['b'],2):0;
+$c2 = $result2[0]['a'] != null ? round($result2[1]['c'],2):0;
+$d2 = $result2[0]['a'] != null ? round($result2[1]['d'],2):0;
 $e2 = round((($a2+$b2+$c2+$d2)/4),2);
 
-$a3 = round($result2[2]['a'],2);
-$b3 = round($result2[2]['b'],2);
-$c3 = round($result2[2]['c'],2);
-$d3 = round($result2[2]['d'],2);
+$a3 = $result2[0]['a'] != null ? round($result2[2]['a'],2):0;
+$b3 = $result2[0]['a'] != null ? round($result2[2]['b'],2):0;
+$c3 = $result2[0]['a'] != null ? round($result2[2]['c'],2):0;
+$d3 = $result2[0]['a'] != null ? round($result2[2]['d'],2):0;
 $e3 = round((($a3+$b3+$c3+$d3)/4),2);
 
 
