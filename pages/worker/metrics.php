@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 session_start();
 if (!isset($_SESSION["token"])) {
@@ -6,12 +6,24 @@ if (!isset($_SESSION["token"])) {
     exit();
 }
 
-$level ="../..";
+$level = "../..";
 $fistName = isset($_SESSION["first_name"]) ? $_SESSION["first_name"] : "Guest";
 $initials = isset($_SESSION["initials"]) ? $_SESSION["initials"] : "GU";
 
 
-require_once dirname(__FILE__)."/$level/components/head-meta.php"; 
+require_once dirname(__FILE__) . "/$level/components/head-meta.php";
+
+//SQL Queries
+//1-4. Job status by worker (today union 7 days union 30 days union total)
+
+//5-8. Ratings 
+
+
+
+
+
+
+
 
 ?>
 <!-- === Link your custom CSS pages below here ===-->
@@ -21,24 +33,200 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
 <!-- <link rel="stylesheet" href="../../css/pages/homeowner/homeowner-create-project.css"> -->
 <!-- === Link your custom CSS  pages above here ===-->
 </head>
- <body class="container-fluid m-0 p-0  w-100 bg-light">  
+
+<body class="container-fluid m-0 p-0  w-100 bg-light">
     <!-- Add your Header NavBar here-->
-    <?php 
-        $headerLink_Selected = 4;
-        require_once dirname(__FILE__)."/$level/components/headers/worker-signed-in.php"; 
+    <?php
+    $headerLink_Selected = 4;
+    require_once dirname(__FILE__) . "/$level/components/headers/worker-signed-in.php";
     ?>
     <div class="<?php echo $hasHeader ?? ""; ?>">
-    <!-- === Your Custom Page Content Goes Here below here === -->
+        <!-- === Your Custom Page Content Goes Here below here === -->
 
-<?php
-    $current_nav_side_tab = "Metrics";
-    require_once dirname(__FILE__)."/$level/components/headers/worker-side-nav.php"; 
-?>
-<div class="col-md-10">
+        <?php
+        $current_nav_side_tab = "Metrics";
+        require_once dirname(__FILE__) . "/$level/components/headers/worker-side-nav.php";
+        ?>
+        <div class="col-md-10">
             <div class="container container-full  w-100 m-lg-0 p-0 min-height ml-3">
                 <main role="main" class="col-md-9 col-lg-10 pt-3 px-4 " style="margin-left:30%; margin-right:40%">
 
                     <h1 class="text-center">Metrics</h1>
+                    <h5 class="jumbotron-h1 text-center mt-lg-3 mt-0 mt-md-3 mt-lg-0">
+                        View your work statistics and ratings to see your performance.
+                    </h5>
+
+                    <hr color="yellow" style="height:5px">
+
+                    <h4 class="mb-4 mt-2 mx-2">Job Summary</h4>
+                    <table class="table table-bordered">
+
+                        <thead class="text-center thead-light">
+                            <th style="width:35%">Statistics</th>
+                            <th style="width:15%">Today</th>
+                            <th style="width:15%">Past 7 Days</th>
+                            <th style="width:15%">Past 30 Days</th>
+                            <th style="width:20%">Overall Total</th>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th>Jobs accepted</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+                            <tr>
+                                <th>Jobs in progress</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+                            <tr>
+                                <th>Jobs cancelled</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Jobs completed</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Bills fulfilled</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+                            <tr>
+                                <th>Revenue generated</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-size:large"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <hr color="yellow" style="height:5px">
+
+                    <h4 class="mb-4 mt-2 mx-2">Rating Summary</h4>
+                    <table class="table table-bordered">
+
+                        <thead class="text-center thead-light">
+                            <th style="width:35%"></th>
+                            <th style="width:15%">Today</th>
+                            <th style="width:15%">Avg. for past 1-30 days</th>
+                            <th style="width:15%">Avg. for past 31-60 days</th>
+                            <th style="width:20%">Overall Average</th>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th>Overall quality</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <th>Professionalism</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <th>Reliability</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Punctuality</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+
+                            <tr>
+                                <th>General Average</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="font-size:large"></th>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                    <hr color="yellow" style="height:5px">
+
+                    <div class="container">
+                        <div class="row">
+                        <div class="col-md-6">
+
+                            <h4 class="mb-4 mt-2 mx-2">Jobs completed by category</h4>
+                            <table class="table table-bordered">
+
+                                <thead class="text-center thead-light">
+                                    <th style="width:60%">Category</th>
+                                    <th style="width:40%">Completed</th>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <h4 class="mb-4 mt-2 mx-2">Jobs completed by location</h4>
+                            <table class="table table-bordered">
+
+                                <thead class="text-center thead-light">
+                                    <th style="width:60%">Location/City</th>
+                                    <th style="width:40%">Completed</th>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        </div>
+                    </div>
 
                     <div class="accordion" id="accordionExample">
                         <div class="card">
@@ -115,15 +303,16 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         </div>
 
 
-    <!-- === Your Custom Page Content Goes Here above here === -->
+        <!-- === Your Custom Page Content Goes Here above here === -->
     </div>
-<?php require_once dirname(__FILE__)."/$level/components/foot-meta.php"; ?>
-<!-- Custom JS Scripts Below -->
+    <?php require_once dirname(__FILE__) . "/$level/components/foot-meta.php"; ?>
+    <!-- Custom JS Scripts Below -->
     <!-- <script src="../../js/pages/user-home.js"></script> -->
     <script>
 
-   
+
 
     </script>
 </body>
+
 </html>
