@@ -396,13 +396,13 @@
 <!-- ====================================== -->
 <!-- BUTTONS DISPLAY - RIGHT SIDE -->
 <!-- ====================================== -->
-           <?php
+           <!-- <?php
                 // Case when worker does not show, user can report the worker
-                if($job_posty_id != 1 && $job_posty_id != 4 && $job_order_status_id != 1 && $date_paid != null || $job_order_status_id == 3 ){
+                //if($job_posty_id != 1 && $job_posty_id != 4 && $job_order_status_id != 1 && $date_paid != null || $job_order_status_id == 3 ){
            ?>
                            
            <div>
-            <a href="<?php echo $level;?>/pages/homeowner/help-center.php">
+            <a href="<?php //echo $level;?>/pages/homeowner/help-center.php">
                     <button  class="btn btn-primary">
                         HELP CENTER
                     </button>
@@ -411,8 +411,8 @@
 
 
             <?php
-                } 
-           ?>
+                //} 
+           ?> -->
 
            <?php
                 // Case when worker does not show, user can report the worker

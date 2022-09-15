@@ -712,7 +712,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
         <!-- RECOMMENDED HEROES -->
         <!-- ================= -->
         <!-- No need for recommendation when job has been cancelled, expired or filled -->
-        <?php 
+        <!-- <?php 
             if( $output->response){ 
                 if($singleJobOrder == false && $status !== null && $status != 3 && $status != 4 && $today!= null && $d != null && $today<$d && $cancelled_by == null){
         ?>
@@ -724,7 +724,7 @@ require_once dirname(__FILE__)."/$level/components/head-meta.php";
             <div class="mb-5"></div>
         <?php
            }}
-        ?>
+        ?> -->
 
 
         </div>
